@@ -78,13 +78,13 @@ def monitor(usbPort, id):
     #Get register data
     try:
         rtn = ["nodata"]
-        if common.portA == "na": 
+        if common.portA == "na" and id == "A": 
             return rtn
-        if common.portB == "na": 
+        if common.portB == "na" and id == "B": 
             return rtn
-        if common.portC == "na": 
+        if common.portC == "na" and id == "C":
             return rtn
-        if common.portD == "na": 
+        if common.portD == "na" and id == "D":
             return rtn        
         client = ModbusSerialClient(port=usbPort,timeout=4,baudrate=9600,bytesize=8,parity="N",stopbits=1)
         client.connect()
