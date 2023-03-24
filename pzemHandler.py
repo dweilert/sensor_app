@@ -139,6 +139,8 @@ def find_usb_ports():
             
         while True:
             line = lines[ln]
+            if config.get("Debug","show_dmesg") == "true":
+                print(line)
             if disconn in line:
                 chkUSB = '/dev/ttyUSB' + line[-1]
                 print(f"Look for : {chkUSB}")
