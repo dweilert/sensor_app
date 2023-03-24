@@ -77,15 +77,27 @@ def mainLine():
         rtn = []
         while True:
             iCnt = iCnt + 1
+            rtn = []
             rtn.append(pzemHandler.monitor(common.portA,"A"))
-            rtn.append(pzemHandler.monitor(common.portB,"B"))
-            rtn.append(pzemHandler.monitor(common.portB,"C")) 
-            rtn.append(pzemHandler.monitor(common.portB,"D"))           
-            # Evaluate the collected sensor data
             if config.get("Debug","show_regs") == "true":
                 logger.put_msg("D",f"All return Regs: {rtn}")
             checkThresholds.check(rtn)
             rtn = []
+            rtn.append(pzemHandler.monitor(common.portB,"B"))
+            if config.get("Debug","show_regs") == "true":
+                logger.put_msg("D",f"All return Regs: {rtn}")
+            checkThresholds.check(rtn)
+            rtn = []
+            rtn.append(pzemHandler.monitor(common.portB,"C")) 
+            if config.get("Debug","show_regs") == "true":
+                logger.put_msg("D",f"All return Regs: {rtn}")
+            checkThresholds.check(rtn)
+            rtn = []
+            rtn.append(pzemHandler.monitor(common.portB,"D"))           
+            if config.get("Debug","show_regs") == "true":
+                logger.put_msg("D",f"All return Regs: {rtn}")
+            checkThresholds.check(rtn)
+
             ups = upsHandler.getUPSInfo()
             # Log iteration and wait
             logger.put_msg("I", "Interval count: " + str(iCnt) + " UPS Current: " + str(common.upsCurrent))
