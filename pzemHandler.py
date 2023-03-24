@@ -191,10 +191,10 @@ def find_usb_ports():
             # No more lines to process
             if ln >= hl:
                 logger.put_msg("I","------------")
-                logger.put_msg("E",f"Sensor 1 usb port: {common.portA}")
-                logger.put_msg("E",f"Sensor 2 usb port: {common.portB}")
-                logger.put_msg("E",f"Sensor 3 usb port: {common.portC}")
-                logger.put_msg("E",f"Sensor 4 usb port: {common.portD}")
+                logger.put_msg("I",f"Sensor 1 usb port: {common.portA}")
+                logger.put_msg("I",f"Sensor 2 usb port: {common.portB}")
+                logger.put_msg("I",f"Sensor 3 usb port: {common.portC}")
+                logger.put_msg("I",f"Sensor 4 usb port: {common.portD}")
                 logger.put_msg("I","------------")
                 break
                         

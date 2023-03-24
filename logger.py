@@ -75,11 +75,11 @@ def put_msg(lvl, msg):
         ts = now.strftime("%Y-%m-%d %H:%M:%S.%f")
 
         if lvl == "i" or lvl == "info" or lvl == "I":
-            lvl = "(Info) : "
+            lvl = "(I) : "
         elif lvl == "e" or lvl == "error" or lvl == "E":
-            lvl = "(Error) : "
+            lvl = "(E) : "
         elif lvl == "d" or lvl == "debug" or lvl == "D":
-            lvl = " : "
+            lvl = "(D) : "
             save = False
 
         # Is message saved or output to console
