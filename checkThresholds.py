@@ -105,9 +105,9 @@ def check(pzem_data):
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
 
-        logger.put_msg("E",f"Exception type: ", exception_type)
-        logger.put_msg("E",f"File name: ", filename)
-        logger.put_msg("E",f"Line number: ", line_number)
+        logger.put_msg("E",f"Exception type: {exception_type}")
+        logger.put_msg("E",f"File name: {filename}")
+        logger.put_msg("E",f"Line number: {line_number}")
         logger.put_msg("E",f"checkThresholds.check ERROR: {e}")
     
 
