@@ -81,15 +81,15 @@ def check(pzem_data):
             checkMsg(msg)
        
         # pumpB
-        if (pzem_data[1][0] == "nodata"):
+        if (pzem_data[0][0] == "nodata"):
             common.bNoD = common.bNoD + 1
             if common.bNoD > common.no_data_max:
                 common.smsMsg.append("Pump B" + NO_DATA_MSG)
                 common.bNoD = 0
         else:
-            msg = voltage(pzem_data[1],"B")
+            msg = voltage(pzem_data[0],"B")
             checkMsg(msg)
-            msg = power(pzem_data[1],"B")
+            msg = power(pzem_data[0],"B")
             checkMsg(msg)
 
         # pumpC
