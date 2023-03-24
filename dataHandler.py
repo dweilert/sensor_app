@@ -66,8 +66,8 @@ def saveData(data, id):
                     record['pump'] = "A"
                     record['start_date'] = common.pumpA_start 
                     record['start_energy'] = common.pumpA_energy_start 
-                    record['stop_date'] = common.pumpA_stop 
-                    record['stop_energy'] = common.pumpA_energy_latest 
+                    record['end_date'] = common.pumpA_stop 
+                    record['end_energy'] = common.pumpA_energy_latest 
                     record['used_energy'] = str(energy)
                     awsHandler.putSensorData(record)		    		
         elif row[0] == "B":
@@ -87,8 +87,8 @@ def saveData(data, id):
                     record['pump'] = "B"
                     record['start_date'] = common.pumpB_start 
                     record['start_energy'] = common.pumpB_energy_start 
-                    record['stop_date'] = common.pumpB_stop 
-                    record['stop_energy'] = common.pumpB_energy_latest 
+                    record['end_date'] = common.pumpB_stop 
+                    record['end_energy'] = common.pumpB_energy_latest 
                     record['used_energy'] = str(energy)
                     awsHandler.putSensorData(record)		    		
         else:
