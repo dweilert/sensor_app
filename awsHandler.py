@@ -37,9 +37,11 @@ import config
 import logger
 
 def putSensorData(sdata):
+    id = getPutID()
+    sensorUrl = config.get("AWSGateWay","sensor_data")
     try:
-        sensorUrl = config.get("AWSGateWay","sensor_data")
-        sdata['id'] = getPutID()
+        sdata['id'] = id
+        sdata = sdata
         if common.debug == True:
             logger.put_msg("D",f"putHandler.putSensorData sdata: {sdata}")
         url = sensorUrl
@@ -75,7 +77,8 @@ def putSMSData(mdata):
     except Exception as e:
         logger.put_msg("E",f"putHandler.putSMSData ERROR: {e}")
     finally:
-        print("End of process")
+        if common.debug == True:
+            logger.put_msg("D","putHandler.putSMSData finished")
 
 
 def getPutID():

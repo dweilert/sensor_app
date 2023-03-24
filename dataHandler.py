@@ -55,7 +55,7 @@ def saveData(data, id):
                 if common.pumpA_status == "OFF":
                     common.pumpA_status = "ON"		
                     common.pumpA_start = row[1]
-                    common.pumpA_enerry_start = row[7]
+                    common.pumpA_energy_start = row[7]
                 else:
                     common.pumpA_energy_latest = row[7]
                     common.pumpA_stop = row[1]		    		    				    
@@ -76,7 +76,7 @@ def saveData(data, id):
                 if common.pumpB_status == "OFF":
                     common.pumpB_status = "ON"		
                     common.pumpB_start = row[1]
-                    common.pumpB_enerry_start = row[7]
+                    common.pumpB_energy_start = row[7]
                 else:
                     common.pumpB_energy_latest = row[7]
                     common.pumpB_stop = row[1]		    		    				    
