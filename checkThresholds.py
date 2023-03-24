@@ -33,7 +33,7 @@ GENERAL INFORMATION:
 """
 
 import os
-
+import sys
 import config
 import common
 import smsHandler
@@ -101,6 +101,13 @@ def check(pzem_data):
 
         checkSMS()
     except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+
+        logger.put_msg("E",f"Exception type: ", exception_type)
+        logger.put_msg("E",f"File name: ", filename)
+        logger.put_msg("E",f"Line number: ", line_number)
         logger.put_msg("E",f"checkThresholds.check ERROR: {e}")
     
 
