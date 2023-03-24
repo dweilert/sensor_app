@@ -144,7 +144,6 @@ def find_usb_ports():
                 print(line)
             if disconn in line:
                 chkUSB = '/dev/ttyUSB' + line[-1]
-                print(f"Look for : {chkUSB}")
 
                 if common.portA == chkUSB:
                     logger.put_msg("I",f"Sensor 1 disconned from USB port: {chkUSB}")
