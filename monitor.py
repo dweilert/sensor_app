@@ -88,12 +88,12 @@ def mainLine():
                 logger.put_msg("D",f"Port B Regs: {rtn}")
             checkThresholds.check(rtn)
             rtn = []
-            rtn = pzemHandler.monitor(common.portB,"C") 
+            rtn = pzemHandler.monitor(common.portC,"C") 
             if config.get("Debug","show_regs") == "true":
                 logger.put_msg("D",f"Port C Regs: {rtn}")
             checkThresholds.check(rtn)
             rtn = []
-            rtn = pzemHandler.monitor(common.portB,"D")          
+            rtn = pzemHandler.monitor(common.portD,"D")          
             if config.get("Debug","show_regs") == "true":
                 logger.put_msg("D",f"Port D Regs: {rtn}")
             checkThresholds.check(rtn)
