@@ -38,16 +38,13 @@ import config
 import logger
 
 def putSensorData(sdata):
-    logger.put_msg("D",f"(1) {sdata}")
     id = getPutID()
     sensorUrl = config.get("AWSGateWay","sensor_data")
     try:
         sdata["id"] = id
-        logger.put_msg("D",f"(2) {sdata}")
         sdata = sdata
-        logger.put_msg("D",f"(3) {sdata}")
         if common.debug == True:
-            logger.put_msg("D",f"(4) putHandler.putSensorData sdata: {sdata}")
+            logger.put_msg("D",f"putHandler.putSensorData sdata: {sdata}")
         url = sensorUrl
         response = requests.put(url, json=sdata)
         if common.debug == True:
