@@ -50,7 +50,7 @@ def saveData(data, id):
         record = {}
         energy = 0
         if row[0] == "A":
-            # Check if Current is seen 	
+            # Check if Current row[3] is seen 	
             if int(row[3]) > 0:
                 if common.pumpA_status == "OFF":
                     common.pumpA_status = "ON"		
@@ -69,6 +69,13 @@ def saveData(data, id):
                     record['end_date'] = common.pumpA_stop 
                     record['end_energy'] = common.pumpA_energy_latest 
                     record['used_energy'] = str(energy)
+                    # Reset pump data
+                    common.pumpA_status = "OFF"
+                    common.pumpA_start = ""
+                    common.pumpA_energy_start = ""
+                    common.pumpA_stop = ""
+                    common.pumpA_energy_latest = ""
+                    # Send data to AWS
                     awsHandler.putSensorData(record)		    		
         elif row[0] == "B":
             # Check if Current is seen 	
@@ -90,6 +97,13 @@ def saveData(data, id):
                     record['end_date'] = common.pumpB_stop 
                     record['end_energy'] = common.pumpB_energy_latest 
                     record['used_energy'] = str(energy)
+                    # Reset pump data
+                    common.pumpB_status = "OFF"
+                    common.pumpB_start = ""
+                    common.pumpB_energy_start = ""
+                    common.pumpB_stop = ""
+                    common.pumpB_energy_latest = ""
+                    # Send data to AWS
                     awsHandler.putSensorData(record)		    		
         else:
             logger.put_msg("I",f"Pump {row[0]} data not processed")

@@ -27,6 +27,7 @@ LICENSE:
 
 """
 
+import sys
 import requests
 import time
 import json
@@ -37,14 +38,14 @@ import config
 import logger
 
 def putSensorData(sdata):
-    print(f"(1) {sdata}")
+    logger.put_msg("D",f"(1) {sdata}")
     id = getPutID()
     sensorUrl = config.get("AWSGateWay","sensor_data")
     try:
         sdata["id"] = id
-        print(f"(2) {sdata}")
+        logger.put_msg("D",f"(2) {sdata}")
         sdata = sdata
-        print(f"(3) {sdata}")
+        logger.put_msg("D",f"(3) {sdata}")
         if common.debug == True:
             logger.put_msg("D",f"(4) putHandler.putSensorData sdata: {sdata}")
         url = sensorUrl
@@ -55,6 +56,14 @@ def putSensorData(sdata):
         if common.debug == True:
             logger.put_msg("D",f"putHandler.putSensorData res: {res}")
     except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+
+        logger.put_msg("E",f"Exception type: {exception_type}")
+        logger.put_msg("E",f"File name: {filename}")
+        logger.put_msg("E",f"Line number: {line_number}")
+        logger.put_msg("E",f"checkThresholds.check ERROR: {e}")
         logger.put_msg("E",f"putHandler.putSensorData ERROR: {e}")
     finally:
         if common.debug == True:
@@ -78,6 +87,14 @@ def putSMSData(mdata):
         if common.debug == True:
             logger.put_msg("D",f"putHandler.putSMSData res: {res}")
     except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+
+        logger.put_msg("E",f"Exception type: {exception_type}")
+        logger.put_msg("E",f"File name: {filename}")
+        logger.put_msg("E",f"Line number: {line_number}")
+        logger.put_msg("E",f"checkThresholds.check ERROR: {e}")        
         logger.put_msg("E",f"putHandler.putSMSData ERROR: {e}")
     finally:
         if common.debug == True:
