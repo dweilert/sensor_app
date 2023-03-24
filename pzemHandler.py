@@ -178,10 +178,10 @@ def find_usb_ports():
                     logger.put_msg("I",f"Sensor 4 set to USB port: {common.portD}")
             
             # Decrease line to get
-            nl = nl + 1
+            ln = ln + 1
 
             # No more lines to process
-            if nl >= hl:
+            if ln >= hl:
                 logger.put_msg("I","---")
                 break
                         
