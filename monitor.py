@@ -83,7 +83,7 @@ def mainLine():
             rtn.append(pzemHandler.monitor(common.portB,"D"))           
             # Evaluate the collected sensor data
             if config.get("Debug","show_regs") == "true":
-                print(f"All return Regs: {rtn}")
+                logger.put_msg("D",f"All return Regs: {rtn}")
             checkThresholds.check(rtn)
             rtn = []
             ups = upsHandler.getUPSInfo()

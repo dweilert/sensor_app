@@ -94,7 +94,7 @@ def monitor(usbPort, id):
         #print(request.registers)
         rtn = request.registers
         if config.get("Debug","show_regs") == "true":
-            print(f"ID: {id} Regs {request.registers}")
+            logger.put_msg("D",f"ID: {id} Regs {request.registers}")
         client.close()
         return rtn
     except Exception as e:
