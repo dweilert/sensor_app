@@ -96,6 +96,7 @@ def monitor(usbPort, id):
         if config.get("Debug","show_regs") == "true":
             print(f"ID: {id} Regs {request.registers}")
         client.close()
+        return rtn
     except Exception as e:
         logger.put_msg("E",f"pzemHandler.monitor Exception: {e}")
 
