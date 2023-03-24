@@ -42,8 +42,6 @@ oldData = 0
 
 def getParms():
     try:
-        print("common.log_dir: ",common.log_dir)
-        print("common.log_base: ",common.log_base)
         if common.log_dir[-1] != "/":
             common.log_dir = common.log_dir + "/"
 
