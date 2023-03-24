@@ -63,12 +63,12 @@ def saveData(data, id):
                 if common.pumpA_status == "ON":
                     common.pumpA_stop = row[1]
                     energy = int(common.pumpA_energy_latest) - int(common.pumpA_energy_start)
-                    record['pump'] = "A"
-                    record['start_date'] = common.pumpA_start 
-                    record['start_energy'] = common.pumpA_energy_start 
-                    record['end_date'] = common.pumpA_stop 
-                    record['end_energy'] = common.pumpA_energy_latest 
-                    record['used_energy'] = str(energy)
+                    record['p'] = "A"                                          # pump
+                    record['sd'] = common.pumpA_start                          # start_date
+                    record['se'] = common.pumpA_energy_start                   # start energy 
+                    record['ee'] = common.pumpA_stop                           # end date 
+                    record['ee'] = common.pumpA_energy_latest                  # end energy
+                    record['ue'] = str(energy)                                 # used energy
                     # Reset pump data
                     common.pumpA_status = "OFF"
                     common.pumpA_start = ""
@@ -91,12 +91,12 @@ def saveData(data, id):
                 if common.pumpB_status == "ON":
                     common.pumpB_stop = row[1]
                     energy = int(common.pumpB_energy_latest) - int(common.pumpB_energy_start)
-                    record['pump'] = "B"
-                    record['start_date'] = common.pumpB_start 
-                    record['start_energy'] = common.pumpB_energy_start 
-                    record['end_date'] = common.pumpB_stop 
-                    record['end_energy'] = common.pumpB_energy_latest 
-                    record['used_energy'] = str(energy)
+                    record['p'] = "B"                                          # pump
+                    record['sd'] = common.pumpB_start                          # start_date
+                    record['se'] = common.pumpB_energy_start                   # start energy 
+                    record['ee'] = common.pumpB_stop                           # end date 
+                    record['ee'] = common.pumpB_energy_latest                  # end energy
+                    record['ue'] = str(energy)                                 # used energy
                     # Reset pump data
                     common.pumpB_status = "OFF"
                     common.pumpB_start = ""
