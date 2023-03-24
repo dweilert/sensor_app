@@ -85,6 +85,8 @@ def monitor(usbPort, id):
         dataHandler.saveData(request.registers, id)
         #print(request.registers)
         rtn = request.registers
+        if config.get("Debug","show_regs") == "true":
+            print(f"ID: {id} Regs {request.registers}")
     except Exception as e:
         logger.put_msg("E",f"pzemHandler.monitor Exception: {e}")
         time.sleep(3)
@@ -117,8 +119,7 @@ def find_usb_ports():
         lines = newlines
         newlines = ""
         hl = len(lines)
-        hl = hl - 1
-        cnt = 0
+        ln = 1
 
         common.portA = "na"
         common.portB = "na"
@@ -129,48 +130,58 @@ def find_usb_ports():
         portB_sig = config.get("USBPortSignatures","portB")
         portC_sig = config.get("USBPortSignatures","portC")
         portD_sig = config.get("USBPortSignatures","portD")
+        disconn = config.get("USBPortSignatures","disconn")
             
         while True:
-            line = lines[hl]
+            line = lines[ln]
+            if disconn in line:
+                chkUSB = '/dev/ttyUSB' + line[-1]
+                print(f"Look for : {chkUSB}")
+
+                if common.portA == chkUSB:
+                    logger.put_msg("I",f"Sensor 1 disconned from USB port: {chkUSB}")
+                    common.portA = "na"
+                elif common.portB == chkUSB:
+                    logger.put_msg("I",f"Sensor 2 disconned from USB port: {chkUSB}")
+                    common.portB = "na"
+                elif common.portC == chkUSB:
+                    logger.put_msg("I",f"Sensor 3 disconned from USB port: {chkUSB}")
+                    common.portC = "na"
+                elif common.portD == chkUSB:
+                    logger.put_msg("I",f"Sensor 4 disconned from USB port: {chkUSB}")
+                    common.portD = "na"
+
             if portA_sig in line:
-                if len(line) > 65:
-                    pid = line[65:72]
-                    common.portA = "/dev/" + pid
-                    logger.put_msg("I",f"Sensor 1 set to USB port: {common.portA}")
-                    cnt = cnt + 1
+                if common.portA == "na":
+                    if len(line) > 65:
+                        pid = line[65:72]
+                        common.portA = "/dev/" + pid
+                        logger.put_msg("I",f"Sensor 1 set to USB port: {common.portA}")
         
             if portB_sig in line:
-                if len(line) > 65:
-                    pid = line[65:72]
-                    common.portB = "/dev/" + pid
-                    logger.put_msg("I",f"Sensor 2 set to USB port: {common.portB}")
-                    cnt = cnt + 1
+                if common.portB == "na":
+                    if len(line) > 65:
+                        pid = line[65:72]
+                        common.portB = "/dev/" + pid
+                        logger.put_msg("I",f"Sensor 2 set to USB port: {common.portB}")
 
             if portC_sig in line:
                 if len(line) > 65:
                     pid = line[65:72]
                     common.portC = "/dev/" + pid
                     logger.put_msg("I",f"Sensor 3 set to USB port: {common.portC}")
-                    cnt = cnt + 1            
 
             if portD_sig in line:
                 if len(line) > 65:
                     pid = line[65:72]
                     common.portD = "/dev/" + pid
                     logger.put_msg("I",f"Sensor 4 set to USB port: {common.portD}")
-                    cnt = cnt + 1
-
-            if cnt == 4:
-                logger.put_msg("I",f"Located {cnt} sensors")
-                logger.put_msg("I","---")
-                break
             
             # Decrease line to get
-            hl = hl - 1
+            nl = nl + 1
 
             # No more lines to process
-            if hl < 2:
-                logger.put_msg("I","Did NOT locate all sensors")
+            if nl >= hl:
                 logger.put_msg("I","---")
                 break
                         
