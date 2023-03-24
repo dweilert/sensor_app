@@ -79,7 +79,7 @@ def put_msg(lvl, msg):
         elif lvl == "e" or lvl == "error" or lvl == "E":
             lvl = "(E) : "
         elif lvl == "d" or lvl == "debug" or lvl == "D":
-            lvl = "(D) : "
+            lvl = " (D) : "
             save = False
 
         # Is message saved or output to console
