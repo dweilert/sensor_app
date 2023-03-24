@@ -95,12 +95,9 @@ def monitor(usbPort, id):
         rtn = request.registers
         if config.get("Debug","show_regs") == "true":
             print(f"ID: {id} Regs {request.registers}")
+        client.close()
     except Exception as e:
         logger.put_msg("E",f"pzemHandler.monitor Exception: {e}")
-        time.sleep(3)
-    finally:
-        client.close()
-        return rtn
 
 """
 Determine which ttyUSB* ports are supporting the connected PZEM modules.
