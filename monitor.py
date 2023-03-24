@@ -77,14 +77,10 @@ def mainLine():
         rtn = []
         while True:
             iCnt = iCnt + 1
-            if common.portA != "na": 
-                rtn.append(pzemHandler.monitor(common.portA,"A"))
-            if common.portB != "na": 
-                rtn.append(pzemHandler.monitor(common.portB,"B"))
-            if common.portC != "na": 
-                rtn.append(pzemHandler.monitor(common.portB,"C")) 
-            if common.portD != "na": 
-                rtn.append(pzemHandler.monitor(common.portB,"D"))           
+            rtn.append(pzemHandler.monitor(common.portA,"A"))
+            rtn.append(pzemHandler.monitor(common.portB,"B"))
+            rtn.append(pzemHandler.monitor(common.portB,"C")) 
+            rtn.append(pzemHandler.monitor(common.portB,"D"))           
             # Evaluate the collected sensor data
             checkThresholds.check(rtn)
             rtn = []
