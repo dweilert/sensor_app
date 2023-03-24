@@ -66,7 +66,7 @@ def saveData(data, id):
                     record['p'] = "A"                                          # pump
                     record['sd'] = common.pumpA_start                          # start_date
                     record['se'] = common.pumpA_energy_start                   # start energy 
-                    record['ee'] = common.pumpA_stop                           # end date 
+                    record['ed'] = common.pumpA_stop                           # end date 
                     record['ee'] = common.pumpA_energy_latest                  # end energy
                     record['ue'] = str(energy)                                 # used energy
                     # Reset pump data
@@ -94,7 +94,7 @@ def saveData(data, id):
                     record['p'] = "B"                                          # pump
                     record['sd'] = common.pumpB_start                          # start_date
                     record['se'] = common.pumpB_energy_start                   # start energy 
-                    record['ee'] = common.pumpB_stop                           # end date 
+                    record['ed'] = common.pumpB_stop                           # end date 
                     record['ee'] = common.pumpB_energy_latest                  # end energy
                     record['ue'] = str(energy)                                 # used energy
                     # Reset pump data
