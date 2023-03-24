@@ -78,24 +78,24 @@ def mainLine():
         while True:
             iCnt = iCnt + 1
             rtn = []
-            rtn.append(pzemHandler.monitor(common.portA,"A"))
+            rtn = pzemHandler.monitor(common.portA,"A")
             if config.get("Debug","show_regs") == "true":
-                logger.put_msg("D",f"All return Regs: {rtn}")
+                logger.put_msg("D",f"Port A Regs: {rtn}")
             checkThresholds.check(rtn)
             rtn = []
-            rtn.append(pzemHandler.monitor(common.portB,"B"))
+            rtn = pzemHandler.monitor(common.portB,"B")
             if config.get("Debug","show_regs") == "true":
-                logger.put_msg("D",f"All return Regs: {rtn}")
+                logger.put_msg("D",f"Port B Regs: {rtn}")
             checkThresholds.check(rtn)
             rtn = []
-            rtn.append(pzemHandler.monitor(common.portB,"C")) 
+            rtn = pzemHandler.monitor(common.portB,"C") 
             if config.get("Debug","show_regs") == "true":
-                logger.put_msg("D",f"All return Regs: {rtn}")
+                logger.put_msg("D",f"Port C Regs: {rtn}")
             checkThresholds.check(rtn)
             rtn = []
-            rtn.append(pzemHandler.monitor(common.portB,"D"))           
+            rtn = pzemHandler.monitor(common.portB,"D")          
             if config.get("Debug","show_regs") == "true":
-                logger.put_msg("D",f"All return Regs: {rtn}")
+                logger.put_msg("D",f"Port D Regs: {rtn}")
             checkThresholds.check(rtn)
 
             ups = upsHandler.getUPSInfo()

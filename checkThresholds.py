@@ -69,27 +69,27 @@ def check(pzem_data):
         # Increment counters and check against thresholds.
 
         # pumpA, 
-        if (pzem_data[0][0] == "nodata"):
+        if (pzem_data[0] == "nodata"):
             common.aNoD = common.aNoD + 1
             if common.aNoD > common.no_data_max:
                 common.smsMsg.append("Pump A" + NO_DATA_MSG)
                 common.aNoD = 0
         else:
-            msg = voltage(pzem_data[0],"A")
+            msg = voltage(pzem_data,"A")
             checkMsg(msg)
-            msg = power(pzem_data[0],"A")
+            msg = power(pzem_data,"A")
             checkMsg(msg)
        
         # pumpB
-        if (pzem_data[0][0] == "nodata"):
+        if (pzem_data[0] == "nodata"):
             common.bNoD = common.bNoD + 1
             if common.bNoD > common.no_data_max:
                 common.smsMsg.append("Pump B" + NO_DATA_MSG)
                 common.bNoD = 0
         else:
-            msg = voltage(pzem_data[0],"B")
+            msg = voltage(pzem_data,"B")
             checkMsg(msg)
-            msg = power(pzem_data[0],"B")
+            msg = power(pzem_data,"B")
             checkMsg(msg)
 
         # pumpC
@@ -132,20 +132,20 @@ def checkSMS():
         logger.put_msg("E",f"checkThresholds.checkSMS ERROR: {e}")   
 	     
 
-def voltage(data,pump):
+def voltage(data, id):
     try:
         # Check if pumpA has voltage/electricity
         if (data[0] == 0):
-            if pump == "A":
+            if id == "A":
                 common.aNoV = common.aNoV + 1
                 if common.aNoV > common.no_voltage_max:
                     common.aNoV = 0
-                    return "Pump " + pump + NO_VOLTAGE_MSG
+                    return "Pump " + id + NO_VOLTAGE_MSG
             else:
                 common.bNoV = common.bNoV + 1
                 if common.bNoV > common.no_voltage_max:
                     common.bNoV = 0
-                    return "Pump " + pump + NO_VOLTAGE_MSG
+                    return "Pump " + id + NO_VOLTAGE_MSG
 
         return "noMsg"
     except Exception as e:
@@ -153,20 +153,20 @@ def voltage(data,pump):
 	
 	
 # Check if pump has powered on lately
-def power(data,pump):
+def power(data,id):
     try:
         # Check if pumpA has power
         if (data[1] == 0):
-            if pump == "A":
+            if id == "A":
                 common.aNoP = common.aNoP + 1
                 if common.aNoP > common.no_power_max:
                     common.aNoP = 0
-                    return "Pump " + pump + NO_POWER_MSG
+                    return "Pump " + id + NO_POWER_MSG
             else:
                 common.bNoP = common.bNoP + 1
                 if common.bNoP > common.no_power_max:
                     common.bNoP = 0
-                    return "Pump " + pump + NO_POWER_MSG
+                    return "Pump " + id + NO_POWER_MSG
 
         return "noMsg"
     except Exception as e:
