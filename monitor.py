@@ -98,7 +98,7 @@ def mainLine():
             ups = upsHandler.getUPSInfo()
             # Log iteration and wait
 
-            print("Interval count: " + str(iCnt), end="")
+            print(f"Interval count: {iCnt}", end="")
             time.sleep(int(config.get("Interval","wait_to_check_sensors")))
             
     except Exception as e:
