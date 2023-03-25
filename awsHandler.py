@@ -41,14 +41,14 @@ def putSensorData(sdata):
     try:
         sdata["id"] = id
         sdata = sdata
-        if config.get("Debug","show_aws_info") == "true":
+        if config.get("Debug","show_aws_put_info") == "true":
             logger.put_msg("D",f"putHandler.putSensorData sdata: {sdata}")
         url = sensorUrl
         response = requests.put(url, json=sdata)
-        if config.get("Debug","show_aws_info") == "true":
+        if config.get("Debug","show_aws_put_info") == "true":
             logger.put_msg("D",f"putHandler.putSensorData response: {response}")
         res = response.json()
-        if config.get("Debug","show_aws_info") == "true":
+        if config.get("Debug","show_aws_put_info") == "true":
             logger.put_msg("D",f"putHandler.putSensorData res: {res}")
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
@@ -57,7 +57,7 @@ def putSensorData(sdata):
         logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
         logger.put_msg("E",f"awsHandler.putSensorData ERROR: {e}")
     finally:
-        if config.get("Debug","show_aws_info") == "true":
+        if config.get("Debug","show_aws_put_info") == "true":
             logger.put_msg("D","putHandler.putSensorData finished")
 
 
@@ -68,14 +68,14 @@ def putSMSData(mdata):
     try:
         mdata["id"] = id
         mdata = mdata
-        if config.get("Debug","show_aws_info") == "true":
+        if config.get("Debug","show_aws_put_info") == "true":
             logger.put_msg("D",f"putHandler.putSMSData sdata: {mdata}")
         url = smsUrl
         response = requests.put(url, json=mdata)
-        if config.get("Debug","show_aws_info") == "true":
+        if config.get("Debug","show_aws_put_info") == "true":
             logger.put_msg("D",f"putHandler.putSMSData response: {response}")
         res = response.json()
-        if config.get("Debug","show_aws_info") == "true":
+        if config.get("Debug","show_aws_put_info") == "true":
             logger.put_msg("D",f"putHandler.putSMSData res: {res}")
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
@@ -84,7 +84,7 @@ def putSMSData(mdata):
         logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
         logger.put_msg("E",f"awsHandler.putSMSData ERROR: {e}")
     finally:
-        if config.get("Debug","show_aws_info") == "true":
+        if config.get("Debug","show_aws_put_info") == "true":
             logger.put_msg("D","putHandler.putSMSData finished")
 
 
