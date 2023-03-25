@@ -175,6 +175,9 @@ def checkSensors():
             smsHandler.sendSMS(config.get("Developer","phones"), msgOut, "Developer")
             cda.sensor_connect_error_msg_cnt = cda.sensor_connect_error_msg_cnt + 1
         else:
+            print(f"cda.sensor_connect_error_msg_cnt {cda.sensor_connect_error_msg_cnt}")
+            val = config.get("Pzem","connect_error_reset_count")
+            print(f"connect_error_reset_count {val}")
             if cda.sensor_connect_error_msg_cnt > int(config.get("Pzem","connect_error_reset_count")):
                 cda.sensor_connect_error_msg_cnt = 0
     
