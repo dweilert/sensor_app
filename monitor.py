@@ -76,26 +76,21 @@ def mainLine():
         rtn = ""
         while True:
             iCnt = iCnt + 1
-            
-            rtn = ""
             rtn = pzemHandler.monitor(cda.portA,"A")
             if config.get("Debug","show_regs") == "true":
                 logger.put_msg("D",f"Port A Regs: {rtn}")
             checkThresholds.check(rtn,"A")
             
-            rtn = ""
             rtn = pzemHandler.monitor(cda.portB,"B")
             if config.get("Debug","show_regs") == "true":
                 logger.put_msg("D",f"Port B Regs: {rtn}")
             checkThresholds.check(rtn,"B")
             
-            rtn = ""
             rtn = pzemHandler.monitor(cda.portC,"C") 
             if config.get("Debug","show_regs") == "true":
                 logger.put_msg("D",f"Port C Regs: {rtn}")
             checkThresholds.check(rtn,"C")
             
-            rtn = ""
             rtn = pzemHandler.monitor(cda.portD,"D")          
             if config.get("Debug","show_regs") == "true":
                 logger.put_msg("D",f"Port D Regs: {rtn}")
