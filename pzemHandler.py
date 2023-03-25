@@ -142,16 +142,20 @@ def find_usb_ports():
                 chkUSB = '/dev/ttyUSB' + line[-1]
 
                 if cda.portA == chkUSB:
-                    logger.put_msg("I",f"Sensor 1 disconned from USB port: {chkUSB}")
+                    if config.get("Debug","show_dmesg") == "true":
+                        logger.put_msg("I",f"Sensor 1 disconned from USB port: {chkUSB}")
                     cda.portA = "na"
                 elif cda.portB == chkUSB:
-                    logger.put_msg("I",f"Sensor 2 disconned from USB port: {chkUSB}")
+                    if config.get("Debug","show_dmesg") == "true":
+                        logger.put_msg("I",f"Sensor 2 disconned from USB port: {chkUSB}")
                     cda.portB = "na"
                 elif cda.portC == chkUSB:
-                    logger.put_msg("I",f"Sensor 3 disconned from USB port: {chkUSB}")
+                    if config.get("Debug","show_dmesg") == "true":    
+                        logger.put_msg("I",f"Sensor 3 disconned from USB port: {chkUSB}")
                     cda.portC = "na"
                 elif cda.portD == chkUSB:
-                    logger.put_msg("I",f"Sensor 4 disconned from USB port: {chkUSB}")
+                    if config.get("Debug","show_dmesg") == "true":
+                        logger.put_msg("I",f"Sensor 4 disconned from USB port: {chkUSB}")
                     cda.portD = "na"
 
             if portA_sig in line:
@@ -159,26 +163,32 @@ def find_usb_ports():
                     if len(line) > 65:
                         pid = line[65:72]
                         cda.portA = "/dev/" + pid
-                        logger.put_msg("I",f"Sensor 1 set to USB port: {cda.portA}")
+                        if config.get("Debug","show_dmesg") == "true":
+                            logger.put_msg("I",f"Sensor 1 set to USB port: {cda.portA}")
         
             if portB_sig in line:
                 if cda.portB == "na":
                     if len(line) > 65:
                         pid = line[65:72]
                         cda.portB = "/dev/" + pid
-                        logger.put_msg("I",f"Sensor 2 set to USB port: {cda.portB}")
+                        if config.get("Debug","show_dmesg") == "true":
+                            logger.put_msg("I",f"Sensor 2 set to USB port: {cda.portB}")
 
             if portC_sig in line:
-                if len(line) > 65:
-                    pid = line[65:72]
-                    cda.portC = "/dev/" + pid
-                    logger.put_msg("I",f"Sensor 3 set to USB port: {cda.portC}")
+                if cda.portC == "na":
+                    if len(line) > 65:
+                        pid = line[65:72]
+                        cda.portC = "/dev/" + pid
+                        if config.get("Debug","show_dmesg") == "true":
+                            logger.put_msg("I",f"Sensor 3 set to USB port: {cda.portC}")
 
             if portD_sig in line:
-                if len(line) > 65:
-                    pid = line[65:72]
-                    cda.portD = "/dev/" + pid
-                    logger.put_msg("I",f"Sensor 4 set to USB port: {cda.portD}")
+                if cda.portD == "na":
+                    if len(line) > 65:
+                        pid = line[65:72]
+                        cda.portD = "/dev/" + pid
+                        if config.get("Debug","show_dmesg") == "true":
+                            logger.put_msg("I",f"Sensor 4 set to USB port: {cda.portD}")
             
             # Decrease line to get
             ln = ln + 1

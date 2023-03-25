@@ -70,5 +70,9 @@ def setCommons():
         cda.log_base = configI.get("Log","log_base")
         cda.log_sms = configI.get("Log","log_sms_number")
 
+        print(f"cda.log_dir {cda.log_dir}")
+        print(f"cda.log_dir {cda.log_base}")
+        print(f"cda.log_dir {cda.log_sms}")
+
     except Exception as e:
         logger.put_msg("E",f"config.setCommons ERROR: {e}")
