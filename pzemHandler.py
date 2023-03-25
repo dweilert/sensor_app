@@ -57,19 +57,14 @@ Active Energy: Measuring range: 0-999.99 kWh, Resolution: 1 Wh, Measurment accur
 
 """
 
-import os
-import time
 import subprocess
 import sys
 from datetime import datetime
-# --------------------------------------------------------------------------- #
-# import the pymodbus client implementations
-# --------------------------------------------------------------------------- #
 from pymodbus.client import ModbusSerialClient
 from pymodbus.constants import Defaults
 
 import config
-import common
+import commonDataArea as cda
 import dataHandler
 import logger
 
@@ -78,13 +73,13 @@ def monitor(usbPort, id):
     #Get register data
     try:
         rtn = ["nodata"]
-        if common.portA == "na" and id == "A": 
+        if cda.portA == "na" and id == "A": 
             return rtn
-        if common.portB == "na" and id == "B": 
+        if cda.portB == "na" and id == "B": 
             return rtn
-        if common.portC == "na" and id == "C":
+        if cda.portC == "na" and id == "C":
             return rtn
-        if common.portD == "na" and id == "D":
+        if cda.portD == "na" and id == "D":
             return rtn   
              
         client = ModbusSerialClient(port=usbPort,timeout=4,baudrate=9600,bytesize=8,parity="N",stopbits=1)
@@ -128,10 +123,10 @@ def find_usb_ports():
         hl = len(lines)
         ln = 1
 
-        common.portA = "na"
-        common.portB = "na"
-        common.portC = "na"
-        common.portD = "na"  
+        cda.portA = "na"
+        cda.portB = "na"
+        cda.portC = "na"
+        cda.portD = "na"  
         
         portA_sig = config.get("USBPortSignatures","portA")
         portB_sig = config.get("USBPortSignatures","portB")
@@ -146,44 +141,44 @@ def find_usb_ports():
             if disconn in line:
                 chkUSB = '/dev/ttyUSB' + line[-1]
 
-                if common.portA == chkUSB:
+                if cda.portA == chkUSB:
                     logger.put_msg("I",f"Sensor 1 disconned from USB port: {chkUSB}")
-                    common.portA = "na"
-                elif common.portB == chkUSB:
+                    cda.portA = "na"
+                elif cda.portB == chkUSB:
                     logger.put_msg("I",f"Sensor 2 disconned from USB port: {chkUSB}")
-                    common.portB = "na"
-                elif common.portC == chkUSB:
+                    cda.portB = "na"
+                elif cda.portC == chkUSB:
                     logger.put_msg("I",f"Sensor 3 disconned from USB port: {chkUSB}")
-                    common.portC = "na"
-                elif common.portD == chkUSB:
+                    cda.portC = "na"
+                elif cda.portD == chkUSB:
                     logger.put_msg("I",f"Sensor 4 disconned from USB port: {chkUSB}")
-                    common.portD = "na"
+                    cda.portD = "na"
 
             if portA_sig in line:
-                if common.portA == "na":
+                if cda.portA == "na":
                     if len(line) > 65:
                         pid = line[65:72]
-                        common.portA = "/dev/" + pid
-                        logger.put_msg("I",f"Sensor 1 set to USB port: {common.portA}")
+                        cda.portA = "/dev/" + pid
+                        logger.put_msg("I",f"Sensor 1 set to USB port: {cda.portA}")
         
             if portB_sig in line:
-                if common.portB == "na":
+                if cda.portB == "na":
                     if len(line) > 65:
                         pid = line[65:72]
-                        common.portB = "/dev/" + pid
-                        logger.put_msg("I",f"Sensor 2 set to USB port: {common.portB}")
+                        cda.portB = "/dev/" + pid
+                        logger.put_msg("I",f"Sensor 2 set to USB port: {cda.portB}")
 
             if portC_sig in line:
                 if len(line) > 65:
                     pid = line[65:72]
-                    common.portC = "/dev/" + pid
-                    logger.put_msg("I",f"Sensor 3 set to USB port: {common.portC}")
+                    cda.portC = "/dev/" + pid
+                    logger.put_msg("I",f"Sensor 3 set to USB port: {cda.portC}")
 
             if portD_sig in line:
                 if len(line) > 65:
                     pid = line[65:72]
-                    common.portD = "/dev/" + pid
-                    logger.put_msg("I",f"Sensor 4 set to USB port: {common.portD}")
+                    cda.portD = "/dev/" + pid
+                    logger.put_msg("I",f"Sensor 4 set to USB port: {cda.portD}")
             
             # Decrease line to get
             ln = ln + 1
@@ -191,13 +186,17 @@ def find_usb_ports():
             # No more lines to process
             if ln >= hl:
                 logger.put_msg("I","------------")
-                logger.put_msg("I",f"Sensor 1 usb port: {common.portA}")
-                logger.put_msg("I",f"Sensor 2 usb port: {common.portB}")
-                logger.put_msg("I",f"Sensor 3 usb port: {common.portC}")
-                logger.put_msg("I",f"Sensor 4 usb port: {common.portD}")
+                logger.put_msg("I",f"Sensor 1 usb port: {cda.portA}")
+                logger.put_msg("I",f"Sensor 2 usb port: {cda.portB}")
+                logger.put_msg("I",f"Sensor 3 usb port: {cda.portC}")
+                logger.put_msg("I",f"Sensor 4 usb port: {cda.portD}")
                 logger.put_msg("I","------------")
                 break
                         
         return
     except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
         logger.put_msg("E",f"pzemHandler.find_usb_ports Exception: {e}")

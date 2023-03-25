@@ -32,13 +32,11 @@ GENERAL INFORMATION:
         sudo pip3 install twilio    # Install Twilio 
 """
 
-import os
-from twilio.rest import Client
+import sys
 import time
 from datetime import datetime
-import json
+from twilio.rest import Client
 
-import common
 import config
 import awsHandler
 import logger
@@ -47,29 +45,9 @@ import logger
 # Find your Account SID and Auth Token at twilio.com/console
 # and set the environment variables. See http://twil.io/secure
 
-common.sid = ""
-common.token = ""
-common.from_number = ""
-common.test_number = ""
-common.test_message = ""
-common.skip_sending = ""
-common.msg_header = ""
-
-def getParms():
-    try:
-        common.sid = config.get("Twilio","accountSID")
-        common.token = config.get("Twilio","authToken")
-        common.from_number = config.get("Twilio","from_number")
-        common.test_number = config.get("Twilio","test_number")
-        common.test_message = config.get("Twilio","test_message")
-        common.skip_sending = config.get("Twilio","skip_sending")
-        common.msg_header = config.get("Twilio","msg_header")+" "
-    except Exception as e:
-        print(f"Get SMS parms error: {e}")    
 
 def sendSMS(toNumbers, msgBody, who):
     try:
-        getParms()
         if "," in toNumbers:
             newNum = toNumbers.split(",")
             toNumbers = newNum
@@ -80,7 +58,7 @@ def sendSMS(toNumbers, msgBody, who):
 
         now = datetime.now()
         fmtDate = now.strftime("%m/%d/%Y at %H:%M:%S")
-        msg = common.msg_header + fmtDate
+        msg = config.get("Twilio","msg_header") + fmtDate
         cnt = 1
 
         # Build the message to send
@@ -88,16 +66,16 @@ def sendSMS(toNumbers, msgBody, who):
             msg = msg + "(" + str(cnt) + ") " + m + " "
             cnt = cnt + 1
 	
-        client = Client(common.sid, common.token)    
+        client = Client(config.get("Twilio","accountSID"), config.get("Twilio","authToken"))    
         first_msg = True
         for number in toNumbers:
             #print("Send message to: ", number)
-            if common.skip_sending == "TRUE" or common.skip_sending == "True" or common.skip_sending == "true":
+            if config.get("Twilio","skip_sending") == "true":
                 logger.put_msg("I","Skipped sending SMS: " + msg )
             else:
                 client.messages.create(
                     to=number, 
-                    from_=common.from_number, 
+                    from_=config.get("Twilio","from_number"), 
                     body=msg)
                 if first_msg == True:
                     first_msg = False				    	    
@@ -110,10 +88,14 @@ def sendSMS(toNumbers, msgBody, who):
                 time.sleep(1)
 
     except Exception as e:
-        print("SMS error: ", e)
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
+        logger.put_msg("E",f"smsHandler.sendSMS ERROR: {e}")
 
     finally:
         return msg
 
 def testSMS():    
-    sendSMS(common.test_number, common.test_message, "Test")
+    sendSMS(config.get("Twilio","test_number"), config.get("Twilio","test_message"), "Test")

@@ -25,12 +25,7 @@ LICENSE:
     GNU General Public License for more details.
 
 """
-# dataHandler
-file_pumpA = ""
-file_pumpB = ""
-file_pumpC = ""
-file_pumpD = ""
-file_outdir = ""
+
 
 # logger
 log_dir = ""

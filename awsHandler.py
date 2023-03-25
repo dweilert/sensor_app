@@ -30,10 +30,8 @@ LICENSE:
 import sys
 import requests
 import time
-import json
 from datetime import datetime
 
-import common
 import config
 import logger
 
@@ -43,27 +41,23 @@ def putSensorData(sdata):
     try:
         sdata["id"] = id
         sdata = sdata
-        if common.debug == True:
+        if config.get("Debug","show_aws_info") == "true":
             logger.put_msg("D",f"putHandler.putSensorData sdata: {sdata}")
         url = sensorUrl
         response = requests.put(url, json=sdata)
-        if common.debug == True:
+        if config.get("Debug","show_aws_info") == "true":
             logger.put_msg("D",f"putHandler.putSensorData response: {response}")
         res = response.json()
-        if common.debug == True:
+        if config.get("Debug","show_aws_info") == "true":
             logger.put_msg("D",f"putHandler.putSensorData res: {res}")
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-
-        logger.put_msg("E",f"Exception type: {exception_type}")
-        logger.put_msg("E",f"File name: {filename}")
-        logger.put_msg("E",f"Line number: {line_number}")
-        logger.put_msg("E",f"checkThresholds.check ERROR: {e}")
-        logger.put_msg("E",f"putHandler.putSensorData ERROR: {e}")
+        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
+        logger.put_msg("E",f"awsHandler.putSensorData ERROR: {e}")
     finally:
-        if common.debug == True:
+        if config.get("Debug","show_aws_info") == "true":
             logger.put_msg("D","putHandler.putSensorData finished")
 
 
@@ -74,27 +68,23 @@ def putSMSData(mdata):
     try:
         mdata["id"] = id
         mdata = mdata
-        if common.debug == True:
+        if config.get("Debug","show_aws_info") == "true":
             logger.put_msg("D",f"putHandler.putSMSData sdata: {mdata}")
         url = smsUrl
         response = requests.put(url, json=mdata)
-        if common.debug == True:
+        if config.get("Debug","show_aws_info") == "true":
             logger.put_msg("D",f"putHandler.putSMSData response: {response}")
         res = response.json()
-        if common.debug == True:
+        if config.get("Debug","show_aws_info") == "true":
             logger.put_msg("D",f"putHandler.putSMSData res: {res}")
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-
-        logger.put_msg("E",f"Exception type: {exception_type}")
-        logger.put_msg("E",f"File name: {filename}")
-        logger.put_msg("E",f"Line number: {line_number}")
-        logger.put_msg("E",f"checkThresholds.check ERROR: {e}")        
-        logger.put_msg("E",f"putHandler.putSMSData ERROR: {e}")
+        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
+        logger.put_msg("E",f"awsHandler.putSMSData ERROR: {e}")
     finally:
-        if common.debug == True:
+        if config.get("Debug","show_aws_info") == "true":
             logger.put_msg("D","putHandler.putSMSData finished")
 
 

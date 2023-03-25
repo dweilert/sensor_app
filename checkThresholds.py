@@ -27,76 +27,120 @@ LICENSE:
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
-GENERAL INFORMATION:
-    PREREQUISITES
-        n/a
 """
 
-import os
 import sys
 import config
-import common
+import commonDataArea as cda
 import smsHandler
-import dataHandler
 import logger
 
 # Voltage
-common.aNoV = 0
-common.bNoV = 0
-common.no_voltage_max = 1
-NO_VOLTAGE_MSG = " has lost electricity"
+cda.aNoV = 0
+cda.bNoV = 0
+cda.cNoV = 0
+cda.dNoV = 0
 
 # Power
-common.aNoP = 0
-common.bNoP = 0
-common.no_power_max = 1
-NO_POWER_MSG = " has not run lately"
+cda.aNoP = 0
+cda.bNoP = 0
+cda.cNoP = 0
+cda.dNoP = 0
 
 # Data
-common.aNoD = 0
-common.bNoD = 0
-common.no_data_max = 1
-NO_DATA_MSG = " is not returning sense data"
+cda.aNoD = 0
+cda.bNoD = 0
+cda.cNoD = 0
+cda.dNoD = 0
+
+cda.overall_msg_sent = False
+cda.overall_msg_cnt = 0
+cda.alarm_msg_sent = False
+cda.alarm_msg_cnt = 0
 
 # SMS message array
-common.smsMsg = []
+cda.smsMsg = []
 	
 	
-def check(pzem_data):
+def check(pzem_data,id):
     try:
         # Clear SMS messages
-        common.smsMsg = []
+        cda.smsMsg = []
         # Increment counters and check against thresholds.
 
-        # pumpA, 
-        if (pzem_data[0] == "nodata"):
-            common.aNoD = common.aNoD + 1
-            if common.aNoD > common.no_data_max:
-                common.smsMsg.append("Pump A" + NO_DATA_MSG)
-                common.aNoD = 0
-        else:
-            msg = voltage(pzem_data,"A")
-            checkMsg(msg)
-            msg = power(pzem_data,"A")
-            checkMsg(msg)
+        # pumpA,
+        if id == "A": 
+            if (pzem_data[0] == "nodata"):
+                cda.aNoD = cda.aNoD + 1
+                if cda.aNoD > int(config.get("Limits","no_data")):
+                    cda.smsMsg.append("Pump A" + " " + config.get("Limits","no_data_msg"))
+                    cda.aNoD = 0
+            else:
+                msg = voltage(pzem_data,"A")
+                if msg != "noMsg":
+                    cda.smsMsg.append(msg)                 
+                    cda.aNoV = 0
+
+                msg = power(pzem_data,"A")
+                if msg != "noMsg":
+                    cda.smsMsg.append(msg)                 
+                    cda.aNoP = 0
        
         # pumpB
-        if (pzem_data[0] == "nodata"):
-            common.bNoD = common.bNoD + 1
-            if common.bNoD > common.no_data_max:
-                common.smsMsg.append("Pump B" + NO_DATA_MSG)
-                common.bNoD = 0
-        else:
-            msg = voltage(pzem_data,"B")
-            checkMsg(msg)
-            msg = power(pzem_data,"B")
-            checkMsg(msg)
+        if id == "B":        
+            if (pzem_data[0] == "nodata"):
+                cda.bNoD = cda.bNoD + 1
+                if cda.bNoD > int(config.get("Limits","no_data")):
+                    cda.smsMsg.append("Pump B" + " " + config.get("Limits","no_data_msg"))
+                    cda.bNoD = 0
+            else:
+                msg = voltage(pzem_data,"B")
+                if msg != "noMsg":
+                    cda.smsMsg.append(msg)                 
+                    cda.bNoV = 0
+                msg = power(pzem_data,"B")
+                if msg != "noMsg":
+                    cda.smsMsg.append(msg)                 
+                    cda.bNoP = 0
 
-        # pumpC
-        #TO DO: Add logic to check this sensor data
+        # alarm
+        if id == "C": 
+            if (pzem_data[0] == "nodata"):
+                cda.cNoD = cda.cNoD + 1
+                if cda.cNoD > int(config.get("Limits","no_data")):
+                    cda.smsMsg.append("Alarm" + " " + config.get("Limits","no_data_msg"))
+                    cda.cNoD = 0
+                    cda.alarm_msg_cnt = 0
+            else:
+                if (pzem_data[1] > 0):
+                    if cda.alarm_msg_sent == False:
+                        cda.smsMsg.append(config.get("Messages","alarm_msg"))
+                        cda.alarm_msg_sent = True
+                    else:
+                        cda.alarm_msg_cnt = cda.alarm_msg_cnt + 1
+                        # If problem is not resolved within an hour reset
+                        if cda.alarm_msg_cnt > int(config.get("Limits","reset_alarm_msg_sent")):
+                            cda.alarm_msg_sent = False
+                            cda.alarm_msg_cnt = 0
 
-        # pumpD
-        #TO DO: Add logic to check this sensor data
+        # overall power
+        if id == "D": 
+            if (pzem_data[0] == "nodata"):
+                cda.dNoD = cda.dNoD + 1
+                if cda.dNoD > int(config.get("Limits","no_data")):
+                    cda.smsMsg.append("Sensor D (power monitor) " + config.get("Limits","no_data_msg"))
+                    cda.cNoD = 0
+            else:
+                if (pzem_data[1] == 0):
+                    if cda.overall_msg_sent == False:
+                        cda.smsMsg.append(config.get("Messages","overall_power_msg"))
+                        cda.overall_msg_sent = True
+                    else:
+                        cda.overall_msg_cnt = cda.overall_msg_cnt + 1
+                        # If problem is not resolved within an hour reset
+                        if cda.overall_msg_cnt > int(config.get("Limits","reset_overall_msg_sent")):
+                            cda.overall_msg_sent = False
+                            cda.overall_msg_cnt = 0
 
 
         checkSMS()
@@ -104,10 +148,7 @@ def check(pzem_data):
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-
-        logger.put_msg("E",f"Exception type: {exception_type}")
-        logger.put_msg("E",f"File name: {filename}")
-        logger.put_msg("E",f"Line number: {line_number}")
+        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.put_msg("E",f"checkThresholds.check ERROR: {e}")
     
 
@@ -115,7 +156,7 @@ def checkMsg(msg):
     try:
         global smsMsg
         if msg != "noMsg":
-            common.smsMsg.append(msg)     
+            cda.smsMsg.append(msg)     
     except Exception as e:
         logger.put_msg("E",f"checkThresholds.checkMsg ERROR: {e}")
 
@@ -123,11 +164,10 @@ def checkMsg(msg):
 def checkSMS():
     try:
         # Should SMS be sent
-        hl = len(common.smsMsg)
-        if (len(common.smsMsg) > 0):
+        if (len(cda.smsMsg) > 0):
             numbers = config.get("Maintenance","phones")
             # Pass phone numbers and message array to handler
-            smsHandler.sendSMS(numbers, common.smsMsg, 'Maintenance')
+            smsHandler.sendSMS(numbers, cda.smsMsg, 'Maintenance')
     except Exception as e:
         logger.put_msg("E",f"checkThresholds.checkSMS ERROR: {e}")   
 	     
@@ -137,15 +177,20 @@ def voltage(data, id):
         # Check if pumpA has voltage/electricity
         if (data[0] == 0):
             if id == "A":
-                common.aNoV = common.aNoV + 1
-                if common.aNoV > common.no_voltage_max:
-                    common.aNoV = 0
-                    return "Pump " + id + NO_VOLTAGE_MSG
-            else:
-                common.bNoV = common.bNoV + 1
-                if common.bNoV > common.no_voltage_max:
-                    common.bNoV = 0
-                    return "Pump " + id + NO_VOLTAGE_MSG
+                cda.aNoV = cda.aNoV + 1
+                if cda.aNoV > int(config.get("Limits","no_voltage")):
+                    cda.aNoV = 0
+                    return "Pump " + id + " " + config.get("Limits","no_voltage_msg")
+            elif id == "B":
+                cda.bNoV = cda.bNoV + 1
+                if cda.bNoV > int(config.get("Limits","no_voltage")):
+                    cda.bNoV = 0
+                    return "Pump " + id + " " +config.get("Limits","no_voltage_msg")
+            elif id == "C":
+                cda.cNoV = cda.cNoV + 1
+                if cda.cNoV > int(config.get("Limits","no_voltage")):
+                    cda.cNoV = 0
+                    return "Alarm " + config.get("Limits","no_voltage_msg")
 
         return "noMsg"
     except Exception as e:
@@ -158,15 +203,15 @@ def power(data,id):
         # Check if pumpA has power
         if (data[1] == 0):
             if id == "A":
-                common.aNoP = common.aNoP + 1
-                if common.aNoP > common.no_power_max:
-                    common.aNoP = 0
-                    return "Pump " + id + NO_POWER_MSG
-            else:
-                common.bNoP = common.bNoP + 1
-                if common.bNoP > common.no_power_max:
-                    common.bNoP = 0
-                    return "Pump " + id + NO_POWER_MSG
+                cda.aNoP = cda.aNoP + 1
+                if cda.aNoP > int(config.get("Limits","no_power")):
+                    cda.aNoP = 0
+                    return "Pump " + id + " " + config.get("Limits","no_power_msg")
+            elif id == "B":
+                cda.bNoP = cda.bNoP + 1
+                if cda.bNoP > int(config.get("Limits","no_power")):
+                    cda.bNoP = 0
+                    return "Pump " + id + " " + config.get("Limits","no_power_msg")
 
         return "noMsg"
     except Exception as e:

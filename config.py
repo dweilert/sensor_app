@@ -26,7 +26,7 @@ LICENSE:
 
 """
 
-import common
+import commonDataArea as cda
 import configparser
 import logger
 
@@ -38,10 +38,10 @@ def readConfig():
         configI.read("config.ini")
         # Set debug flag from config.ini file
         if configI.get("Debug","status") == "true" or configI.get("Debug","status") == "true" or configI.get("Debug","status") == "TRUE":
-            common.debug = True
+            cda.debug = True
             logger.put_msg("D","config.readConfig DEBUG messages will be displayed")
         else:
-            common.debug = False
+            cda.debug = False
         setCommons()
         return True
     except Exception as e:
@@ -65,29 +65,10 @@ def set(k1, k2, data):
         return False
 
 def setCommons():
-    try:
-        # dataHandler
-        common.file_outdir = configI.get("Output","directory")
-        if common.file_outdir[-1] != "/":
-            common.file_outdir = common.file_outdir + "/" 
-        common.file_pumpA = common.file_outdir + configI.get("Output","pumpA")
-        common.file_pumpB = common.file_outdir + configI.get("Output","pumpB")
-        common.file_pumpC = common.file_outdir + configI.get("Output","pumpC")
-        common.file_pumpD = common.file_outdir + configI.get("Output","pumpD")
+    try:        # logger
+        cda.log_dir = configI.get("Log","log_directory")
+        cda.log_base = configI.get("Log","log_base")
+        cda.log_sms = configI.get("Log","log_sms_number")
 
-        # logger
-        common.log_dir = configI.get("Log","log_directory")
-        common.log_base = configI.get("Log","log_base")
-        common.log_sms = configI.get("Log","log_sms_number")
-
-        # monitor
-        common.wait_to_check_sensors = configI.get("Interval","wait_to_check_sensors")
-        common.wait_to_check_for_ports = configI.get("Interval","wait_to_check_for_ports")
-
-        # pumpHandler
-        common.no_data_max = int(configI.get("Limits","no_data"))
-        common.no_power_max = int(configI.get("Limits","no_power"))
-        common.no_voltage_max = int(configI.get("Limits","no_voltage"))
-        print("set values")
     except Exception as e:
         logger.put_msg("E",f"config.setCommons ERROR: {e}")

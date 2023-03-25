@@ -27,8 +27,10 @@ LICENSE:
 """
 import smbus
 import time
+import sys
 
-import common
+import commonDataArea as cda
+import logger
 
 # Config Register (R/W)
 _REG_CONFIG                 = 0x00
@@ -219,30 +221,37 @@ class INA219:
 
 
 def getUPSInfo():
+    try:
+        # Create an INA219 instance.
+        ina219 = INA219(addr=0x42)
 
-    # Create an INA219 instance.
-    ina219 = INA219(addr=0x42)
+        bus_voltage = ina219.getBusVoltage_V()             # voltage on V- (load side)
+        shunt_voltage = ina219.getShuntVoltage_mV() / 1000 # voltage between V+ and V- across the shunt
+        current = ina219.getCurrent_mA()                   # current in mA
+        power = ina219.getPower_W()                        # power in W
+        p = (bus_voltage - 6)/2.4*100
+        if(p > 100):p = 100
+        if(p < 0):p = 0
 
-    bus_voltage = ina219.getBusVoltage_V()             # voltage on V- (load side)
-    shunt_voltage = ina219.getShuntVoltage_mV() / 1000 # voltage between V+ and V- across the shunt
-    current = ina219.getCurrent_mA()                   # current in mA
-    power = ina219.getPower_W()                        # power in W
-    p = (bus_voltage - 6)/2.4*100
-    if(p > 100):p = 100
-    if(p < 0):p = 0
+        # Null the object
+        ina219 = None
+        cda.upsPower = "{:6.3f}".format(power)
+        
+        # If current is negative the UPS battery is not charging
+        # or drawing more than it is charging
+        cda.upsCurrent = "{:9.6f}".format(current/1000)
 
-    # Null the object
-    ina219 = None
-    common.upsPower = "{:6.3f}".format(power)
-    
-    # If current is negative the UPS battery is not charging
-    # or drawing more than it is charging
-    common.upsCurrent = "{:9.6f}".format(current/1000)
+        # print("PSU Voltage:   {:6.3f} V".format(bus_voltage + shunt_voltage))
+        # print("Shunt Voltage: {:9.6f} V".format(shunt_voltage))
+        # print("Load Voltage:  {:6.3f} V".format(bus_voltage))
+        # print("Current:       {:9.6f} A".format(current/1000))
+        # print("Power:         {:6.3f} W".format(power))
+        # print("Percent:       {:3.1f}%".format(p))
+        # print("")
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.put_msg("E",f"upsHandler.getUPSInfo ERROR: {e}")
 
-    # print("PSU Voltage:   {:6.3f} V".format(bus_voltage + shunt_voltage))
-    # print("Shunt Voltage: {:9.6f} V".format(shunt_voltage))
-    # print("Load Voltage:  {:6.3f} V".format(bus_voltage))
-    # print("Current:       {:9.6f} A".format(current/1000))
-    # print("Power:         {:6.3f} W".format(power))
-    # print("Percent:       {:3.1f}%".format(p))
-    # print("")

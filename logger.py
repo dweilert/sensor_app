@@ -26,12 +26,10 @@ LICENSE:
     GNU General Public License for more details.
 
 """
-
-import os
-import time
+import sys
 from datetime import datetime
 
-import common
+import commonDataArea as cda
 import config
 import smsHandler
 
@@ -42,25 +40,25 @@ oldData = 0
 
 def getParms():
     try:
-        if common.log_dir[-1] != "/":
-            common.log_dir = common.log_dir + "/"
+        if cda.log_dir[-1] != "/":
+            cda.log_dir = cda.log_dir + "/"
 
         now = datetime.now()
         new = now.strftime("%Y_%m_%d")
 
-        if common.log_date == "":
-            common.log_date = new
+        if cda.log_date == "":
+            cda.log_date = new
 
         # Check if it is a new day if so swap to new file
-        if common.log_date != new:
-            common.log_old_name = common.log_file_name
-            common.log_file_name = common.log_dir+common.log_base+"_"+common.log_date+".log"
+        if cda.log_date != new:
+            cda.log_old_name = cda.log_file_name
+            cda.log_file_name = cda.log_dir+cda.log_base+"_"+cda.log_date+".log"
         else:
-            common.log_file_name = common.log_dir+common.log_base+"_"+common.log_date+".log"
+            cda.log_file_name = cda.log_dir+cda.log_base+"_"+cda.log_date+".log"
 
-        if common.log_first_time == True:
-            common.log_first_time = False
-            print("Log message file: "+common.log_file_name)
+        if cda.log_first_time == True:
+            cda.log_first_time = False
+            print("Log message file: "+cda.log_file_name)
 
     except Exception as e:
         print(f"Get Logger parms error: {e}")
@@ -84,7 +82,7 @@ def put_msg(lvl, msg):
 
         # Is message saved or output to console
         if save == True:
-            file1 = open(common.log_file_name, mode="a", encoding="utf-8")
+            file1 = open(cda.log_file_name, mode="a", encoding="utf-8")
             file1.write(ts + " " + lvl + msg + "\n")
             file1.close()
             file1 = None
@@ -94,12 +92,16 @@ def put_msg(lvl, msg):
         else:
             print(ts + lvl + msg)
     except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        print(f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
         print(f"logger.put_msg ERROR:  {e}")
-        print(f"logger.put_msg Dropped msg: {msg}")
+        print(f"Dropped msg: {msg}")
 
 
 def sms_msg(msg):
     try:
-        smsHandler.sendSMS(common.log_sms, msg, "Developer")
+        smsHandler.sendSMS(cda.log_sms, msg, "Developer")
     except Exception as e:
         print(f"logger.sms_msg ERROR: {e}")

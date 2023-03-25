@@ -26,13 +26,10 @@ LICENSE:
 
 """
 
-import os
 import sys
-import time
 from datetime import datetime
 
-import common
-import config
+import commonDataArea as cda
 import logger
 import awsHandler
 
@@ -52,63 +49,65 @@ def saveData(data, id):
         if row[0] == "A":
             # Check if Current row[3] is seen 	
             if int(row[3]) > 0:
-                if common.pumpA_status == "OFF":
-                    common.pumpA_status = "ON"		
-                    common.pumpA_start = row[1]
-                    common.pumpA_energy_start = row[7]
+                if cda.pumpA_status == "OFF":
+                    cda.pumpA_status = "ON"		
+                    cda.pumpA_start = row[1]
+                    cda.pumpA_energy_start = row[7]
                 else:
-                    common.pumpA_energy_latest = row[7]
-                    common.pumpA_stop = row[1]		    		    				    
+                    cda.pumpA_energy_latest = row[7]
+                    cda.pumpA_stop = row[1]		    		    				    
             else:		
-                if common.pumpA_status == "ON":
-                    common.pumpA_stop = row[1]
-                    energy = int(common.pumpA_energy_latest) - int(common.pumpA_energy_start)
+                if cda.pumpA_status == "ON":
+                    cda.pumpA_stop = row[1]
+                    energy = int(cda.pumpA_energy_latest) - int(cda.pumpA_energy_start)
                     record['p'] = "A"                                          # pump
-                    record['sd'] = common.pumpA_start                          # start_date
-                    record['se'] = common.pumpA_energy_start                   # start energy 
-                    record['ed'] = common.pumpA_stop                           # end date 
-                    record['ee'] = common.pumpA_energy_latest                  # end energy
+                    record['sd'] = cda.pumpA_start                          # start_date
+                    record['se'] = cda.pumpA_energy_start                   # start energy 
+                    record['ed'] = cda.pumpA_stop                           # end date 
+                    record['ee'] = cda.pumpA_energy_latest                  # end energy
                     record['ue'] = str(energy)                                 # used energy
                     # Reset pump data
-                    common.pumpA_status = "OFF"
-                    common.pumpA_start = ""
-                    common.pumpA_energy_start = ""
-                    common.pumpA_stop = ""
-                    common.pumpA_energy_latest = ""
+                    cda.pumpA_status = "OFF"
+                    cda.pumpA_start = ""
+                    cda.pumpA_energy_start = ""
+                    cda.pumpA_stop = ""
+                    cda.pumpA_energy_latest = ""
                     # Send data to AWS
                     awsHandler.putSensorData(record)		    		
         elif row[0] == "B":
             # Check if Current is seen 	
             if int(row[3]) > 0:
-                if common.pumpB_status == "OFF":
-                    common.pumpB_status = "ON"		
-                    common.pumpB_start = row[1]
-                    common.pumpB_energy_start = row[7]
+                if cda.pumpB_status == "OFF":
+                    cda.pumpB_status = "ON"		
+                    cda.pumpB_start = row[1]
+                    cda.pumpB_energy_start = row[7]
                 else:
-                    common.pumpB_energy_latest = row[7]
-                    common.pumpB_stop = row[1]		    		    				    
+                    cda.pumpB_energy_latest = row[7]
+                    cda.pumpB_stop = row[1]		    		    				    
             else:		
-                if common.pumpB_status == "ON":
-                    common.pumpB_stop = row[1]
-                    energy = int(common.pumpB_energy_latest) - int(common.pumpB_energy_start)
+                if cda.pumpB_status == "ON":
+                    cda.pumpB_stop = row[1]
+                    energy = int(cda.pumpB_energy_latest) - int(cda.pumpB_energy_start)
                     record['p'] = "B"                                          # pump
-                    record['sd'] = common.pumpB_start                          # start_date
-                    record['se'] = common.pumpB_energy_start                   # start energy 
-                    record['ed'] = common.pumpB_stop                           # end date 
-                    record['ee'] = common.pumpB_energy_latest                  # end energy
-                    record['ue'] = str(energy)                                 # used energy
+                    record['sd'] = cda.pumpB_start                          # start_date
+                    record['se'] = cda.pumpB_energy_start                   # start energy 
+                    record['ed'] = cda.pumpB_stop                           # end date 
+                    record['ee'] = cda.pumpB_energy_latest                  # end energy
+                    record['ue'] = str(energy)                              # used energy
                     # Reset pump data
-                    common.pumpB_status = "OFF"
-                    common.pumpB_start = ""
-                    common.pumpB_energy_start = ""
-                    common.pumpB_stop = ""
-                    common.pumpB_energy_latest = ""
+                    cda.pumpB_status = "OFF"
+                    cda.pumpB_start = ""
+                    cda.pumpB_energy_start = ""
+                    cda.pumpB_stop = ""
+                    cda.pumpB_energy_latest = ""
                     # Send data to AWS
                     awsHandler.putSensorData(record)		    		
-        else:
-            logger.put_msg("I",f"Pump {row[0]} data not processed")
 
         return 
     except Exception as e:
-        logger.put_msg("E",f"awsHandler.sumData ERROR: {e}")
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.put_msg("E",f"dataHandler.sumData ERROR: {e}")
     
