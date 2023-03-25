@@ -87,7 +87,7 @@ def monitor(usbPort, id):
         print(client.__dir__())
 
         client.connect()
-        
+
         request = client.read_input_registers(0,10,1)
         # Save the sensor data is in the registers element
         dataHandler.saveData(request.registers, id)
@@ -99,6 +99,8 @@ def monitor(usbPort, id):
         return rtn
     except Exception as e:
         logger.put_msg("E",f"pzemHandler.monitor Exception: {e}")
+        client.close()
+        return rtn
 
 """
 Determine which ttyUSB* ports are supporting the connected PZEM modules.
