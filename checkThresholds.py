@@ -170,7 +170,9 @@ def checkSensors():
         if cda.sensor_connect_error_msg_cnt == 0:
             msg = config.get("Pzem","connect_error_msg")
             msg = msg + " " + connErr
-            smsHandler.sendSMS(config.get("Developer","phones"), msg, "Developer")
+            msgOut = []
+            msgOut.append(msg)
+            smsHandler.sendSMS(config.get("Developer","phones"), msgOut, "Developer")
             cda.sensor_connect_error_msg_cnt = cda.sensor_connect_error_msg_cnt + 1
         else:
             if cda.sensor_connect_error_msg_cnt > int(config.get("Pzem","connect_error_reset_count")):
@@ -197,7 +199,9 @@ def checkSensors():
             # If 4 it means power lost to all sensors
             if cda.sensor_lost_power_msg_cnt == 0:
                 msg = config.get("Pzem","sensor_lost_power_msg")
-                smsHandler.sendSMS(config.get("Developer","phones"), msg, "Developer")
+                msgOut = []
+                msgOut.append(msg)
+                smsHandler.sendSMS(config.get("Developer","phones"), msgOut, "Developer")
                 cda.sensor_lost_power_msg_cnt = cda.sensor_lost_power_msg_cnt + 1
             else:
                 cda.sensor_lost_power_msg_cnt = cda.sensor_lost_power_msg_cnt + 1
@@ -206,7 +210,9 @@ def checkSensors():
         else:
             if cda.sensor_io_error_msg_cnt == 0:
                 msg = config.get("Pzem","sensor_io_error_msg") + " " + ioErr
-                smsHandler.sendSMS(config.get("Developer","phones"), msg, "Developer")
+                msgOut = []
+                msgOut.append(msg)
+                smsHandler.sendSMS(config.get("Developer","phones"), msgOut, "Developer")
                 cda.sensor_io_error_msg_cnt = cda.sensor_io_error_msg_cnt + 1
             else:
                 cda.sensor_io_error_msg_cnt = cda.sensor_io_error_msg_cnt + 1
