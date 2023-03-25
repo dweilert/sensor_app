@@ -40,6 +40,7 @@ oldData = 0
 
 def getParms():
     try:
+        print(cda.log_dir)
         if cda.log_dir[-1] != "/":
             cda.log_dir = cda.log_dir + "/"
 
