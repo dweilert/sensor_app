@@ -73,6 +73,7 @@ def monitor(usbPort, id):
     #Get register data
     try:
         rtn = ["nodata"]
+        # Check if sensor was found, if not skip
         if cda.portA == "na" and id == "A": 
             return rtn
         if cda.portB == "na" and id == "B": 
@@ -83,7 +84,10 @@ def monitor(usbPort, id):
             return rtn   
              
         client = ModbusSerialClient(port=usbPort,timeout=4,baudrate=9600,bytesize=8,parity="N",stopbits=1)
+        print(client.__dir__())
+
         client.connect()
+        
         request = client.read_input_registers(0,10,1)
         # Save the sensor data is in the registers element
         dataHandler.saveData(request.registers, id)

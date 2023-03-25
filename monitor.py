@@ -29,6 +29,8 @@ LICENSE:
 import time
 import sys
 from datetime import datetime
+import logging
+
 
 import config
 import commonDataArea as cda
@@ -120,6 +122,9 @@ def mainLine():
 if __name__ == "__main__":
     # reset_usb()
     try:
+        logging.basicConfig()
+        log = logging.getLogger()
+        log.setLevel(logging.DEBUG)        
         # Read config.ini file for parameters
         config.readConfig()
         mainLine()
