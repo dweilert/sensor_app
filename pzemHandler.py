@@ -118,25 +118,25 @@ def monitor(usbPort, id):
         logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
  
 
-        if config.get("Pzem","ioException") in exception_type:
-            if id == "A":
-                cda.sensor_A_io_error = True
-            elif id == "B":
-                cda.sensor_B_io_error = True
-            elif id == "C":
-                cda.sensor_C_io_error = True
-            elif id == "D":
-                cda.sensor_D_io_error = True
+        # if config.get("Pzem","ioException") in exception_type:
+        #     if id == "A":
+        #         cda.sensor_A_io_error = True
+        #     elif id == "B":
+        #         cda.sensor_B_io_error = True
+        #     elif id == "C":
+        #         cda.sensor_C_io_error = True
+        #     elif id == "D":
+        #         cda.sensor_D_io_error = True
 
-        if config.get("Pzem","connectionError") in exception_type:
-            if id == "A":
-                cda.sensor_A_connect_error = True
-            elif id == "B":
-                cda.sensor_B_connect_error = True
-            elif id == "C":
-                cda.sensor_C_connect_error = True
-            elif id == "D":
-                cda.sensor_D_connect_error = True
+        # if config.get("Pzem","connectionError") in exception_type:
+        #     if id == "A":
+        #         cda.sensor_A_connect_error = True
+        #     elif id == "B":
+        #         cda.sensor_B_connect_error = True
+        #     elif id == "C":
+        #         cda.sensor_C_connect_error = True
+        #     elif id == "D":
+        #         cda.sensor_D_connect_error = True
 
 
         logger.put_msg("E",f"pzemHandler.monitor Sensor {id} Exception: {e}")
