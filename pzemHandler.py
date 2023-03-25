@@ -112,13 +112,8 @@ def monitor(usbPort, id):
 
         return rtn
     except Exception as e:
-        exception_type, exception_object, exception_traceback = sys.exc_info()
-        filename = exception_traceback.tb_frame.f_code.co_filename
-        line_number = exception_traceback.tb_lineno
-        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
- 
         errorLine = f"Exception: {e}"
-        print(f"ErrorLine: {errorLine}")
+
         if config.get("Pzem","ioException") in errorLine:
             if id == "A":
                 cda.sensor_A_io_error = True
@@ -129,20 +124,23 @@ def monitor(usbPort, id):
             elif id == "D":
                 cda.sensor_D_io_error = True
 
-        # if config.get("Pzem","connectionError") in exception_type:
-        #     if id == "A":
-        #         cda.sensor_A_connect_error = True
-        #     elif id == "B":
-        #         cda.sensor_B_connect_error = True
-        #     elif id == "C":
-        #         cda.sensor_C_connect_error = True
-        #     elif id == "D":
-        #         cda.sensor_D_connect_error = True
+        if config.get("Pzem","connectionError") in errorLine:
+            if id == "A":
+                cda.sensor_A_connect_error = True
+            elif id == "B":
+                cda.sensor_B_connect_error = True
+            elif id == "C":
+                cda.sensor_C_connect_error = True
+            elif id == "D":
+                cda.sensor_D_connect_error = True
 
-
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
         logger.put_msg("E",f"pzemHandler.monitor Sensor {id} Exception: {e}")
         client.close()
-        return 
+        return ["nodata"]
 
 """
 Determine which ttyUSB* ports are supporting the connected PZEM modules.
