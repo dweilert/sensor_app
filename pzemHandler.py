@@ -133,11 +133,7 @@ def monitor(usbPort, id):
                 cda.sensor_C_connect_error = True
             elif id == "D":
                 cda.sensor_D_connect_error = True
-
-        exception_type, exception_object, exception_traceback = sys.exc_info()
-        filename = exception_traceback.tb_frame.f_code.co_filename
-        line_number = exception_traceback.tb_lineno
-        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
+               
         logger.put_msg("E",f"pzemHandler.monitor Sensor {id} Exception: {e}")
         client.close()
         return ["nodata"]
