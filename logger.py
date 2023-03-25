@@ -58,9 +58,17 @@ def getParms():
 
         if cda.log_first_time == True:
             cda.log_first_time = False
-            print("Log message file: "+cda.log_file_name)
+
+            now = datetime.now()
+            ts = now.strftime("%Y-%m-%d %H:%M:%S.%f")
+            #sys.stdout.write(f"{ts} (I) : Interval count({iCnt})")
+            print(f"{ts} (I) : Log message file: {cda.log_file_name}")
 
     except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        print(f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")                       
         print(f"Get Logger parms error: {e}")
         return
 

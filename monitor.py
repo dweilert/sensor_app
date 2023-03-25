@@ -101,7 +101,9 @@ def mainLine():
             #print(f"Interval count: {iCnt}", end="")
             now = datetime.now()
             ts = now.strftime("%Y-%m-%d %H:%M:%S.%f")
-            sys.stdout.write(f"{ts} (I) : Interval count({iCnt})")
+            #sys.stdout.write(f"{ts} (I) : Interval count({iCnt})")
+            print(f"{ts} (I) : Interval count({iCnt})")
+
             time.sleep(int(config.get("Interval","wait_to_check_sensors")))
             
     except Exception as e:
