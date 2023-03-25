@@ -70,7 +70,6 @@ import logger
 
 
 def monitor(usbPort, id):
-    print(f"monitor: {usbPort} {id}")
     #Get register data
     try:
         rtn = ["nodata"]
