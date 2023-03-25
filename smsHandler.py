@@ -58,7 +58,7 @@ def sendSMS(toNumbers, msgBody, who):
 
         now = datetime.now()
         fmtDate = now.strftime("%m/%d/%Y at %H:%M:%S")
-        msg = config.get("Twilio","msg_header") + fmtDate
+        msg = config.get("Twilio","msg_header") + " " + fmtDate + " - "
         cnt = 1
 
         # Build the message to send
