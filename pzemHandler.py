@@ -95,6 +95,7 @@ def monitor(usbPort, id):
         if config.get("Debug","show_regs") == "true":
             logger.put_msg("D",f"ID: {id} Regs {request.registers}")
         client.close()
+        # No errors
         if id == "A":
             cda.sensor_A_io_error = False
             cda.sensor_A_connect_error = False
@@ -133,7 +134,7 @@ def monitor(usbPort, id):
 
         logger.put_msg("E",f"pzemHandler.monitor Sensor {id} Exception: {e}")
         client.close()
-        return rtn
+        return 
 
 """
 Determine which ttyUSB* ports are supporting the connected PZEM modules.
