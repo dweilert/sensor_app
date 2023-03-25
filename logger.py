@@ -40,7 +40,9 @@ oldData = 0
 
 def getParms():
     try:
-
+        cda.log_dir = config.get("Log","log_directory")
+        cda.log_base = config.get("Log","log_base")
+        cda.log_sms = config.get("Log","log_sms_number")
         if cda.log_dir[-1] != "/":
             cda.log_dir = cda.log_dir + "/"
 
