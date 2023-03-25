@@ -84,7 +84,7 @@ def monitor(usbPort, id):
             return rtn   
              
         client = ModbusSerialClient(port=usbPort,timeout=4,baudrate=9600,bytesize=8,parity="N",stopbits=1)
-        if config.get("Debug","show_pzem_attirbutes") == "true":
+        if config.get("Debug","show_pzem_attributes") == "true":
             print(client.__dir__())
 
         client.connect()
