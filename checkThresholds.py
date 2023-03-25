@@ -64,10 +64,10 @@ cda.smsMsg = []
 	
 def check(pzem_data,id):
     try:
-        print(type(pzem_data))
-        if type(pzem_data) != "list":
-            logger.put_msg("E",f"checkThresholds.check: No valid data from sensor {id}")
-            return
+        # print(type(pzem_data))
+        # if type(pzem_data) != "list":
+        #     logger.put_msg("E",f"checkThresholds.check: No valid data from sensor {id}")
+        #     return
         # Clear SMS messages
         cda.smsMsg = []
         # Increment counters and check against thresholds.
