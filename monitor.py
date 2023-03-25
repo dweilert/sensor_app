@@ -97,6 +97,9 @@ def mainLine():
                 logger.put_msg("D",f"Port D Regs: {rtn}")
             checkThresholds.check(rtn,"D")
 
+            # Check for io errors and connection errors
+            checkThresholds.checkSensors()
+
             ups = upsHandler.getUPSInfo()
             # Log iteration and wait
 

@@ -28,8 +28,8 @@ LICENSE:
 
 
 # logger
-log_dir = ""
-log_base = ""
+log_dir = "~"
+log_base = "monitor"
 log_date = ""
 log_file_name = ""
 log_old_name = ""
@@ -45,15 +45,23 @@ portD = "na"
 wait_to_check_sensors = 15
 wait_to_check_for_ports = 15
 
-# pumpHandler
-no_data_max = 10000
-no_power_max = 10000
-no_voltage_max = 10000
+# pzem
+sensor_A_io_error = False
+sensor_B_io_error = False
+sensor_C_io_error = False
+sensor_D_io_error = False
+sensor_io_error_msg_cnt = 0
+sensor_lost_power_msg_cnt = 0
+
+sensor_A_connect_error = False
+sensor_B_connect_error = False
+sensor_C_connect_error = False
+sensor_D_connect_error = False
+sensor_connect_error_msg_cnt = 0
 
 
 # Data array of pzem-16 sensor data
 sensorData = []
-saveCount = 0
 
 # Pump A data
 pumpA_status = "OFF"
@@ -74,18 +82,12 @@ pumpB_record = ""
 def saveSensorData(data):
     sd = data.split(",")
     global sensorData
-    global saveCount
     sensorData.append(sd)
-    saveCount = saveCount + 1
 
 def getSensorData():
     return sensorData
 
 def clearSensorData():
     global sensorData
-    global saveCount
     sensorData = []
-    saveCount = 0
 
-def getSensorCount():
-    return saveCount

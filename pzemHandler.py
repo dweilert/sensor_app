@@ -84,8 +84,6 @@ def monitor(usbPort, id):
             return rtn   
              
         client = ModbusSerialClient(port=usbPort,timeout=int(config.get("Pzem","timeout")),baudrate=9600,bytesize=8,parity="N",stopbits=1)
-        if config.get("Debug","show_pzem_attributes") == "true":
-            print(client.__dir__())
 
         client.connect()
 
@@ -97,8 +95,42 @@ def monitor(usbPort, id):
         if config.get("Debug","show_regs") == "true":
             logger.put_msg("D",f"ID: {id} Regs {request.registers}")
         client.close()
+        if id == "A":
+            cda.sensor_A_io_error = False
+            cda.sensor_A_connect_error = False
+        elif id == "B":
+            cda.sensor_B_io_error = False
+            cda.sensor_B_connect_error = False
+        elif id == "C":
+            cda.sensor_C_io_error = False
+            cda.sensor_C_connect_error = False
+        elif id == "D":
+            cda.sensor_D_io_error = False
+            cda.sensor_D_connect_error = False
+
         return rtn
     except Exception as e:
+        if config.get("Pzem","ioException") in e:
+            if id == "A":
+                cda.sensor_A_io_error = True
+            elif id == "B":
+                cda.sensor_B_io_error = True
+            elif id == "C":
+                cda.sensor_C_io_error = True
+            elif id == "D":
+                cda.sensor_D_io_error = True
+
+        if config.get("Pzem","connectionError") in e:
+            if id == "A":
+                cda.sensor_A_connect_error = True
+            elif id == "B":
+                cda.sensor_B_connect_error = True
+            elif id == "C":
+                cda.sensor_C_connect_error = True
+            elif id == "D":
+                cda.sensor_D_connect_error = True
+
+
         logger.put_msg("E",f"pzemHandler.monitor Sensor {id} Exception: {e}")
         client.close()
         return rtn
