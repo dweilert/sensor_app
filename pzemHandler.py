@@ -83,7 +83,7 @@ def monitor(usbPort, id):
         if cda.portD == "na" and id == "D":
             return rtn   
              
-        client = ModbusSerialClient(port=usbPort,timeout=4,baudrate=9600,bytesize=8,parity="N",stopbits=1)
+        client = ModbusSerialClient(port=usbPort,timeout=int(config.get("Pzem","timeout")),baudrate=9600,bytesize=8,parity="N",stopbits=1)
         if config.get("Debug","show_pzem_attributes") == "true":
             print(client.__dir__())
 
