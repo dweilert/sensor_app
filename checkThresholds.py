@@ -64,6 +64,10 @@ cda.smsMsg = []
 	
 def check(pzem_data,id):
     try:
+        print(type(pzem_data))
+        if type(pzem_data) != "list":
+            logger.put_msg("E",f"checkThresholds.check: No valid data from sensor{id}")
+            return
         # Clear SMS messages
         cda.smsMsg = []
         # Increment counters and check against thresholds.
@@ -149,7 +153,7 @@ def check(pzem_data,id):
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-        logger.put_msg("E",f"checkThresholds.check ERROR: {e}")
+        logger.put_msg("E",f"checkThresholds.check ERROR for sensor{id}: {e}")
     
 
 def checkMsg(msg):
