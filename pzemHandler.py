@@ -112,7 +112,13 @@ def monitor(usbPort, id):
 
         return rtn
     except Exception as e:
-        if config.get("Pzem","ioException") in e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
+ 
+
+        if config.get("Pzem","ioException") in exception_type:
             if id == "A":
                 cda.sensor_A_io_error = True
             elif id == "B":
@@ -122,7 +128,7 @@ def monitor(usbPort, id):
             elif id == "D":
                 cda.sensor_D_io_error = True
 
-        if config.get("Pzem","connectionError") in e:
+        if config.get("Pzem","connectionError") in exception_type:
             if id == "A":
                 cda.sensor_A_connect_error = True
             elif id == "B":
