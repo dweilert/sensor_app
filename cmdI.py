@@ -20,7 +20,7 @@ def run_unix_domain_socket_client():
         while True:
             message = input("Enter command: ")
             #message = "This is the message.  This will be echoed back!"
-            if message == "quit" or message = "bye" or message == "q"
+            if message == "quit" or message == "bye" or message == "q":
                 break 
             print  ("Sending [%s]" %message) 
     
