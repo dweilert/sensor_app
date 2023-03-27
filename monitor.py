@@ -30,7 +30,7 @@ import time
 import sys
 from datetime import datetime
 import logging
-
+from gpiozero import CPUTemperature
 
 import config
 import commonDataArea as cda
@@ -107,7 +107,8 @@ def mainLine():
             ts = now.strftime("%Y-%m-%d %H:%M:%S.%f")
             #sys.stdout.write(f"{ts} (I) : Interval count({iCnt})")
             print(f"{ts} (I) : Interval count({iCnt})")
-
+            cpu = CPUTemperature()
+            print(cpu.temperature)
             time.sleep(int(config.get("Interval","wait_to_check_sensors")))
             
     except Exception as e:
