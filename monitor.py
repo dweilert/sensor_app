@@ -26,11 +26,14 @@ LICENSE:
  
 """
 
+import os
 import time
 import sys
 from datetime import datetime
 import logging
 from gpiozero import CPUTemperature
+import socket
+from threading import Thread
 
 import config
 import commonDataArea as cda
@@ -119,6 +122,23 @@ def mainLine():
         logger.put_msg("E",f"monitor.mainLine Exception: {e}")
         time.sleep(15)
         mainLine()
+
+class interface:
+    def _listener(self) :
+        while True:
+            data, _ = self._socket.recvfrom(1024)
+            print(f"received: {data}")
+            self._send(data, self._name)
+
+    def __init__(self, name, isDaemon) :
+        if os.path.exists("/tmp/sensor_server_socket"): 
+            os.remove( "/tmp/sensor_server_socket")
+        self._name = name
+        self._socket = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
+        self._socket.bind("/tmp/sensor_server_socket")
+        self._thread = Thread(target=self._listener)
+        self._thread.setDaemon(isDaemon)
+        self._thread.start()
 	
 
 # Main section 
@@ -130,6 +150,8 @@ if __name__ == "__main__":
         log.setLevel(logging.DEBUG)        
         # Read config.ini file for parameters
         config.readConfig()
+        # Create UNIX socket to listen for inbound command requests
+        cmdInterface = interface(name="cmdI", isDaemon=True)
         mainLine()
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
