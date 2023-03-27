@@ -104,9 +104,10 @@ def mainLine():
 
             ups = upsHandler.getUPSInfo()
 
-            # Check if a command request has been submitted
-            if cda.cmdI != "":
-                print(f"Command to execute: {cda.cmdI}")
+            # # Check if a command request has been submitted
+            # if cda.cmdI != "":
+            #     cda.cmdI == ""
+            #     print(f"Command to execute: {cda.cmdI}")
 
 
 
@@ -145,6 +146,8 @@ class interface:
         while True:
             data, _ = self._socket.recvfrom(1024)
             print(f"cmdI received: {data}")
+            data = data.decode()
+            print(data)
             #cda.cmdI = data
             if data == "pump":
 
