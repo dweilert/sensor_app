@@ -146,12 +146,14 @@ class interface:
             data, _ = self._socket.recvfrom(1024)
             print(f"cmdI received: {data}")
             cda.cmdI = data
-            if data == "pump":                
+            if data == "pump":
+
                 self._send("Pump data to be returned")
             elif data == "ups":                
                 self._send("UPS data to be returned")
-            elif data == "status":                
-                self._send("Status data to be returned")
+            elif data == "status":
+                rtn = bytes("Status data to be returned")                
+                self._send(rtn)
             else:
                 self._send("Invalid command")
 
