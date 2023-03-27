@@ -159,6 +159,10 @@ class interface:
                 time.sleep(1)              
                 self._send(rtn)
             else:
+                msg = "Invalid command"
+                rtn = bytes(msg, 'utf-8')
+                print(type(rtn))
+                print(rtn)
                 self._send("Invalid command")
 
 
