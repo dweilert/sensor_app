@@ -108,10 +108,10 @@ def mainLine():
             #print(f"Interval count: {iCnt}", end="")
             now = datetime.now()
             ts = now.strftime("%Y-%m-%d %H:%M:%S.%f")
-            #sys.stdout.write(f"{ts} (I) : Interval count({iCnt})")
-            print(f"{ts} (I) : Interval count({iCnt})")
             cpu = CPUTemperature()
-            print(f"{cpu.temperature} C")
+            print(f"Command to execute: {cda.cmdI}")
+            print(f"{ts} (I) : Interval count({iCnt} CPU temp: {cpu.temperture} C)")
+
             time.sleep(int(config.get("Interval","wait_to_check_sensors")))
             
     except Exception as e:
@@ -127,8 +127,9 @@ class interface:
     def _listener(self) :
         while True:
             data, _ = self._socket.recvfrom(1024)
-            print(f"received: {data}")
-            self._send(data, self._name)
+            print(f"cmdI received: {data}")
+            cda.cmdI = data
+            #self._send(data, self._name)
 
     def __init__(self, name, isDaemon) :
         if os.path.exists("/tmp/sensor_server_socket"): 
