@@ -145,7 +145,7 @@ class interface:
         while True:
             data, _ = self._socket.recvfrom(1024)
             print(f"cmdI received: {data}")
-            cda.cmdI = data
+            #cda.cmdI = data
             if data == "pump":
 
                 self._send("Pump data to be returned")
