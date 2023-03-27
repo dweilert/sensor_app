@@ -163,7 +163,7 @@ class interface:
                 rtn = bytes(msg, 'utf-8')
                 print(type(rtn))
                 print(rtn)
-                self._send("Invalid command")
+                self._send(rtn)
 
 
     def _send(self, data) :
