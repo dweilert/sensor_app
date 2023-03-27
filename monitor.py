@@ -103,13 +103,19 @@ def mainLine():
             checkThresholds.checkSensors()
 
             ups = upsHandler.getUPSInfo()
+
+            # Check if a command request has been submitted
+            if cda.cmdI != "":
+                print(f"Command to execute: {cda.cmdI}")
+
+
+
             # Log iteration and wait
 
             #print(f"Interval count: {iCnt}", end="")
             now = datetime.now()
             ts = now.strftime("%Y-%m-%d %H:%M:%S.%f")
             cpu = CPUTemperature()
-            print(f"Command to execute: {cda.cmdI}")
             print(f"{ts} (I) : Interval count({iCnt} CPU temp: {cpu.temperture} C)")
 
             time.sleep(int(config.get("Interval","wait_to_check_sensors")))
@@ -124,12 +130,6 @@ def mainLine():
         mainLine()
 
 class interface:
-    def _listener(self) :
-        while True:
-            data, _ = self._socket.recvfrom(1024)
-            print(f"cmdI received: {data}")
-            cda.cmdI = data
-            #self._send(data, self._name)
 
     def __init__(self, name, isDaemon) :
         if os.path.exists("/tmp/sensor_server_socket"): 
@@ -140,6 +140,26 @@ class interface:
         self._thread = Thread(target=self._listener)
         self._thread.setDaemon(isDaemon)
         self._thread.start()
+
+    def _listener(self) :
+        while True:
+            data, _ = self._socket.recvfrom(1024)
+            print(f"cmdI received: {data}")
+            cda.cmdI = data
+            if data == "pump":                
+                self._send("Pump data to be returned")
+            elif data == "ups":                
+                self._send("UPS data to be returned")
+            elif data == "status":                
+                self._send("Status data to be returned")
+            else:
+                self._send("Invalid command")
+
+
+    def _send(self, data) :
+        _s = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
+        _s.sendto(data, "/tmp/sensor_server_socket")
+
 	
 
 # Main section 
@@ -152,6 +172,7 @@ if __name__ == "__main__":
         # Read config.ini file for parameters
         config.readConfig()
         # Create UNIX socket to listen for inbound command requests
+        cda.cmdI = ""
         cmdInterface = interface(name="cmdI", isDaemon=True)
         mainLine()
     except Exception as e:
