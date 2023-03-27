@@ -196,13 +196,13 @@ def checkSensors():
         ioCnt = ioCnt + 1
 
     if ioCnt > 0:
-        if ioCnt == 4:
+        if ioCnt == int(config.get("Pzem","total_senosrs")):
             # If 4 it means power lost to all sensors
             if cda.sensor_lost_power_msg_cnt == 0:
                 msg = config.get("Pzem","sensor_lost_power_msg")
                 msgOut = []
                 msgOut.append(msg)
-                smsHandler.sendSMS(config.get("Developer","phones"), msgOut, "Developer")
+                smsHandler.sendSMS(config.get("Maintenance","phones"), msgOut, "Developer")
                 cda.sensor_lost_power_msg_cnt = cda.sensor_lost_power_msg_cnt + 1
             else:
                 cda.sensor_lost_power_msg_cnt = cda.sensor_lost_power_msg_cnt + 1
