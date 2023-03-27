@@ -152,7 +152,9 @@ class interface:
             elif data == "ups":                
                 self._send("UPS data to be returned")
             elif data == "status":
-                rtn = bytes("Status data to be returned", 'utf-8')                
+                rtn = bytes("Status data to be returned", 'utf-8')
+                print(type(rtn))
+                print(rtn)                
                 self._send(rtn)
             else:
                 self._send("Invalid command")
