@@ -108,7 +108,7 @@ def mainLine():
             #sys.stdout.write(f"{ts} (I) : Interval count({iCnt})")
             print(f"{ts} (I) : Interval count({iCnt})")
             cpu = CPUTemperature()
-            print(cpu.temperature)
+            print(f"{cpu.temperature} C")
             time.sleep(int(config.get("Interval","wait_to_check_sensors")))
             
     except Exception as e:
