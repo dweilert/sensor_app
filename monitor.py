@@ -146,13 +146,16 @@ class interface:
         while True:
             data = self._socket.recvfrom(1024)
             print(type(data))
-            ndata = data.decode('utf-8')
-#            ndata = ""
-            for d in data:
-                print(d)
-                d = d.decode('utf-8')
-                ndata = ndata + d
-            print(f"cmdI received: {ndata}")
+            print(data[0])
+            ndata = data[1]
+            print(data[1])
+            # ndata = string(data)
+            # print(type(ndata)) 
+            # for d in data:
+            #     print(d)
+            #     #d = d.decode('utf-8')
+            #     #ndata = ndata + d
+            #print(f"cmdI received: {data}")
             print(ndata)
             #cda.cmdI = data
             if ndata == "pump":
