@@ -21,7 +21,7 @@ def writeCommand(cmd):
 
         f = open(cmd_file, "w")
         f.write(cmd)
-        print("\n" + "waiting ")
+        print("\n")
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
