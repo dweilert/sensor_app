@@ -149,6 +149,8 @@ class interface:
             ndata = data.decode('utf-8')
 #            ndata = ""
             for d in data:
+                print(d)
+                d = d.decode('utf-8')
                 ndata = ndata + d
             print(f"cmdI received: {ndata}")
             print(ndata)
