@@ -70,11 +70,11 @@ def getResults():
 def show_help():
     print(" ")
     print("  Valid commands: ")
-    print("    status  - get current status of monitor service")
-    print("    pumps   - show information regarding pumps")
-    print("    sensors - get list of sensors that are currently monitoring environment")
-    print("    help    - show this help information")
-    print("    quit    - stop command interface")
+    print("    s (or) status  - get current status of monitor service")
+    print("    p (or) pumps   - show information regarding pumps")
+    print("    m (or) monitor - get list of sensors that are currently monitoring environment")
+    print("    h (or) help    - show this help information")
+    print("    q (or) quit    - stop command interface")
     print(" ")
     print("---")
 
@@ -91,14 +91,16 @@ def getCommand():
                 print("Command interface closed")
                 print("\n"+"---")
                 break
-            elif cmd == "help":
+            elif cmd == "help" or cmd == "h":
                 show_help()
-            elif cmd == "status":
-                writeCommand(cmd)
-            elif cmd == "pumps":
-                writeCommand(cmd)
-            elif cmd == "sensors":
-                writeCommand(cmd)
+            elif cmd == "status" or cmd == "s":
+                writeCommand("status")
+            elif cmd == "pumps" or cmd == "p":
+                writeCommand("pumps")
+            elif cmd == "monitor" or cmd == "m":
+                writeCommand("monitor")
+            elif cmd == "logs" or cmd == "l":
+                writeCommand("logs")
             else:
                 print("Invalid command, type help for valid commands")
                 print("\n" + "---")
