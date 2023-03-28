@@ -62,7 +62,7 @@ def checkForCommandFile(temp):
             results = ""      
             for line in f:
                 if "status" in line:
-                    results = results + "Monitor.service is running at " + temp + " C degrees"
+                    results = results + "Monitor.service is running at " + str(temp) + " C degrees"
                 elif "pumps" in line:
                     results = results + "Pump information requested"
                 elif "sensor" in line:
