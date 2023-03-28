@@ -127,36 +127,44 @@ def saveData(data, id):
         logger.put_msg("E",f"dataHandler.sumData ERROR: {e}")
     
 def setHLA(id):
-    high = 0
-    low = 9999999
-    total = 0
-    avg = 0
-    cnt = 0
-    if id == "A":
-        data = cda.pumpA_cycles
-    else:
-        data = cda.pumpB_cycles
-    for d in data:
-        if int(d[3]) > high:
-            high = int(d[3])
-        if int(d[3]) < low and int(d[3] > 0):
-            low = int(d[3])
-        if int(d[3]) > 0: 
-            total = total + int(d[3]) 
-            cnt = cnt + 1
-
-    if cnt > 0:
-        avg = total / cnt
-    else:
+    try:
+        high = 0
+        low = 9999999
+        total = 0
         avg = 0
-        
-    if id == "A":
-        cda.pumpA_amp_high = high
-        cda.pumpA_amp_low = low
-        cda.pumpA_amp_avg = avg
-    else:
-        cda.pumpB_amp_high = high
-        cda.pumpB_amp_low = low
-        cda.pumpB_amp_avg = avg
+        cnt = 0
+        if id == "A":
+            data = cda.pumpA_cycles
+        else:
+            data = cda.pumpB_cycles
+        for d in data:
+            if int(d[3]) > high:
+                high = int(d[3])
+            if int(d[3]) < low and int(d[3] > 0):
+                low = int(d[3])
+            if int(d[3]) > 0: 
+                total = total + int(d[3]) 
+                cnt = cnt + 1
 
-    logger.put_msg("I", id + " - HLA:" + str(high) + " " + str(low) + " " + str(avg))
+        if cnt > 0:
+            avg = total / cnt
+        else:
+            avg = 0
+
+        if id == "A":
+            cda.pumpA_amp_high = high
+            cda.pumpA_amp_low = low
+            cda.pumpA_amp_avg = avg
+        else:
+            cda.pumpB_amp_high = high
+            cda.pumpB_amp_low = low
+            cda.pumpB_amp_avg = avg
+
+        logger.put_msg("I", id + " - High:" + str(high) + " Low:" + str(low) + " Avg:" + str(avg))
+
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.put_msg("E",f"dataHandler.setHLA ERROR: {e}")
