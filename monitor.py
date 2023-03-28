@@ -71,6 +71,11 @@ def checkForCommandFile(temp):
                 elif "sensor" in line:
                     #print("sensor request")
                     results = results + "Sensor information requested" + "\n"
+                elif "logs" in line:
+                    #print("sensor request")
+                    for m in cda.log_msg:
+                        results = results + m + "\n"
+
                 else:
                     #print("Invalid request")
                     results = results + "Request cannot be processed" + "\n"

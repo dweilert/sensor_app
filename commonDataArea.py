@@ -35,6 +35,7 @@ log_file_name = ""
 log_old_name = ""
 log_sms = ""
 log_first_time = True
+log_messages = []
 
 # monitor
 getPortsCnt = 0
