@@ -114,6 +114,7 @@ def getCommand():
 if __name__ == "__main__":
     # reset_usb()
     try:
+        config.readConfig()
         getCommand()
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
