@@ -73,6 +73,9 @@ def saveData(data, id):
                     record['ed'] = cda.pumpA_stop                              # end date 
                     record['ee'] = cda.pumpA_energy_latest                     # end energy
                     record['ue'] = str(energy)                                 # used energy
+                    record['ah'] = cda.pumpA_amp_high
+                    record['al'] = cda.pumpA_amp_low
+                    record['aa'] = cda.pumpA_amp_avg
                     # Reset pump data
                     cda.pumpA_status = "OFF"
                     cda.pumpA_start = ""
@@ -109,6 +112,9 @@ def saveData(data, id):
                     record['ed'] = cda.pumpB_stop                           # end date 
                     record['ee'] = cda.pumpB_energy_latest                  # end energy
                     record['ue'] = str(energy)                              # used energy
+                    record['ah'] = cda.pumpB_amp_high
+                    record['al'] = cda.pumpB_amp_low
+                    record['aa'] = cda.pumpB_amp_avg
                     # Reset pump data
                     cda.pumpB_status = "OFF"
                     cda.pumpB_start = ""
