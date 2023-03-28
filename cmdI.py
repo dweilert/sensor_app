@@ -73,7 +73,9 @@ def show_help():
     print("    m (or) monitor - get current status of monitor service")
     print("    p (or) pumps   - show information regarding pumps")
     print("    s (or) sensors - get list of sensors that are currently monitoring environment")
+    print("    u (or) ups     - get ups information")
     print("    l (or) logs    - get log data")
+    print("    t (or) temp    - get temperature information")
     print("    h (or) help    - show this help information")
     print("    q (or) quit    - stop command interface")
     print(" ")
@@ -102,6 +104,10 @@ def getCommand():
                 writeCommand("monitor")
             elif cmd == "logs" or cmd == "l":
                 writeCommand("logs")
+            elif cmd == "ups" or cmd == "u":
+                writeCommand("ups")
+            elif cmd == "temp" or cmd == "t":
+                writeCommand("temp")
             else:
                 print("Invalid command, type help for valid commands")
                 print("\n" + "---")

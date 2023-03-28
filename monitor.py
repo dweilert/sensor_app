@@ -66,6 +66,10 @@ def checkForCommandFile():
                     results = getPumpInfo()
                 elif "sensor" in line:
                     results = getSensorInfo()
+                elif "ups" in line:
+                    results = upsHandler.getUPSInfo()    
+                elif "temp" in line:
+                    results = getTempInfo()    
                 elif "logs" in line:
                     for m in cda.log_messages:
                         results = results + m + "\n"
@@ -86,6 +90,35 @@ def checkForCommandFile():
         line_number = exception_traceback.tb_lineno
         logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.put_msg("E",f"monitor.checkForCommandFile Exception: {e}")
+
+def getTempInfo():
+    try:
+        high = 0
+        low = 999
+        total = 0
+        cnt = 0
+        for t in cda.cpu_temps:
+            if t > high:
+                high = t
+            if t < low:
+                low = t
+            total = total + t
+            cnt = cnt + 1
+        
+        avg = total / cnt
+        results =           "Avgerage temp: " + str(avg) + "\n"
+        results = results + "High temp    : " + str(high) + "\n"
+        results = results + "Low temp     : " + str(low) + "\n"
+        return results
+    
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.put_msg("E",f"monitor.getTempInfo Exception: {e}")
+
+
 
 
 def getPumpInfo():
@@ -136,6 +169,13 @@ def getMonitorStatus():
     info = subprocess.run(["systemctl","status","monitor"], capture_output=True, text=True)
     lines = info.stdout
     return lines
+
+
+def getMonitorStatus():
+    info = subprocess.run(["systemctl","status","monitor"], capture_output=True, text=True)
+    lines = info.stdout
+    return lines
+
 
 
 def resetCheck():
@@ -226,11 +266,6 @@ def mainLine():
         logger.put_msg("E",f"monitor.mainLine Exception: {e}")
         time.sleep(15)
         mainLine()
-
-
-
-
-
 
 	
 
