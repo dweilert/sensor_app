@@ -87,7 +87,7 @@ def put_msg(lvl, msg):
         elif lvl == "e" or lvl == "error" or lvl == "E":
             lvl = "(E) : "
         elif lvl == "d" or lvl == "debug" or lvl == "D":
-            lvl = " (D) : "
+            lvl = "(D) : "
 
         cda.log_messages.append(ts + " " + lvl + msg)
         if config.get("Log","log_console") == "true" or config.get("Log","log_console") == "True" or config.get("Log","log_console") == "TRUE":
