@@ -80,38 +80,24 @@ oldData = 0
 def put_msg(lvl, msg):
     try:
         #getParms()
-        save = False
         now = datetime.now()
         ts = now.strftime("%Y-%m-%d %H:%M:%S.%f")
 
         if lvl == "i" or lvl == "info" or lvl == "I":
             lvl = "(I) : "
-            save = True
         elif lvl == "e" or lvl == "error" or lvl == "E":
             lvl = "(E) : "
-            save = True
         elif lvl == "d" or lvl == "debug" or lvl == "D":
             lvl = " (D) : "
-            save = False
 
-        # Is message saved or output to console
-        if save == True:
-            # file1 = open(cda.log_file_name, mode="a", encoding="utf-8")
-            # file1.write(ts + " " + lvl + msg + "\n")
-            # file1.close()
-            # file1 = None
-            # # Should msg also be shown on console
-            # if config.get("Log","log_console") == "true" or config.get("Log","log_console") == "True" or config.get("Log","log_console") == "TRUE":
-            #     print(ts + " " + lvl + msg)
-            cda.log_messages.append(ts + " " + lvl + msg)
-            if config.get("Log","log_console") == "true" or config.get("Log","log_console") == "True" or config.get("Log","log_console") == "TRUE":
-                print(ts + " " + lvl + msg)
+        cda.log_messages.append(ts + " " + lvl + msg)
+        if config.get("Log","log_console") == "true" or config.get("Log","log_console") == "True" or config.get("Log","log_console") == "TRUE":
+            print(ts + " " + lvl + msg)
 
-            if len(cda.log_messages) > int(config.get("Log","max_records")):
-                for i in range(int(config.get("Log","drop_count"))): 
-                    cda.log_messages.pop(i)
-        else:
-            print(ts + lvl + msg)
+        if len(cda.log_messages) > int(config.get("Log","max_records")):
+            for i in range(int(config.get("Log","drop_count"))): 
+                cda.log_messages.pop(i)
+
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename

@@ -149,10 +149,9 @@ def mainLine():
             now = datetime.now()
             ts = now.strftime("%Y-%m-%d %H:%M:%S.%f")
             cpu = CPUTemperature()
-            print(f"{ts} (I) : Interval count({iCnt} CPU temp: {cpu.temperature} C)")
+            logger.put_msg(f"{ts} (I) : Interval count({iCnt} CPU temp: {cpu.temperature} C)")
 
             checkForCommandFile(cpu.temperature)
-
 
             time.sleep(int(config.get("Interval","wait_to_check_sensors")))
             
