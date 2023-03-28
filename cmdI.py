@@ -49,10 +49,13 @@ def getResults():
         global command_sent
         global results_check_cnt
         if os.path.exists(results_file):
+            print("open file")
             f = open(results_file,"r")
+            print("read and print file")
             print(f.read())
             command_sent = False
             results_check_cnt = 0
+            print("delete fileß")
             deleteResults()
             return True
         else:
