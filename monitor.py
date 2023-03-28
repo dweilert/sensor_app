@@ -92,7 +92,7 @@ def getPumpInfo():
         result = result + "  On/Off status: " + cda.pumpA_status + "\n"
         result = result + "  Cycle count  : " + str(cda.pumpA_cycle_cnt) + "\n"
         result = result + "\n"
-        result = "Pump 2: \n"
+        result = result + "Pump 2: \n"
         result = result + "  On/Off status: " + cda.pumpB_status + "\n"
         result = result + "  Cycle count  : " + str(cda.pumpB_cycle_cnt) + "\n"
         return result
@@ -109,15 +109,15 @@ def getSensorInfo():
         result = result + "  USB port       : " + cda.portA + "\n"
         result = result + "  I/O Error      : " + cda.sensor_A_io_error + "\n"
         result = result + "  Connect Error  : " + cda.sensor_A_connect_error + "\n"
-        result = "Sensor 2: \n"
+        result = result + "Sensor 2: \n"
         result = result + "  USB port       : " + cda.portB + "\n"
         result = result + "  I/O Error      : " + cda.sensor_B_io_error + "\n"
         result = result + "  Connect Error  : " + cda.sensor_B_connect_error + "\n"
-        result = "Sensor 3: \n"
+        result = result + "Sensor 3: \n"
         result = result + "  USB port       : " + cda.portC + "\n"
         result = result + "  I/O Error      : " + cda.sensor_C_io_error + "\n"
         result = result + "  Connect Error  : " + cda.sensor_C_connect_error + "\n"
-        result = "Sensor 4: \n"
+        result = result + "Sensor 4: \n"
         result = result + "  USB port       : " + cda.portD + "\n"
         result = result + "  I/O Error      : " + cda.sensor_D_io_error + "\n"
         result = result + "  Connect Error  : " + cda.sensor_D_connect_error + "\n"
@@ -207,7 +207,7 @@ def mainLine():
             cpu = CPUTemperature()
             cda.cpu_temps.append(cpu.temperature)
 
-            logger.put_msg("I",f"Interval count({cda.iCnt}")
+            logger.put_msg("I",f"Interval count({cda.iCnt})")
 
             # check if the CLI interface has any requests
             checkForCommandFile()
