@@ -72,6 +72,8 @@ def checkForCommandFile():
                 else:
                     results = results + "INVALID request, cannot be processed" + "\n"
 
+            if results == "":
+                results = "Failed to get requested data"
             f = open(config.get("CommandInterface","results_file"), "w")
             f.write(results) 
             f.close()               
@@ -107,20 +109,20 @@ def getSensorInfo():
     try:
         result = "\nSensor 1: \n"
         result = result + "  USB port       : " + cda.portA + "\n"
-        result = result + "  I/O Error      : " + cda.sensor_A_io_error + "\n"
-        result = result + "  Connect Error  : " + cda.sensor_A_connect_error + "\n"
+        result = result + "  I/O Error      : " + str(cda.sensor_A_io_error) + "\n"
+        result = result + "  Connect Error  : " + str(cda.sensor_A_connect_error) + "\n"
         result = result + "Sensor 2: \n"
         result = result + "  USB port       : " + cda.portB + "\n"
-        result = result + "  I/O Error      : " + cda.sensor_B_io_error + "\n"
-        result = result + "  Connect Error  : " + cda.sensor_B_connect_error + "\n"
+        result = result + "  I/O Error      : " + str(cda.sensor_B_io_error) + "\n"
+        result = result + "  Connect Error  : " + str(cda.sensor_B_connect_error) + "\n"
         result = result + "Sensor 3: \n"
         result = result + "  USB port       : " + cda.portC + "\n"
-        result = result + "  I/O Error      : " + cda.sensor_C_io_error + "\n"
-        result = result + "  Connect Error  : " + cda.sensor_C_connect_error + "\n"
+        result = result + "  I/O Error      : " + str(cda.sensor_C_io_error) + "\n"
+        result = result + "  Connect Error  : " + str(cda.sensor_C_connect_error) + "\n"
         result = result + "Sensor 4: \n"
         result = result + "  USB port       : " + cda.portD + "\n"
-        result = result + "  I/O Error      : " + cda.sensor_D_io_error + "\n"
-        result = result + "  Connect Error  : " + cda.sensor_D_connect_error + "\n"
+        result = result + "  I/O Error      : " + str(cda.sensor_D_io_error) + "\n"
+        result = result + "  Connect Error  : " + str(cda.sensor_D_connect_error) + "\n"
         result = result + "\n"
         return result
     except Exception as e:
@@ -133,6 +135,7 @@ def getSensorInfo():
 def getMonitorStatus():
     info = subprocess.run(["systemctl","status","monitor"], capture_output=True, text=True)
     lines = info.stdout
+    print(lines)
     newlines = lines.split("\n")
     result = ""
     for line in newlines:
