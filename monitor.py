@@ -144,29 +144,30 @@ class interface:
 
     def _listener(self) :
         while True:
-            data, _ = self._socket.recvfrom(1024)
+            data = self._socket.recvfrom(1024)
+
             print(f"cmdI received: {data}")
             data = data.decode()
             print(data)
             #cda.cmdI = data
             if data == "pump":
-
-                self._send("Pump data to be returned")
+                msg = "Pump data to be returned"
+                break
             elif data == "ups":                
-                self._send("UPS data to be returned")
+                msg = "UPS data to be returned"
+                break
             elif data == "status":
                 msg = "Status data to be returned"
-                rtn = bytes(msg, 'utf-8')
-                print(type(rtn))
-                print(rtn)  
-                time.sleep(1)              
-                self._send(rtn)
+                break
             else:
                 msg = "Invalid command"
-                rtn = bytes(msg, 'utf-8')
-                print(type(rtn))
-                print(rtn)
-                self._send(rtn)
+                break
+
+        msg = "Invalid command"
+        rtn = bytes(msg, 'utf-8')
+        print(type(rtn))
+        print(rtn)
+        self._send(rtn)
 
 
     def _send(self, data) :

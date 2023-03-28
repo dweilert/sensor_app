@@ -9,7 +9,7 @@ def run_unix_domain_socket_client():
      
     # Connect the socket to the path where the server is listening 
     server_address = SERVER_PATH  
-    print ("connecting to %s" % server_address) 
+    print (f"Connecting to senor command interface at {server_address}") 
     try: 
         sock.connect(server_address) 
     except socket.error as msg: 
@@ -22,19 +22,9 @@ def run_unix_domain_socket_client():
             #message = "This is the message.  This will be echoed back!"
             if message == "quit" or message == "bye" or message == "q":
                 break 
-            print  ("Sending [%s]" %message) 
-    
             sock.sendall(bytes(message, 'utf-8')) 
-            # Comment out the above line and uncomment the below line for Python 2.7. 
-            # sock.sendall(message) 
-    
-            amount_received = 0 
-            amount_expected = len(message) 
-            
-            while amount_received < amount_expected: 
-                data = sock.recv(16) 
-                amount_received += len(data) 
-                print ("Received [%s]" % data) 
+            data = sock.recv(1024)
+            print(f"Received: {data}")
      
     finally: 
         print ("Finished") 
