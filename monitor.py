@@ -145,10 +145,11 @@ class interface:
     def _listener(self) :
         while True:
             data = self._socket.recvfrom(1024)
-            print(type(data))
+            print(type(data[0]))
             print(data[0])
-            ndata = data[1]
-            print(data[1])
+            ndata = data[1].decode
+            print(type(ndata))
+            print(ndata)
             # ndata = string(data)
             # print(type(ndata)) 
             # for d in data:
