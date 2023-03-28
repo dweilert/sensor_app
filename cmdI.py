@@ -13,6 +13,8 @@ results_file = ""
 
 def writeCommand(cmd):
     try: 
+        global command_sent
+        global results_check_cnt
         command_sent = True
         deleteResults()
         results_check_cnt = 0
@@ -44,10 +46,12 @@ def deleteResults():
 
 def getResults():
     try: 
+        global command_sent
+        global results_check_cnt
         if os.path.exists(results_file):
             f = open(results_file,"r")
             print(f.read())
-            command_sent = 0
+            command_sent = False
             results_check_cnt = 0
             deleteResults()
             return True
@@ -74,6 +78,8 @@ def show_help():
 
 def getCommand():
     try:
+        global command_sent
+        global results_check_cnt
         while True:
             print("Enter command: ")
             cmd = input()
@@ -91,6 +97,7 @@ def getCommand():
             else:
                 print("Invalid command, type help for valid commands")
 
+            time.sleep(0.5)
             if command_sent == True:
                 while True:
                     if getResults == True:
