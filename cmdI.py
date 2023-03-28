@@ -20,10 +20,12 @@ def writeCommand(cmd):
         f.close()
 
 
-def deleteResults():    
-    if os.path.exists(config.get("CommandInterface","results_file")):
-        os.remove(config.get("CommandInterface","results_file"))
-
+def deleteResults():   
+    try: 
+        if os.path.exists(config.get("CommandInterface","results_file")):
+            os.remove(config.get("CommandInterface","results_file"))
+    except Exception as e:
+        print("")
 
 def checkForResults():
     try: 
@@ -53,8 +55,8 @@ def show_help():
 
 
 def getCommand():
-    while True:
-        try:
+    try:
+        while True:
             print("Enter command: ")
             cmd = input()
             if cmd == "q" or cmd == "quit":
@@ -78,12 +80,19 @@ def getCommand():
                         break
                     else:
                         results_check_cnt = results_check_cnt + 1
+                        if results_check_cnt > 3:
+                            print("stopped waiting for command results, retry")
+                            break
                         print("waiting for command results")
                         time.sleep(2)
 
 
-        except Exception as e:
-            print(f"Input error: {e}")
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        print(f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")             
+        print(f"Input error: {e}")
 
 
 # Main section 
