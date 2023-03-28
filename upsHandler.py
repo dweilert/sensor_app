@@ -240,13 +240,13 @@ def getUPSInfo():
         # If current is negative the UPS battery is not charging
         # or drawing more than it is charging
         cda.upsCurrent = "{:9.6f}".format(current/1000)
-
-        result = ("PSU Voltage:   {:6.3f} V".format(bus_voltage + shunt_voltage)) + "\n"
-        result = result + ("Shunt Voltage: {:9.6f} V".format(shunt_voltage)) + "\n"
-        result = result + ("Load Voltage:  {:6.3f} V".format(bus_voltage)) + "\n"
-        result = result + ("Current:       {:9.6f} A".format(current/1000)) + "\n"
-        result = result + ("Power:         {:6.3f} W".format(power)) + "\n"
-        result = result + ("Percent:       {:3.1f}%".format(p)) + "\n"
+        result = "UPS information"
+        result = result + ("  PSU Voltage:   {:6.3f} V".format(bus_voltage + shunt_voltage)) + "\n"
+        result = result + ("  Shunt Voltage: {:9.6f} V".format(shunt_voltage)) + "\n"
+        result = result + ("  Load Voltage:  {:6.3f} V".format(bus_voltage)) + "\n"
+        result = result + ("  Current:       {:9.6f} A".format(current/1000)) + "\n"
+        result = result + ("  Power:         {:6.3f} W".format(power)) + "\n"
+        result = result + ("  Percent:       {:3.1f}%".format(p)) + "\n"
         result = result + (" ") + "\n"
         return result
     except Exception as e:
