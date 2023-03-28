@@ -149,7 +149,7 @@ def mainLine():
             now = datetime.now()
             ts = now.strftime("%Y-%m-%d %H:%M:%S.%f")
             cpu = CPUTemperature()
-            logger.put_msg(f"{ts} (I) : Interval count({iCnt} CPU temp: {cpu.temperature} C)")
+            logger.put_msg("I",f"Interval count({iCnt} CPU temp: {cpu.temperature} C)")
 
             checkForCommandFile(cpu.temperature)
 
