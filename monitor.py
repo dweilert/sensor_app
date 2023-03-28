@@ -54,6 +54,26 @@ def getPorts():
     except Exception as e:
         logger.put_msg("E","monitor.getPorts ERROR: " + e)
 
+def checkForCommandFile(temp):
+    if os.path.exists(config.get("CommandInterface","cmd_file")):
+        f = open(config.get("CommandInterface","cmd_file"),"r")  
+        results = ""      
+        for line in f:
+            if "status" in line:
+                results = results + "Monitor.service is running at " + temp + " C degrees"
+            elif "pumps" in line:
+                results = results + "Pump information requested"
+            elif "sensor" in line:
+                results = results + "Sensor information requested"
+            else:
+                results = results + "Request cannot be processed"
+
+        f = open(config.get("CommandInterface","results_file"), "w")
+        f.write(results) 
+        f.close()               
+        
+        os.remove(config.get("CommandInterface","cmd_file"))
+
 
 def mainLine():
     try:
@@ -104,13 +124,6 @@ def mainLine():
 
             ups = upsHandler.getUPSInfo()
 
-            # # Check if a command request has been submitted
-            # if cda.cmdI != "":
-            #     cda.cmdI == ""
-            #     print(f"Command to execute: {cda.cmdI}")
-
-
-
             # Log iteration and wait
 
             #print(f"Interval count: {iCnt}", end="")
@@ -118,6 +131,9 @@ def mainLine():
             ts = now.strftime("%Y-%m-%d %H:%M:%S.%f")
             cpu = CPUTemperature()
             print(f"{ts} (I) : Interval count({iCnt} CPU temp: {cpu.temperature} C)")
+
+            checkForCommandFile(cpu.temperature)
+
 
             time.sleep(int(config.get("Interval","wait_to_check_sensors")))
             
@@ -130,58 +146,10 @@ def mainLine():
         time.sleep(15)
         mainLine()
 
-class interface:
-
-    def __init__(self, name, isDaemon) :
-        if os.path.exists("/tmp/sensor_server_socket"): 
-            os.remove( "/tmp/sensor_server_socket")
-        self._name = name
-        self._socket = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
-        self._socket.bind("/tmp/sensor_server_socket")
-        self._thread = Thread(target=self._listener)
-        self._thread.setDaemon(isDaemon)
-        self._thread.start()
-
-    def _listener(self) :
-        while True:
-            data = self._socket.recvfrom(1024)
-            print(type(data[0]))
-            print(data[0])
-            ndata = data[0].decode('utf-8')
-            print(type(ndata))
-            print(ndata)
-            # ndata = string(data)
-            # print(type(ndata)) 
-            # for d in data:
-            #     print(d)
-            #     #d = d.decode('utf-8')
-            #     #ndata = ndata + d
-            #print(f"cmdI received: {data}")
-            print(ndata)
-            #cda.cmdI = data
-            if ndata == "pump":
-                msg = "Pump data to be returned"
-                break
-            elif ndata == "ups":                
-                msg = "UPS data to be returned"
-                break
-            elif ndata == "status":
-                msg = "Status data to be returned"
-                break
-            else:
-                msg = "Invalid command"
-                break
-
-        msg = "Invalid command"
-        rtn = bytes(msg, 'utf-8')
-        print(type(rtn))
-        print(rtn)
-        self._send(rtn)
 
 
-    def _send(self, data) :
-        _s = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
-        _s.sendto(data, "/tmp/sensor_server_socket")
+
+
 
 	
 
@@ -194,9 +162,12 @@ if __name__ == "__main__":
         log.setLevel(logging.DEBUG)        
         # Read config.ini file for parameters
         config.readConfig()
-        # Create UNIX socket to listen for inbound command requests
+
+        # clear and reset any command requests
         cda.cmdI = ""
-        cmdInterface = interface(name="cmdI", isDaemon=True)
+        if os.path.exists(config.get("CommandInterface","cmd_file")):
+            os.remove(config.get("CommandInterface","cmd_file"))
+
         mainLine()
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
