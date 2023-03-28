@@ -146,7 +146,8 @@ class interface:
         while True:
             data = self._socket.recvfrom(1024)
             print(type(data))
-            ndata = ""
+            ndata = data.decode('utf-8')
+#            ndata = ""
             for d in data:
                 ndata = ndata + d
             print(f"cmdI received: {ndata}")
