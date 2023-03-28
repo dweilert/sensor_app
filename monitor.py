@@ -61,7 +61,7 @@ def checkForCommandFile():
             results = ""      
             for line in f:
                 if "monitor" in line:
-                    getMonitorStatus()
+                    results = getMonitorStatus()
                 elif "pumps" in line:
                     results = getPumpInfo()
                 elif "sensor" in line:
@@ -134,7 +134,6 @@ def getSensorInfo():
 
 def getMonitorStatus():
     info = subprocess.run(["systemctl","status","monitor"], capture_output=True, text=True)
-    print("info type:", type(info))
     lines = info.stdout
     return lines
 
