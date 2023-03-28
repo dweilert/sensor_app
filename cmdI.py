@@ -21,6 +21,7 @@ def writeCommand(cmd):
 
         f = open(cmd_file, "w")
         f.write(cmd)
+        print("\n" + "  waiting ")
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
@@ -57,7 +58,6 @@ def getResults():
             deleteResults()
             return True
         else:
-            print("no results found")
             return False
     except Exception as e: 
         exception_type, exception_object, exception_traceback = sys.exc_info()
@@ -112,7 +112,7 @@ def getCommand():
                         if results_check_cnt > 5:
                             print("stopped waiting for command results, retry", end="\r")
                             break
-                        print("waiting " + dots, end="\r")
+                        print("  waiting " + dots, end="\r")
                         time.sleep(2)
 
 
