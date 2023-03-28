@@ -106,7 +106,7 @@ def getTempInfo():
             cnt = cnt + 1
         
         avg = total / cnt
-        results = "Temperature information"
+        results = "Temperature information" + "\n"
         results = results + "  Avgerage temp: " + str(avg) + "\n"
         results = results + "  High temp    : " + str(high) + "\n"
         results = results + "  Low temp     : " + str(low) + "\n"
