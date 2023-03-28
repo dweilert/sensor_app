@@ -205,7 +205,7 @@ def mainLine():
             
             # get cpu temperature and save
             cpu = CPUTemperature()
-            cda.cup_temps.append(cpu.temperature)
+            cda.cpu_temps.append(cpu.temperature)
 
             logger.put_msg("I",f"Interval count({cda.iCnt}")
 
