@@ -8,6 +8,8 @@ import config
  
 command_sent = False
 results_check_cnt = 0
+cmd_file = ""
+results_file = ""
 
 def writeCommand(cmd):
     try: 
@@ -15,7 +17,7 @@ def writeCommand(cmd):
         deleteResults()
         results_check_cnt = 0
 
-        f = open(config.get("CommandInterface","cmd_file"), "w")
+        f = open(cmd_file, "w")
         f.write(cmd)
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
@@ -30,22 +32,21 @@ def writeCommand(cmd):
 
 def deleteResults():   
     try: 
-        if os.path.exists(config.get("CommandInterface","results_file")):
-            os.remove(config.get("CommandInterface","results_file"))
+        if os.path.exists(results_file):
+            os.remove(results_file)
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         print(f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-        print("Delete results error")
+        print("Delete results file error")
 
-def checkForResults():
+
+def getResults():
     try: 
-        if os.path.exists(config.get("CommandInterface","results_file")):
-            f = open(config.get("CommandInterface","results_file"),"r")
-            for line in f:
-                print(line)
-            f.close()
+        if os.path.exists(results_file):
+            f = open(results_file,"r")
+            print(f.read())
             command_sent = 0
             results_check_cnt = 0
             deleteResults()
@@ -57,7 +58,8 @@ def checkForResults():
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         print(f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-        print(f"Get results error: {e}")
+        print(f"Get results file error: {e}")
+        return False
 
 
 def show_help():
@@ -91,7 +93,7 @@ def getCommand():
 
             if command_sent == True:
                 while True:
-                    if checkForResults == True:
+                    if getResults == True:
                         print("---")
                         break
                     else:
@@ -116,6 +118,9 @@ if __name__ == "__main__":
     # reset_usb()
     try:
         config.readConfig()
+        cmd_file = config.get("CommandInterface","cmd_file")
+        results_file = config.get("CommandInterface","results_file")
+        print(cmd_file + " " + results_file)
         getCommand()
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()

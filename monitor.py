@@ -62,6 +62,8 @@ def checkForCommandFile(temp):
             results = ""      
             for line in f:
                 if "status" in line:
+                    #data = subprocess.run(["dmesg"], capture_output=True, text=True)
+
                     results = results + "Monitor.service is running at " + str(temp) + " C degrees"
                 elif "pumps" in line:
                     results = results + "Pump information requested"
@@ -74,7 +76,8 @@ def checkForCommandFile(temp):
             f.write(results) 
             f.close()               
             
-            os.remove(config.get("CommandInterface","cmd_file"))
+            print("remove cmd file")
+            os.remove(filename)
         else:
             print("Did not find: " + config.get("CommandInterface","cmd_file") )
 
