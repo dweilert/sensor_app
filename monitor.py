@@ -145,18 +145,20 @@ class interface:
     def _listener(self) :
         while True:
             data = self._socket.recvfrom(1024)
-
-            print(f"cmdI received: {data}")
-            data = data.decode()
-            print(data)
+            print(type(data))
+            ndata = ""
+            for d in data:
+                ndata = ndata + d
+            print(f"cmdI received: {ndata}")
+            print(ndata)
             #cda.cmdI = data
-            if data == "pump":
+            if ndata == "pump":
                 msg = "Pump data to be returned"
                 break
-            elif data == "ups":                
+            elif ndata == "ups":                
                 msg = "UPS data to be returned"
                 break
-            elif data == "status":
+            elif ndata == "status":
                 msg = "Status data to be returned"
                 break
             else:
