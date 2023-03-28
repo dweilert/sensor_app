@@ -137,14 +137,19 @@ def setHLA(id):
     else:
         data = cda.pumpB_cycles
     for d in data:
-        cnt = cnt + 1
         if int(d[3]) > high:
             high = int(d[3])
-        if int(d[3]) < low:
-            low = int(d[3]) 
-        total = total + int(d[3]) 
+        if int(d[3]) < low and int(d[3] > 0):
+            low = int(d[3])
+        if int(d[3]) > 0: 
+            total = total + int(d[3]) 
+            cnt = cnt + 1
 
-    avg = total / cnt
+    if cnt > 0:
+        avg = total / cnt
+    else:
+        avg = 0
+        
     if id == "A":
         cda.pumpA_amp_high = high
         cda.pumpA_amp_low = low
