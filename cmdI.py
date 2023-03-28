@@ -76,6 +76,7 @@ def show_help():
     print("    help    - show this help information")
     print("    quit    - stop command interface")
     print(" ")
+    print("---")
 
 
 def getCommand():
