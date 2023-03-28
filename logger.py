@@ -107,8 +107,8 @@ def put_msg(lvl, msg):
             if config.get("Log","log_console") == "true" or config.get("Log","log_console") == "True" or config.get("Log","log_console") == "TRUE":
                 print(ts + " " + lvl + msg)
 
-            if len(cda.log_messages) > int(config.get("Logs","max_records")):
-                for i in range(int(config.get("Logs","drop_count"))): 
+            if len(cda.log_messages) > int(config.get("Log","max_records")):
+                for i in range(int(config.get("Log","drop_count"))): 
                     cda.log_messages.pop(i)
         else:
             print(ts + lvl + msg)
