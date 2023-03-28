@@ -16,6 +16,13 @@ def writeCommand(cmd):
 
         f = open(config.get("CommandInterface","cmd_file"), "w")
         f.write(cmd)
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        print(f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        print("WriteCommand Error")
+
     finally: 
         f.close()
 
@@ -25,7 +32,11 @@ def deleteResults():
         if os.path.exists(config.get("CommandInterface","results_file")):
             os.remove(config.get("CommandInterface","results_file"))
     except Exception as e:
-        print("")
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        print(f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        print("Delete results error")
 
 def checkForResults():
     try: 
@@ -41,6 +52,10 @@ def checkForResults():
         else:
             return False
     except Exception as e: 
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        print(f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         print(f"Get results error: {e}")
 
 
@@ -101,5 +116,10 @@ if __name__ == "__main__":
     try:
         getCommand()
     except Exception as e:
-        print(f'Error {e}')
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        print(f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")             
+
+        print(f'Command Interface Error {e}')
         sys.exit(1)
