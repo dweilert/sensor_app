@@ -105,7 +105,7 @@ def getCommand():
             time.sleep(0.5)
             if command_sent == True:
                 while True:
-                    if getResults == True:
+                    if getResults() == True:
                         print("---")
                         break
                     else:
