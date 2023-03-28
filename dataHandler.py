@@ -53,16 +53,17 @@ def saveData(data, id):
                     cda.pumpA_status = "ON"		
                     cda.pumpA_start = row[1]
                     cda.pumpA_energy_start = row[7]
-                    cda.pumpA_cycle.append(row)
+                    cda.pumpA_cycles = []
+                    cda.pumpA_cycles.append(row)
                     cda.pumpA_cycle_cnt = cda.pumpA_cycle_cnt + 1  
                 else:
                     cda.pumpA_energy_latest = row[7]
                     cda.pumpA_stop = row[1]	
-                    cda.pumpA_cycle.append(row)	 
+                    cda.pumpA_cycles.append(row)	 
                      		    				    
             else:		
                 if cda.pumpA_status == "ON":
-                    cda.pumpA_cycle.append(row)
+                    cda.pumpA_cycles.append(row)
                     cda.pumpA_stop = row[1]
                     setHLA("A")
                     energy = int(cda.pumpA_energy_latest) - int(cda.pumpA_energy_start)
@@ -89,15 +90,16 @@ def saveData(data, id):
                     cda.pumpB_status = "ON"		
                     cda.pumpB_start = row[1]
                     cda.pumpB_energy_start = row[7]
-                    cda.pumpB_cycle.append(row)
+                    cda.pumpA_cycles = []
+                    cda.pumpB_cycles.append(row)
                     cda.pumpB_cycle_cnt = cda.pumpB_cycle_cnt + 1 
                 else:
                     cda.pumpB_energy_latest = row[7]
                     cda.pumpB_stop = row[1]
-                    cda.pumpB_cycle.append(row)		    		    				    
+                    cda.pumpB_cycles.append(row)		    		    				    
             else:		
                 if cda.pumpB_status == "ON":
-                    cda.pumpB_cycle.append(row)
+                    cda.pumpB_cycles.append(row)
                     cda.pumpB_stop = row[1]
                     setHLA("B")
                     energy = int(cda.pumpB_energy_latest) - int(cda.pumpB_energy_start)
