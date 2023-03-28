@@ -61,7 +61,7 @@ def checkForCommandFile():
             results = ""      
             for line in f:
                 if "monitor" in line:
-                    results = subprocess.run(["systemctl","status","monitor"], capture_output=True, text=True)
+                    getMonitorStatus()
                 elif "pumps" in line:
                     results = getPumpInfo()
                 elif "sensor" in line:
@@ -88,7 +88,7 @@ def checkForCommandFile():
 
 def getPumpInfo():
     try:
-        result = "Pump 1: \n"
+        result = "\nPump 1: \n"
         result = result + "  On/Off status: " + cda.pumpA_status + "\n"
         result = result + "  Cycle count  : " + str(cda.pumpA_cycle_cnt) + "\n"
         result = result + "\n"
@@ -105,7 +105,7 @@ def getPumpInfo():
 
 def getSensorInfo():
     try:
-        result = "Sensor 1: \n"
+        result = "\nSensor 1: \n"
         result = result + "  USB port       : " + cda.portA + "\n"
         result = result + "  I/O Error      : " + cda.sensor_A_io_error + "\n"
         result = result + "  Connect Error  : " + cda.sensor_A_connect_error + "\n"
@@ -122,8 +122,6 @@ def getSensorInfo():
         result = result + "  I/O Error      : " + cda.sensor_D_io_error + "\n"
         result = result + "  Connect Error  : " + cda.sensor_D_connect_error + "\n"
         result = result + "\n"
-
-
         return result
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
@@ -132,6 +130,14 @@ def getSensorInfo():
         logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.put_msg("E",f"monitor.checkForCommandFile Exception: {e}")
 
+def getMonitorStatus():
+    info = subprocess.run(["systemctl","status","monitor"], capture_output=True, text=True)
+    lines = info.stdout
+    newlines = lines.split("\n")
+    result = ""
+    for line in newlines:
+        result = result + line + "\n"
+    return result
 
 
 def resetCheck():
