@@ -48,6 +48,7 @@ def getResults():
     try: 
         global command_sent
         global results_check_cnt
+        print("check for file" + results_file)
         if os.path.exists(results_file):
             print("open file")
             f = open(results_file,"r")
@@ -59,6 +60,7 @@ def getResults():
             deleteResults()
             return True
         else:
+            print("no results found")
             return False
     except Exception as e: 
         exception_type, exception_object, exception_traceback = sys.exc_info()
