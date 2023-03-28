@@ -4,6 +4,7 @@ import time
 
 import commonDataArea as cda
 import config
+
  
 command_sent = False
 results_check_cnt = 0

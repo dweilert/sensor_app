@@ -73,7 +73,8 @@ def checkForCommandFile(temp):
         f.close()               
         
         os.remove(config.get("CommandInterface","cmd_file"))
-
+    else:
+        print("Did not find: " + config.get("CommandInterface","cmd_file") )
 
 def mainLine():
     try:
