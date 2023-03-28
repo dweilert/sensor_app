@@ -140,7 +140,7 @@ def setHLA(id):
         for d in data:
             if int(d[3]) > high:
                 high = int(d[3])
-            if int(d[3]) < low and int(d[3] > 0):
+            if int(d[3]) < low and int(d[3]) > 0:
                 low = int(d[3])
             if int(d[3]) > 0: 
                 total = total + int(d[3]) 
