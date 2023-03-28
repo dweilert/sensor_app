@@ -21,7 +21,7 @@ def writeCommand(cmd):
 
         f = open(cmd_file, "w")
         f.write(cmd)
-        print("\n" + "  waiting ")
+        print("\n" + "waiting ")
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
@@ -49,7 +49,6 @@ def getResults():
     try: 
         global command_sent
         global results_check_cnt
-        print("check for file" + results_file)
         if os.path.exists(results_file):
             f = open(results_file,"r")
             print(f.read())
@@ -84,8 +83,8 @@ def getCommand():
         global results_check_cnt
         dots = ""
         while True:
-            print("Enter command: ")
-            cmd = input()
+            prompt = "Enter command: "
+            cmd = input(prompt)
             if cmd == "q" or cmd == "quit":
                 print("Command interface closed")
                 break
@@ -112,7 +111,7 @@ def getCommand():
                         if results_check_cnt > 5:
                             print("stopped waiting for command results, retry", end="\r")
                             break
-                        print("  waiting " + dots, end="\r")
+                        print("waiting " + dots, end="\r")
                         time.sleep(2)
 
 
@@ -131,7 +130,7 @@ if __name__ == "__main__":
         config.readConfig()
         cmd_file = config.get("CommandInterface","cmd_file")
         results_file = config.get("CommandInterface","results_file")
-        print(cmd_file + " " + results_file)
+
         getCommand()
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
