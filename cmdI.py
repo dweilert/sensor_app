@@ -99,6 +99,8 @@ def getCommand():
                 writeCommand(cmd)
             else:
                 print("Invalid command, type help for valid commands")
+                print("\n" + "---")
+                command_sent = False
 
             time.sleep(0.75)
             if command_sent == True:
