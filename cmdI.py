@@ -89,6 +89,7 @@ def getCommand():
             cmd = input(prompt)
             if cmd == "q" or cmd == "quit":
                 print("Command interface closed")
+                print("\n"+"---")
                 break
             elif cmd == "help":
                 show_help()
