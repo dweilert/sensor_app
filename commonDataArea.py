@@ -60,17 +60,13 @@ sensor_C_connect_error = False
 sensor_D_connect_error = False
 sensor_connect_error_msg_cnt = 0
 
-
-# Data array of pzem-16 sensor data
-sensorData = []
-
 # Pump A data
 pumpA_status = "OFF"
 pumpA_start = ""
 pumpA_stop = ""
 pumpA_energy_start = 0
 pumpA_energy_latest = 0
-pumpA_record = ""
+pumpA_cycle_cnt = 0
 
 # Pump B data
 pumpB_status = "OFF"
@@ -78,17 +74,10 @@ pumpB_start = ""
 pumpB_stop = ""
 pumpB_energy_start = 0
 pumpB_energy_latest = 0
-pumpB_record = ""
+pumpB_cycle_cnt = 0
 
-def saveSensorData(data):
-    sd = data.split(",")
-    global sensorData
-    sensorData.append(sd)
+current_date = ""
+iCnt = 0
+error_cnt = 0
 
-def getSensorData():
-    return sensorData
-
-def clearSensorData():
-    global sensorData
-    sensorData = []
-
+cpu_temps = []

@@ -32,8 +32,7 @@ import sys
 from datetime import datetime
 import logging
 from gpiozero import CPUTemperature
-import socket
-from threading import Thread
+import subprocess
 
 import config
 import commonDataArea as cda
@@ -54,31 +53,24 @@ def getPorts():
     except Exception as e:
         logger.put_msg("E","monitor.getPorts ERROR: " + e)
 
-def checkForCommandFile(temp):
+def checkForCommandFile():
     try:
         filename = config.get("CommandInterface","cmd_file")
         if os.path.exists(filename):
             f = open(config.get("CommandInterface","cmd_file"),"r")  
             results = ""      
             for line in f:
-                if "status" in line:
-                    #data = subprocess.run(["dmesg"], capture_output=True, text=True)
-                    #print("status request")
-                    results = results + "Monitor.service is running at " + str(temp) + " C degrees" + "\n"
+                if "monitor" in line:
+                    results = subprocess.run(["systemctl","status","monitor"], capture_output=True, text=True)
                 elif "pumps" in line:
-                    #print("pumps request")
-                    results = results + "Pump information requested" + "\n"
+                    results = getPumpInfo()
                 elif "sensor" in line:
-                    #print("sensor request")
-                    results = results + "Sensor information requested" + "\n"
+                    results = getSensorInfo()
                 elif "logs" in line:
-                    #print("sensor request")
                     for m in cda.log_messages:
                         results = results + m + "\n"
-
                 else:
-                    #print("Invalid request")
-                    results = results + "Request cannot be processed" + "\n"
+                    results = results + "INVALID request, cannot be processed" + "\n"
 
             f = open(config.get("CommandInterface","results_file"), "w")
             f.write(results) 
@@ -93,6 +85,66 @@ def checkForCommandFile(temp):
         logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.put_msg("E",f"monitor.checkForCommandFile Exception: {e}")
 
+
+def getPumpInfo():
+    try:
+        result = "Pump 1: \n"
+        result = result + "  On/Off status: " + cda.pumpA_status + "\n"
+        result = result + "  Cycle count  : " + str(cda.pumpA_cycle_cnt) + "\n"
+        result = result + "\n"
+        result = "Pump 2: \n"
+        result = result + "  On/Off status: " + cda.pumpB_status + "\n"
+        result = result + "  Cycle count  : " + str(cda.pumpB_cycle_cnt) + "\n"
+        return result
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.put_msg("E",f"monitor.checkForCommandFile Exception: {e}")
+
+def getSensorInfo():
+    try:
+        result = "Sensor 1: \n"
+        result = result + "  USB port       : " + cda.portA + "\n"
+        result = result + "  I/O Error      : " + cda.sensor_A_io_error + "\n"
+        result = result + "  Connect Error  : " + cda.sensor_A_connect_error + "\n"
+        result = "Sensor 2: \n"
+        result = result + "  USB port       : " + cda.portB + "\n"
+        result = result + "  I/O Error      : " + cda.sensor_B_io_error + "\n"
+        result = result + "  Connect Error  : " + cda.sensor_B_connect_error + "\n"
+        result = "Sensor 3: \n"
+        result = result + "  USB port       : " + cda.portC + "\n"
+        result = result + "  I/O Error      : " + cda.sensor_C_io_error + "\n"
+        result = result + "  Connect Error  : " + cda.sensor_C_connect_error + "\n"
+        result = "Sensor 4: \n"
+        result = result + "  USB port       : " + cda.portD + "\n"
+        result = result + "  I/O Error      : " + cda.sensor_D_io_error + "\n"
+        result = result + "  Connect Error  : " + cda.sensor_D_connect_error + "\n"
+        result = result + "\n"
+
+
+        return result
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.put_msg("E",f"monitor.checkForCommandFile Exception: {e}")
+
+
+
+def resetCheck():
+    now = datetime.now()
+    new = now.strftime("%Y_%m_%d")
+
+    # Check if it is a new day if so swap to new file
+    if cda.current_date != new:
+        cda.current_date = new
+        cda.iCnt = 0
+        cda.error_cnt = 0
+        pumpB_cycle_cnt = 0
+        pumpA_cycle_cnt = 0
 
 def mainLine():
     try:
@@ -114,10 +166,12 @@ def mainLine():
             else:	    
                 time.sleep(int(config.get("Interval","wait_to_check_for_ports")))
 
-        iCnt = 0
         rtn = ""
         while True:
-            iCnt = iCnt + 1
+            # if new date reset counters
+            resetCheck()
+
+            cda.iCnt = cda.iCnt + 1
             rtn = pzemHandler.monitor(cda.portA,"A")
             if config.get("Debug","show_regs") == "true":
                 logger.put_msg("D",f"Port A Regs: {rtn}")
@@ -148,10 +202,15 @@ def mainLine():
             #print(f"Interval count: {iCnt}", end="")
             now = datetime.now()
             ts = now.strftime("%Y-%m-%d %H:%M:%S.%f")
+            
+            # get cpu temperature and save
             cpu = CPUTemperature()
-            logger.put_msg("I",f"Interval count({iCnt} CPU temp: {cpu.temperature} C)")
+            cda.cup_temps.append(cpu.temperature)
 
-            checkForCommandFile(cpu.temperature)
+            logger.put_msg("I",f"Interval count({cda.iCnt}")
+
+            # check if the CLI interface has any requests
+            checkForCommandFile()
 
             time.sleep(int(config.get("Interval","wait_to_check_sensors")))
             
@@ -175,14 +234,15 @@ def mainLine():
 if __name__ == "__main__":
     # reset_usb()
     try:
-        logging.basicConfig()
-        log = logging.getLogger()
-        log.setLevel(logging.DEBUG)        
         # Read config.ini file for parameters
         config.readConfig()
-
-        # clear and reset any command requests
+        # set current date
+        now = datetime.now()
+        cda.current_date = now.strftime("%Y_%m_%d")
+        # initialize values
         cda.cmdI = ""
+        cda.iCnt = 0
+        cda.error_cnt = 0
         if os.path.exists(config.get("CommandInterface","cmd_file")):
             os.remove(config.get("CommandInterface","cmd_file"))
 

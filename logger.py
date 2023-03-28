@@ -35,7 +35,6 @@ import smsHandler
 
 # Data array of pzem-16 sensor data
 logData = []
-oldData = 0
 
 
 # def getParms():
@@ -105,7 +104,6 @@ def put_msg(lvl, msg):
         print(f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")
         cda.log_msg.append(f"Logger - Exception type: {exception_type} File name: {filename} Line number: {line_number}")            
         cda.log_msg.append(f"Dropped msg: {msg}")
-
 
 def sms_msg(msg):
     try:

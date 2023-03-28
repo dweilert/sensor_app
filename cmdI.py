@@ -70,9 +70,10 @@ def getResults():
 def show_help():
     print(" ")
     print("  Valid commands: ")
-    print("    s (or) status  - get current status of monitor service")
+    print("    m (or) monitor - get current status of monitor service")
     print("    p (or) pumps   - show information regarding pumps")
-    print("    m (or) monitor - get list of sensors that are currently monitoring environment")
+    print("    s (or) sensors - get list of sensors that are currently monitoring environment")
+    print("    l (or) logs    - get log data")
     print("    h (or) help    - show this help information")
     print("    q (or) quit    - stop command interface")
     print(" ")
@@ -93,8 +94,8 @@ def getCommand():
                 break
             elif cmd == "help" or cmd == "h":
                 show_help()
-            elif cmd == "status" or cmd == "s":
-                writeCommand("status")
+            elif cmd == "sensors" or cmd == "s":
+                writeCommand("sensors")
             elif cmd == "pumps" or cmd == "p":
                 writeCommand("pumps")
             elif cmd == "monitor" or cmd == "m":
