@@ -55,26 +55,36 @@ def getPorts():
         logger.put_msg("E","monitor.getPorts ERROR: " + e)
 
 def checkForCommandFile(temp):
-    if os.path.exists(config.get("CommandInterface","cmd_file")):
-        f = open(config.get("CommandInterface","cmd_file"),"r")  
-        results = ""      
-        for line in f:
-            if "status" in line:
-                results = results + "Monitor.service is running at " + temp + " C degrees"
-            elif "pumps" in line:
-                results = results + "Pump information requested"
-            elif "sensor" in line:
-                results = results + "Sensor information requested"
-            else:
-                results = results + "Request cannot be processed"
+    try:
+        filename = config.get("CommandInterface","cmd_file")
+        if os.path.exists(filename):
+            f = open(config.get("CommandInterface","cmd_file"),"r")  
+            results = ""      
+            for line in f:
+                if "status" in line:
+                    results = results + "Monitor.service is running at " + temp + " C degrees"
+                elif "pumps" in line:
+                    results = results + "Pump information requested"
+                elif "sensor" in line:
+                    results = results + "Sensor information requested"
+                else:
+                    results = results + "Request cannot be processed"
 
-        f = open(config.get("CommandInterface","results_file"), "w")
-        f.write(results) 
-        f.close()               
-        
-        os.remove(config.get("CommandInterface","cmd_file"))
-    else:
-        print("Did not find: " + config.get("CommandInterface","cmd_file") )
+            f = open(config.get("CommandInterface","results_file"), "w")
+            f.write(results) 
+            f.close()               
+            
+            os.remove(config.get("CommandInterface","cmd_file"))
+        else:
+            print("Did not find: " + config.get("CommandInterface","cmd_file") )
+
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.put_msg("E",f"monitor.checkForCommandFile Exception: {e}")
+
 
 def mainLine():
     try:
