@@ -50,13 +50,10 @@ def getResults():
         global results_check_cnt
         print("check for file" + results_file)
         if os.path.exists(results_file):
-            print("open file")
             f = open(results_file,"r")
-            print("read and print file")
             print(f.read())
             command_sent = False
             results_check_cnt = 0
-            print("delete fileß")
             deleteResults()
             return True
         else:
@@ -85,6 +82,7 @@ def getCommand():
     try:
         global command_sent
         global results_check_cnt
+        dots = ""
         while True:
             print("Enter command: ")
             cmd = input()
@@ -102,7 +100,7 @@ def getCommand():
             else:
                 print("Invalid command, type help for valid commands")
 
-            time.sleep(0.5)
+            time.sleep(0.75)
             if command_sent == True:
                 while True:
                     if getResults() == True:
@@ -110,10 +108,11 @@ def getCommand():
                         break
                     else:
                         results_check_cnt = results_check_cnt + 1
-                        if results_check_cnt > 3:
-                            print("stopped waiting for command results, retry")
+                        dots = dots + "."
+                        if results_check_cnt > 5:
+                            print("stopped waiting for command results, retry", end="\r")
                             break
-                        print("waiting for command results")
+                        print("waiting " + dots, end="\r")
                         time.sleep(2)
 
 
