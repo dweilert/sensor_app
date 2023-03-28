@@ -147,7 +147,7 @@ class interface:
             data = self._socket.recvfrom(1024)
             print(type(data[0]))
             print(data[0])
-            ndata = data[1].decode
+            ndata = data[1].decode('utf-8')
             print(type(ndata))
             print(ndata)
             # ndata = string(data)
