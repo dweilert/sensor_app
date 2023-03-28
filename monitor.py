@@ -135,19 +135,8 @@ def getSensorInfo():
 def getMonitorStatus():
     info = subprocess.run(["systemctl","status","monitor"], capture_output=True, text=True)
     print("info type:", type(info))
-
     lines = info.stdout
-    print("stdout type:", type(info.stdout))
-    print(lines)
-
-    newlines = lines.split("\n")
-    print("newlines type:", type(newlines))
-    print(newlines)
-
-    result = ""
-    for line in newlines:
-        result = result + line + "\n"
-    return result
+    return lines
 
 
 def resetCheck():
