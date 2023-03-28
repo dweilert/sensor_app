@@ -43,6 +43,54 @@ Communication protocol: Baud: 9600, Parity: N, Data bits: 8, Stop bit: 1
 
 By reading the input registers the followin data is obtained:
 
+Register       Description                      Resolution
+address
+-------------------------------------------------------------------------------
+0x0000      Voltage value               Measuring range: 80-260V 
+            Volts                       Resolution: 0.1V
+                                        Measurment accuracy: 0.5%
+                                        What is being supplied on the 110
+                                        leads connected to the PZEM
+
+0x0001      Current (low 16 bits)       Measuring range: 0-100A 
+            AMPS                        Starting measuring current: 0.02A
+                                        Resolution: 0.001A
+                                        Measurment accuracy: 0.5%
+                                        Amps being seen when monitored device
+                                        is being used
+
+0x0002      Current (high 16 bits)
+
+0x0003      Power (low 16 bits)         Measuring range: 0-23kW 
+            Watts                       Starting measuring power: 0.4W, 
+                                        Resolution: 0.1W
+                                        Format: <1000W one decimal, >=1000W only integer
+                                        Measurment accuracy: 0.5% 
+                                        Watts being seen when monitored device
+                                        is being used
+
+0x0004      Power (high 16 bits)         
+
+0x0005      Energy (low 16 bits)        Measuring range: 0-999.99 kWh, 
+            kWh                         Resolution: 1 Wh, 
+                                        Measurment accuracy: 0.5%
+                                        Format: <10kWh integer Wh, >=10kWh then kWh
+
+0x0006      Energy (high 16 bits)   
+
+0x0007      Frequency                   Measuring range: 45-65 Hz, 
+            Hz                          Resolution: 0.1 Hz, 
+                                        Measurment accuracy: 0.5%
+
+0x0008      Power factor                Measuring range: 0.00-1.00, 
+                                        Resolution: 0.01, 
+                                        Measurment accuracy: 1%
+
+0x0009      Alarm status                0xFFFF alarm is on
+                                        0x0000 alarm is off
+                                        PF power fault
+
+
 Voltage:       Measuring range: 80-260V, Resolution: 0.1V, Measurment accuracy: 0.5%
 Current:       Measuring range: 0-100A 
                Starting measuring current: 0.02A

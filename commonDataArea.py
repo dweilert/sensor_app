@@ -67,6 +67,10 @@ pumpA_stop = ""
 pumpA_energy_start = 0
 pumpA_energy_latest = 0
 pumpA_cycle_cnt = 0
+pumpA_cycles = []
+pumpA_amp_high = 0
+pumpA_amp_low = 0
+pumpA_amp_avg = 0
 
 # Pump B data
 pumpB_status = "OFF"
@@ -75,6 +79,10 @@ pumpB_stop = ""
 pumpB_energy_start = 0
 pumpB_energy_latest = 0
 pumpB_cycle_cnt = 0
+pumpB_cycles = []
+pumpB_amp_high = 0
+pumpB_amp_low = 0
+pumpB_amp_avg = 0
 
 current_date = ""
 iCnt = 0
