@@ -66,7 +66,7 @@ def getParms():
             now = datetime.now()
             ts = now.strftime("%Y-%m-%d %H:%M:%S.%f")
             #sys.stdout.write(f"{ts} (I) : Interval count({iCnt})")
-            print(f"{ts} (I) : Log message file: {cda.log_file_name}")
+            #print(f"{ts} (I) : Log message file: {cda.log_file_name}")
 
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()

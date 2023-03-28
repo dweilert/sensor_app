@@ -39,7 +39,7 @@ def readConfig():
         # Set debug flag from config.ini file
         if configI.get("Debug","status") == "true" or configI.get("Debug","status") == "true" or configI.get("Debug","status") == "TRUE":
             cda.debug = True
-            logger.put_msg("D","config.readConfig DEBUG messages will be displayed")
+            #logger.put_msg("D","config.readConfig DEBUG messages will be displayed")
         else:
             cda.debug = False
         setCommons()
