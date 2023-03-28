@@ -75,6 +75,7 @@ def show_help():
     print("    sensors - get list of sensors that are currently monitoring environment")
     print("    help    - show this help information")
     print("    quit    - stop command interface")
+    print(" ")
 
 
 def getCommand():
@@ -104,6 +105,7 @@ def getCommand():
                 while True:
                     if getResults() == True:
                         print("---")
+                        dots = ""
                         break
                     else:
                         results_check_cnt = results_check_cnt + 1
