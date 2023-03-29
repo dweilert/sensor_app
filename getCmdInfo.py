@@ -196,36 +196,54 @@ def getMonitorStatus():
 def getRegisters(id):
     try:
         results = ""
-        print(len(cda.sensor_A_registers))
-        print(len(cda.sensor_B_registers))
-        print(len(cda.sensor_C_registers))
-        print(len(cda.sensor_D_registers))
+        a_len = len(cda.sensor_A_registers)
+        if a_len > 10:
+            a_start = a_len - 9
+        else:
+            a_start = 1
+        b_len = len(cda.sensor_B_registers)
+        if b_len > 10:
+            b_start = b_len - 9
+        else:
+            b_start = 1
+        c_len = len(cda.sensor_C_registers)
+        if c_len > 10:
+            c_start = c_len - 9
+        else:
+            c_start = 1
+        d_len = len(cda.sensor_D_registers)
+        if d_len > 10:
+            d_start = d_len - 9
+        else:
+            d_start = 1
         if id == "A":
-            if len(cda.sensor_A_registers) > 0:
+            if a_len > 0:
                 results = results + "Sensor 1: \n"
-                for r in cda.sensor_A_registers:
-                    results = results + formatRegisters(r) + "\n"
+                p = a_start
+                while p <= a_len:
+                    results = results + "(" + p + ") " + formatRegisters(cda.sensor_A_registers[p]) + "\n"
                 results = results + "\n"
-
         if id == "B":
-            if len(cda.sensor_B_registers) > 0:
+            if b_len > 0:
                 results = results + "Sensor 2: \n"
-                for r in cda.sensor_B_registers:
-                    results = results + formatRegisters(r) + "\n"
+                p = b_start
+                while p <= b_len:
+                    results = results + "(" + p + ") " + formatRegisters(cda.sensor_B_registers[p]) + "\n"
                 results = results + "\n"
-
         if id == "C":
-            if len(cda.sensor_C_registers) > 0:
+            if c_len > 0:
                 results = results + "Sensor 3: \n"
-                for r in cda.sensor_C_registers:
-                    results = results + formatRegisters(r) + "\n"
+                p = c_start
+                while p <= c_len:
+                    results = results + "(" + p + ") " + formatRegisters(cda.sensor_C_registers[p]) + "\n"
                 results = results + "\n"
 
-        if id == "C":
-            if len(cda.sensor_D_registers) > 0:
+        if id == "D":
+            if d_len > 0:
                 results = results + "Sensor 4: \n"
-                for r in cda.sensor_D_registers:
-                    results = results + formatRegisters(r) + "\n"
+                p = d_start
+                while p <= d_len:
+                    results = results + "(" + p + ") " + formatRegisters(cda.sensor_D_registers[p]) + "\n"
                 results = results + "\n"
 
         return results
@@ -267,7 +285,7 @@ def formatRegisters(registers):
     #rinline = impedance*math.cos(pwangle)
     #xinline = impedance*math.sin(pwangle)
     #data = f"volt: {volt}  amp: {amp}  power {power} energy: {energy} freq: {freq}  pwfac:{pwfac}  reactive: {reactive}  apparent: {apparent}  powerangle: {pwangle}  impedance: {impedance}  rinline: {rinline}  xinline: {xinline}  status: {alarmtran}"
-    data = f"volt:{volt}  amp:{amp}  power:{power}  energy:{energy}  freq:{freq}  pwfac:{pwfac}  alarm:{alarmtran}"
+    data = f"volt: {volt}  amp: {amp}  power: {power}  energy: {energy}  freq: {freq}  pwfac: {pwfac}  alarm: {alarmtran}"
        
     return data
 
