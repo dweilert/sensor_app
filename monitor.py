@@ -137,7 +137,7 @@ def getPumpInfo():
         result = result + "  End energy      : " + str(cda.pumpA_energy_latest) + "\n"
         result = result + "  Amps high       : " + str(cda.pumpA_amp_high) + "\n"
         result = result + "  Amps low        : " + str(cda.pumpA_amp_low) + "\n"
-        result = result + ("  Amps avg        : {:6.3f}".format(cda.pumpA_amp_avg)) + "\n"
+        result = result + ("  Amps avg        :{:6.3f}".format(cda.pumpA_amp_avg)) + "\n"
         result = result + "  ---- Current cycle information ----" + "\n"
 
 
@@ -152,7 +152,7 @@ def getPumpInfo():
         result = result + "  End energy      : " + str(cda.pumpB_energy_latest) + "\n"
         result = result + "  Amps high       : " + str(cda.pumpB_amp_high) + "\n"
         result = result + "  Amps low        : " + str(cda.pumpB_amp_low) + "\n"
-        result = result + ("  Amps avg        : {:6.3f}".format(cda.pumpB_amp_avg)) + "\n"
+        result = result + ("  Amps avg        :{:6.3f}".format(cda.pumpB_amp_avg)) + "\n"
         result = result + "  ---- Current cycle information ----" + "\n"
 
         print(cda.pumpA_cycles)

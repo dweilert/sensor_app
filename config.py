@@ -35,7 +35,7 @@ configI = configparser.ConfigParser()
 def readConfig():
     try:
         #configI = configparser.ConfigParser()
-        configI.read("config.ini")
+        configI.read("/home/bob/config.ini")
         # Set debug flag from config.ini file
         if configI.get("Debug","status") == "true" or configI.get("Debug","status") == "true" or configI.get("Debug","status") == "TRUE":
             cda.debug = True
