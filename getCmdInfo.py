@@ -245,11 +245,11 @@ def formatRegisters(registers):
     amp = registers[1]*0.001
     amp = "{:5.3f}".format(amp)
     power = registers[3]*0.1
-    power = "{:5.1f}".format(power)
+    power = "{:6.2f}".format(power)
     energy = registers[5]*0.001
     energy = "{:4.2f}".format(energy)
     freq = registers[7]*0.1
-    freq = "{:3.1f}".format(freq)
+    freq = "{:4.2f}".format(freq)
     pwfac = registers[8]*0.01
     pwfac = "{:3.2f}".format(pwfac)
 
@@ -267,7 +267,7 @@ def formatRegisters(registers):
     #rinline = impedance*math.cos(pwangle)
     #xinline = impedance*math.sin(pwangle)
     #data = f"volt: {volt}  amp: {amp}  power {power} energy: {energy} freq: {freq}  pwfac:{pwfac}  reactive: {reactive}  apparent: {apparent}  powerangle: {pwangle}  impedance: {impedance}  rinline: {rinline}  xinline: {xinline}  status: {alarmtran}"
-    data = f"volt:{{:6.2f}.format(volt)}  amp:{amp}  power:{power}  energy:{energy}  freq:{freq}  pwfac:{pwfac}  alarm:{alarmtran}"
+    data = f"volt:{volt}  amp:{amp}  power:{power}  energy:{energy}  freq:{freq}  pwfac:{pwfac}  alarm:{alarmtran}"
        
     return data
 
