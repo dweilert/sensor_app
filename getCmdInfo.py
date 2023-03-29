@@ -71,7 +71,7 @@ def checkForCommandFile():
                     for m in cda.log_messages:
                         results = results + m + "\n"
                 else:
-                    results = results + "INVALID request, cannot be processed" + "\n"
+                    results = "Request " + line + " cannot be processed" + "\n"
 
             if results == "":
                 results = "Failed to get requested data"

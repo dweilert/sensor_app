@@ -13,6 +13,7 @@ results_file = ""
 
 def writeCommand(cmd):
     try: 
+        print("cmd: " + cmd)
         global command_sent
         global results_check_cnt
         command_sent = True
