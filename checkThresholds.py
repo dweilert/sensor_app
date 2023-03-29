@@ -196,7 +196,7 @@ def checkSensors():
         ioCnt = ioCnt + 1
 
     if ioCnt > 0:
-        if ioCnt == int(config.get("Pzem","total_senosrs")):
+        if ioCnt == int(config.get("Pzem","total_sensors")):
             # If 4 it means power lost to all sensors
             if cda.sensor_lost_power_msg_cnt == 0:
                 msg = config.get("Pzem","sensor_lost_power_msg")
