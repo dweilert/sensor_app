@@ -232,6 +232,9 @@ def getRegisters(id):
                     results = results + "(" + str(p) + ") " + formatRegisters(cda.sensor_A_registers[p]) + "\n"
                     p = p + 1
                 results = results + "\n"
+        else:
+            results = "No data for reqister" + "\n"
+
         if id == "B" and b_len > 0:
             if b_len > 0:
                 results = results + "Sensor 2: \n"
@@ -240,6 +243,9 @@ def getRegisters(id):
                     results = results + "(" + str(p) + ") " + formatRegisters(cda.sensor_B_registers[p]) + "\n"
                     p = p + 1
                 results = results + "\n"
+        else:
+            results = "No data for reqister" + "\n"
+
         if id == "C" and c_len > 0:
             if c_len > 0:
                 results = results + "Sensor 3: \n"
@@ -248,6 +254,8 @@ def getRegisters(id):
                     results = results + "(" + str(p) + ") " + formatRegisters(cda.sensor_C_registers[p]) + "\n"
                     p = p + 1
                 results = results + "\n"
+        else:
+            results = "No data for reqister" + "\n"
 
         if id == "D" and d_len > 0:
             if d_len > 0:
@@ -257,6 +265,8 @@ def getRegisters(id):
                     results = results + "(" + str(p) + ") " + formatRegisters(cda.sensor_D_registers[p]) + "\n"
                     p = p + 1
                 results = results + "\n"
+        else:
+            results = "No data for reqister" + "\n"
 
         return results
 
