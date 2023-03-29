@@ -70,15 +70,19 @@ def getResults():
 def show_help():
     print(" ")
     print("  Valid commands: ")
-    print("    m (or) monitor - get current status of monitor service")
-    print("    p (or) pumps   - show information regarding pumps")
-    print("    s (or) sensors - get list of sensors that are currently monitoring environment")
-    print("    r (or) regs    - get sensor register information")
-    print("    u (or) ups     - get ups information")
-    print("    l (or) logs    - get log data")
-    print("    t (or) temp    - get temperature information")
-    print("    h (or) help    - show this help information")
-    print("    q (or) quit    - stop command interface")
+    print("    h  - show this help information")
+    print("    l  - log data")
+    print("    m  - monitor service current status")
+    print("    p  - pump information, both pumps")
+    print("    q  - quit command interface")
+    print("    r1 - register information for sensor 1 ")
+    print("    r2 - register information forsensor 2 register")
+    print("    r3 - register information forsensor 3 register")
+    print("    r4 - register information forsensor 4 register")
+    print("    s  - sensors USB mappings and status")
+    print("    t  - temperature information for Raspberry Pi")
+    print("    u  - ups information for Raspberry Pi")
+ 
     print(" ")
     print("---")
 
@@ -95,24 +99,30 @@ def getCommand():
                 print("Command interface closed")
                 print("\n"+"---")
                 break
-            elif cmd == "help" or cmd == "h":
+            elif cmd == "h":
                 show_help()
-            elif cmd == "sensors" or cmd == "s":
+            elif cmd == "s":
                 writeCommand("sensors")
-            elif cmd == "pumps" or cmd == "p":
+            elif cmd == "p":
                 writeCommand("pumps")
-            elif cmd == "monitor" or cmd == "m":
+            elif cmd == "m":
                 writeCommand("monitor")
-            elif cmd == "logs" or cmd == "l":
+            elif cmd == "l":
                 writeCommand("logs")
-            elif cmd == "ups" or cmd == "u":
+            elif cmd == "u":
                 writeCommand("ups")
-            elif cmd == "temp" or cmd == "t":
+            elif cmd == "t":
                 writeCommand("temp")
-            elif cmd == "regs" or cmd == "r":
-                writeCommand("regs")
+            elif cmd == "r1":
+                writeCommand("r1")
+            elif cmd == "r2":
+                writeCommand("r2")
+            elif cmd == "r3":
+                writeCommand("r3")
+            elif cmd == "r4":
+                writeCommand("r4")
             else:
-                print("Invalid command, type help for valid commands")
+                print("Invalid command, type h for help")
                 print("\n" + "---")
                 command_sent = False
 

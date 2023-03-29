@@ -58,8 +58,14 @@ def checkForCommandFile():
                     results = upsHandler.getUPSInfo()    
                 elif "temp" in line:
                     results = getTempInfo()    
-                elif "regs" in line:
-                    results = getRegisters()    
+                elif "r1" in line:
+                    results = getRegisters("A")    
+                elif "r2" in line:
+                    results = getRegisters("B")    
+                elif "r3" in line:
+                    results = getRegisters("C")    
+                elif "r4" in line:
+                    results = getRegisters("D")    
                 elif "logs" in line:
                     for m in cda.log_messages:
                         results = results + m + "\n"
@@ -187,32 +193,40 @@ def getMonitorStatus():
     return lines
 
 
-def getRegisters():
+def getRegisters(id):
     try:
         results = ""
-        if len(cda.sensor_A_registers) > 0:
-            results = results + "Sensor 1: \n"
-            for r in cda.sensor_A_registers:
-                results = results + formatRegisters(r) + "\n"
-            results = results + "\n"
+        print(len(cda.sensor_A_registers))
+        print(len(cda.sensor_B_registers))
+        print(len(cda.sensor_C_registers))
+        print(len(cda.sensor_D_registers))
+        if id == "A":
+            if len(cda.sensor_A_registers) > 0:
+                results = results + "Sensor 1: \n"
+                for r in cda.sensor_A_registers:
+                    results = results + formatRegisters(r) + "\n"
+                results = results + "\n"
 
-        if len(cda.sensor_B_registers) > 0:
-            results = results + "Sensor 2: \n"
-            for r in cda.sensor_B_registers:
-                results = results + formatRegisters(r) + "\n"
-            results = results + "\n"
+        if id == "B":
+            if len(cda.sensor_B_registers) > 0:
+                results = results + "Sensor 2: \n"
+                for r in cda.sensor_B_registers:
+                    results = results + formatRegisters(r) + "\n"
+                results = results + "\n"
 
-        if len(cda.sensor_C_registers) > 0:
-            results = results + "Sensor 3: \n"
-            for r in cda.sensor_C_registers:
-                results = results + formatRegisters(r) + "\n"
-            results = results + "\n"
+        if id == "C":
+            if len(cda.sensor_C_registers) > 0:
+                results = results + "Sensor 3: \n"
+                for r in cda.sensor_C_registers:
+                    results = results + formatRegisters(r) + "\n"
+                results = results + "\n"
 
-        if len(cda.sensor_D_registers) > 0:
-            results = results + "Sensor 4: \n"
-            for r in cda.sensor_D_registers:
-                results = results + formatRegisters(r) + "\n"
-            results = results + "\n"
+        if id == "C":
+            if len(cda.sensor_D_registers) > 0:
+                results = results + "Sensor 4: \n"
+                for r in cda.sensor_D_registers:
+                    results = results + formatRegisters(r) + "\n"
+                results = results + "\n"
 
         return results
 
