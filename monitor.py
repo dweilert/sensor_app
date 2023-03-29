@@ -90,29 +90,28 @@ def mainLine():
 
             now = datetime.now()
             nowDay = now.strftime("%Y_%m_%d")
-            nowTime = now.strftime("%H:%M:%S.%f")
             resetCheck(nowDay)
 
             cda.iCnt = cda.iCnt + 1
             rtn = pzemHandler.monitor(cda.portA,"A")
             checkThresholds.check(rtn,"A")
-            rtn.append(nowTime)
-            cda.sensor_A_registers.append(rtn)
+            if len(rtn) > 8:
+                cda.sensor_A_registers.append(rtn)
             
             rtn = pzemHandler.monitor(cda.portB,"B")
             checkThresholds.check(rtn,"B")
-            rtn.append(nowTime)
-            cda.sensor_B_registers.append(rtn)
+            if len(rtn) > 8:
+                cda.sensor_B_registers.append(rtn)
 
             rtn = pzemHandler.monitor(cda.portC,"C") 
             checkThresholds.check(rtn,"C")
-            rtn.append(nowTime)
-            cda.sensor_C_registers.append(rtn)
+            if len(rtn) > 8:
+                cda.sensor_C_registers.append(rtn)
 
             rtn = pzemHandler.monitor(cda.portD,"D")          
             checkThresholds.check(rtn,"D")
-            rtn.append(nowTime)
-            cda.sensor_D_registers.append(rtn)
+            if len(rtn) > 8:
+                cda.sensor_D_registers.append(rtn)
 
             # Check for io errors and connection errors
             checkThresholds.checkSensors()
