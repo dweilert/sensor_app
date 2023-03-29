@@ -202,18 +202,21 @@ def getRegisters(id):
             a_start = a_len - 9
         else:
             a_start = 0
+
         b_len = len(cda.sensor_B_registers)
         b_len = b_len - 1
         if b_len > 10:
             b_start = b_len - 9
         else:
             b_start = 0
+        
         c_len = len(cda.sensor_C_registers)
         c_len = c_len - 1
         if c_len > 10:
             c_start = c_len - 9
         else:
             c_start = 0
+        
         d_len = len(cda.sensor_D_registers)
         d_len = d_len - 1
         if d_len > 10:
@@ -267,6 +270,8 @@ def getRegisters(id):
 
 
 def formatRegisters(registers):
+    if len(registers) < 8:
+        return ""
     volt = registers[0]*0.1
     volt = "{:5.2f}".format(volt)
     amp = registers[1]*0.001
