@@ -233,11 +233,11 @@ def getMemory():
                 u_low = int(m[1])
             t_mem = int(m[0])
 
-        u_high = u_high / 1000,1
+        u_high = u_high / 1000
         u_high = "{:5.3f}".format(u_high)
-        u_low = u_low / 1000,1
+        u_low = u_low / 1000
         u_low = "{:5.3f}".format(u_low)
-        t_mem = t_mem / 1000,1
+        t_mem = t_mem / 1000
         t_mem = "{:5.3f}".format(t_mem)
 
         results = "Memory information" + "\n"
