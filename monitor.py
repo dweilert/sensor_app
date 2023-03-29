@@ -95,22 +95,25 @@ def mainLine():
             cda.iCnt = cda.iCnt + 1
             rtn = pzemHandler.monitor(cda.portA,"A")
             checkThresholds.check(rtn,"A")
-            print(rtn)
+            print(rtn + " :A " + str(len(rtn)))
             if len(rtn) > 8:
                 cda.sensor_A_registers.append(rtn)
             
             rtn = pzemHandler.monitor(cda.portB,"B")
             checkThresholds.check(rtn,"B")
+            print(rtn + " :B " + str(len(rtn)))
             if len(rtn) > 8:
                 cda.sensor_B_registers.append(rtn)
 
             rtn = pzemHandler.monitor(cda.portC,"C") 
             checkThresholds.check(rtn,"C")
+            print(rtn + " :C " + str(len(rtn)))
             if len(rtn) > 8:
                 cda.sensor_C_registers.append(rtn)
 
             rtn = pzemHandler.monitor(cda.portD,"D")          
             checkThresholds.check(rtn,"D")
+            print(rtn + " :D " + str(len(rtn)))
             if len(rtn) > 8:
                 cda.sensor_D_registers.append(rtn)
 
