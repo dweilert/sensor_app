@@ -195,7 +195,7 @@ def getRegisters():
             for r in cda.sensor_A_registers:
                 results = results + formatRegisters(r) + "\n"
             results = results + "\n"
-            
+
         if len(cda.sensor_B_registers) > 0:
             results = results + "Sensor 2: \n"
             for r in cda.sensor_B_registers:
@@ -245,7 +245,7 @@ def formatRegisters(registers):
     impedance= apparent/(amp*amp)
     rinline = impedance*math.cos(pwangle)
     xinline = impedance*math.sin(pwangle)
-    data = f"volt: {volt}  amp: {amp}  power {power} energy: {energy} freq: {freq}  pwfac:{pwfac}  reactive: {reactive}  apparent: {apparent}  powerangle: {pwangle}  impedance: {impedance}  rinline: {rinline}  xinline: {xinline}  status: {alarmtran}""
+    data = f"volt: {volt}  amp: {amp}  power {power} energy: {energy} freq: {freq}  pwfac:{pwfac}  reactive: {reactive}  apparent: {apparent}  powerangle: {pwangle}  impedance: {impedance}  rinline: {rinline}  xinline: {xinline}  status: {alarmtran}"
        
     return data
 
