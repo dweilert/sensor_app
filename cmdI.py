@@ -13,23 +13,19 @@ results_file = ""
 
 def writeCommand(cmd):
     try: 
-        print("cmd: " + cmd)
         global command_sent
         global results_check_cnt
         command_sent = True
         deleteResults()
         results_check_cnt = 0
-
         f = open(cmd_file, "w")
         f.write(cmd)
-        #print("\n")
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         print(f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")
         print("WriteCommand Error")
-
     finally: 
         f.close()
 

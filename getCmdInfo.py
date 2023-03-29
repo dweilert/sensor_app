@@ -48,7 +48,9 @@ def checkForCommandFile():
             f = open(config.get("CommandInterface","cmd_file"),"r")  
             results = ""      
             for line in f:
-                print("======================" + line)
+                if line.strip() == "":
+                    results = "Failed to read command request, please retry"
+                    break
                 if "monitor" in line:
                     results = getMonitorStatus()
                 elif "pumps" in line:
