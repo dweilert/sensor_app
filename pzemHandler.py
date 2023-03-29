@@ -90,19 +90,6 @@ address
                                         0x0000 alarm is off
                                         PF power fault
 
-
-Voltage:       Measuring range: 80-260V, Resolution: 0.1V, Measurment accuracy: 0.5%
-Current:       Measuring range: 0-100A 
-               Starting measuring current: 0.02A
-               Resolution: 0.001A, Measurment accuracy: 0.5%
-Active power:  Measuring range: 0-23kW 
-               Starting measuring power: 0.4W, Resolution: 0.1W
-               Format: <1000W one decimal, >=1000W only integer, Measurment accuracy: 0.5%
-Power factor:  Measuring range: 0.00-1.00, Resolution: 0.01, Measurment accuracy: 1%
-Frequency:     Measuring range: 45-65 Hz, Resolution: 0.1 Hz, Measurment accuracy: 0.5%
-Active Energy: Measuring range: 0-999.99 kWh, Resolution: 1 Wh, Measurment accuracy: 0.5%
-               Format: <10kWh integer Wh, >=10kWh then kWh
-
 """
 
 import subprocess
@@ -115,6 +102,12 @@ import config
 import commonDataArea as cda
 import dataHandler
 import logger
+
+def resetEnergy(usbPort, id):
+    client = ModbusSerialClient(port=usbPort,timeout=int(config.get("Pzem","timeout")),baudrate=9600,bytesize=8,parity="N",stopbits=1)
+    client.connect()
+    request = client.write_registers(0,10,1)
+
 
 
 def monitor(usbPort, id):
@@ -140,10 +133,9 @@ def monitor(usbPort, id):
         dataHandler.saveData(request.registers, id)
         #print(request.registers)
         rtn = request.registers
-        if config.get("Debug","show_regs") == "true":
-            logger.put_msg("D",f"ID: {id} Regs {request.registers}")
         client.close()
-        # No errors
+
+        # No errors so set flags to False
         if id == "A":
             cda.sensor_A_io_error = False
             cda.sensor_A_connect_error = False

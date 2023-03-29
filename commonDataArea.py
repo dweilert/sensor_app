@@ -60,6 +60,12 @@ sensor_C_connect_error = False
 sensor_D_connect_error = False
 sensor_connect_error_msg_cnt = 0
 
+sensor_A_registers = []
+sensor_B_registers = []
+sensor_C_registers = []
+sensor_D_registers = []
+
+
 # Pump A data
 pumpA_status = "OFF"
 pumpA_start = ""

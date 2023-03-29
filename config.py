@@ -35,14 +35,12 @@ configI = configparser.ConfigParser()
 def readConfig():
     try:
         #configI = configparser.ConfigParser()
-        configI.read("config.ini")
+        configI.read("/home/bob/sensor_app/config.ini")
         # Set debug flag from config.ini file
-        if configI.get("Debug","status") == "true" or configI.get("Debug","status") == "true" or configI.get("Debug","status") == "TRUE":
+        if configI.get("Debug","status") == "true":
             cda.debug = True
-            #logger.put_msg("D","config.readConfig DEBUG messages will be displayed")
         else:
             cda.debug = False
-        setCommons()
         return True
     except Exception as e:
         logger.put_msg("E",f"config.readConfig ERROR: {e}")
@@ -55,20 +53,3 @@ def get(k1, k2):
     except Exception as e:
         logger.put_msg("E",f"config.get ERROR: {e}")
         return  "err"
-
-def set(k1, k2, data):
-    try:
-        configI[k1][k2] = data
-        return True
-    except Exception as e:
-        logger.put_msg("E",f"config.set ERROR: {e}")
-        return False
-
-def setCommons():
-    try:        # logger
-        cda.log_dir = configI.get("Log","log_directory")
-        cda.log_base = configI.get("Log","log_base")
-        cda.log_sms = configI.get("Log","log_sms_number")
-
-    except Exception as e:
-        logger.put_msg("E",f"config.setCommons ERROR: {e}")
