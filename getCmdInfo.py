@@ -221,21 +221,21 @@ def getRegisters(id):
                 results = results + "Sensor 1: \n"
                 p = a_start
                 while p <= a_len:
-                    results = results + "(" + p + ") " + formatRegisters(cda.sensor_A_registers[p]) + "\n"
+                    results = results + "(" + str(p) + ") " + formatRegisters(cda.sensor_A_registers[p]) + "\n"
                 results = results + "\n"
         if id == "B":
             if b_len > 0:
                 results = results + "Sensor 2: \n"
                 p = b_start
                 while p <= b_len:
-                    results = results + "(" + p + ") " + formatRegisters(cda.sensor_B_registers[p]) + "\n"
+                    results = results + "(" + str(p) + ") " + formatRegisters(cda.sensor_B_registers[p]) + "\n"
                 results = results + "\n"
         if id == "C":
             if c_len > 0:
                 results = results + "Sensor 3: \n"
                 p = c_start
                 while p <= c_len:
-                    results = results + "(" + p + ") " + formatRegisters(cda.sensor_C_registers[p]) + "\n"
+                    results = results + "(" + str(p) + ") " + formatRegisters(cda.sensor_C_registers[p]) + "\n"
                 results = results + "\n"
 
         if id == "D":
@@ -243,7 +243,7 @@ def getRegisters(id):
                 results = results + "Sensor 4: \n"
                 p = d_start
                 while p <= d_len:
-                    results = results + "(" + p + ") " + formatRegisters(cda.sensor_D_registers[p]) + "\n"
+                    results = results + "(" + str(p) + ") " + formatRegisters(cda.sensor_D_registers[p]) + "\n"
                 results = results + "\n"
 
         return results
