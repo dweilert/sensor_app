@@ -122,7 +122,7 @@ def getTempInfo():
         results = results + "  Average temp : " + str(avg) + "\n"
         results = results + "  High temp    : " + str(high) + "\n"
         results = results + "  Low temp     : " + str(low) + "\n"
-        print(results)
+
         return results
     
     except Exception as e:
