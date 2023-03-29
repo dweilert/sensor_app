@@ -226,6 +226,7 @@ def getMemory():
 
         cnt = 0
         for m in cda.cpu_ram:
+            print(m)
             if int(m[1]) > u_high:
                 u_high = int(m[1])
             if int(m[1]) < u_low:
