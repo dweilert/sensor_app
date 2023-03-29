@@ -124,6 +124,9 @@ def getTempInfo():
 
 def getPumpInfo():
     try:
+
+        print(cda.pumpA_cycles)
+
         result = "\nPump 1: \n"
         result = result + "  On/Off status: " + cda.pumpA_status + "\n"
         result = result + "  ---- Latest information ----" + "\n"
@@ -136,7 +139,7 @@ def getPumpInfo():
         result = result + "  Amps low        : " + str(cda.pumpA_amp_low) + "\n"
         result = result + ("  Amps avg        : {:6.3f}".format(cda.pumpA_amp_avg)) + "\n"
         result = result + "  ---- Current cycle information ----" + "\n"
-        result = result + "  Cycles       : " + cda.pumpA_cycles
+
 
         result = result + "\n"
         result = result + "Pump 2: \n"
@@ -151,14 +154,29 @@ def getPumpInfo():
         result = result + "  Amps low        : " + str(cda.pumpB_amp_low) + "\n"
         result = result + ("  Amps avg        : {:6.3f}".format(cda.pumpB_amp_avg)) + "\n"
         result = result + "  ---- Current cycle information ----" + "\n"
-        result = result + "  Cycles       : " + cda.pumpB_cycles
+
+        print(cda.pumpA_cycles)
+
         return result
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-        logger.put_msg("E",f"monitor.checkForCommandFile Exception: {e}")
+        logger.put_msg("E",f"monitor.getPumpInfo Exception: {e}")
+
+def printList():
+    try:
+
+        return 
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.put_msg("E",f"monitor.printList Exception: {e}")
+
+
 
 def getSensorInfo():
     try:
