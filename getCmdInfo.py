@@ -226,11 +226,11 @@ def getMemory():
 
         cnt = 0
         for m in cda.cpu_ram:
-            if m[1] > u_high:
-                u_high = m[1]
-            if m[1] < u_low:
-                u_low = m[1]
-            t_mem = m[0]
+            if int(m[1]) > u_high:
+                u_high = int(m[1])
+            if int(m[1]) < u_low:
+                u_low = int(m[1])
+            t_mem = int(m[0])
 
         u_high = u_high / 1000,1
         u_high = "{:5.3f}".format(u_high)
