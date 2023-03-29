@@ -271,7 +271,7 @@ def getRegisters(id):
 
 def formatRegisters(registers):
     if len(registers) < 8:
-        return ""
+        return "No data for register"
     volt = registers[0]*0.1
     volt = "{:5.2f}".format(volt)
     amp = registers[1]*0.001
