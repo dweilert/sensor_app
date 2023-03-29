@@ -48,7 +48,7 @@ def checkForCommandFile():
             f = open(config.get("CommandInterface","cmd_file"),"r")  
             results = ""      
             for line in f:
-                print("line:" + line)
+                print("============================= line:" + line)
                 if "monitor" in line:
                     results = getMonitorStatus()
                 elif "pumps" in line:
