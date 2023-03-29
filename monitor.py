@@ -30,6 +30,7 @@ import os
 import time
 import sys
 from datetime import datetime
+from gpiozero import CPUTemperature
 
 import config
 import logger
@@ -115,6 +116,11 @@ def mainLine():
 
             # Check for io errors and connection errors
             checkThresholds.checkSensors()
+
+            # get Raspberry Pi temp and save
+            cpu = CPUTemperature()
+            cda.cpu_temps.append(cpu.temperature)
+
 
             logger.put_msg("I",f"Interval count({cda.iCnt})")
 
