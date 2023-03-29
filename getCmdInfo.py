@@ -197,26 +197,31 @@ def getRegisters(id):
     try:
         results = ""
         a_len = len(cda.sensor_A_registers)
+        a_len = a_len - 1
         if a_len > 10:
             a_start = a_len - 9
         else:
-            a_start = 1
+            a_start = 0
         b_len = len(cda.sensor_B_registers)
+        b_len = b_len - 1
         if b_len > 10:
             b_start = b_len - 9
         else:
-            b_start = 1
+            b_start = 0
         c_len = len(cda.sensor_C_registers)
+        c_len = c_len - 1
         if c_len > 10:
             c_start = c_len - 9
         else:
-            c_start = 1
+            c_start = 0
         d_len = len(cda.sensor_D_registers)
+        d_len = d_len - 1
         if d_len > 10:
             d_start = d_len - 9
         else:
-            d_start = 1
-        if id == "A":
+            d_start = 0
+
+        if id == "A" and a_len > 0:
             if a_len > 0:
                 results = results + "Sensor 1: \n"
                 p = a_start
@@ -224,7 +229,7 @@ def getRegisters(id):
                     results = results + "(" + str(p) + ") " + formatRegisters(cda.sensor_A_registers[p]) + "\n"
                     p = p + 1
                 results = results + "\n"
-        if id == "B":
+        if id == "B" and b_len > 0:
             if b_len > 0:
                 results = results + "Sensor 2: \n"
                 p = b_start
@@ -232,7 +237,7 @@ def getRegisters(id):
                     results = results + "(" + str(p) + ") " + formatRegisters(cda.sensor_B_registers[p]) + "\n"
                     p = p + 1
                 results = results + "\n"
-        if id == "C":
+        if id == "C" and c_len > 0:
             if c_len > 0:
                 results = results + "Sensor 3: \n"
                 p = c_start
@@ -241,7 +246,7 @@ def getRegisters(id):
                     p = p + 1
                 results = results + "\n"
 
-        if id == "D":
+        if id == "D" and d_len > 0:
             if d_len > 0:
                 results = results + "Sensor 4: \n"
                 p = d_start
