@@ -60,7 +60,9 @@ def checkForCommandFile():
                 elif "ups" in line:
                     results = upsHandler.getUPSInfo()    
                 elif "temp" in line:
-                    results = getTempInfo()    
+                    results = getTempInfo()  
+                elif "memory" in line:
+                    results = getMemory()    
                 elif "r1" in line:
                     results = getRegisters("A")    
                 elif "r2" in line:
@@ -207,6 +209,49 @@ def getMonitorStatus():
     info = subprocess.run(["systemctl","status","monitor"], capture_output=True, text=True)
     lines = info.stdout
     return lines
+
+def getMemory():
+    # Return RAM information (unit=kb) in a list                                        
+    # Index 0: total RAM                                                                
+    # Index 1: used RAM                                                                 
+    # Index 2: free RAM
+    try:
+        t_mem = 0
+
+        u_high = 0
+        u_low = 999
+
+        f_high = 0
+        f_low = 999
+
+        cnt = 0
+        for m in cda.cpu_ram:
+            if m[1] > u_high:
+                u_high = m[1]
+            if m[1] < u_low:
+                u_low = m[1]
+            t_mem = m[0]
+
+        u_high = u_high / 1000,1
+        u_high = "{:5.3f}".format(u_high)
+        u_low = u_low / 1000,1
+        u_low = "{:5.3f}".format(u_low)
+        t_mem = t_mem / 1000,1
+        t_mem = "{:5.3f}".format(t_mem)
+
+        results = "Memory information" + "\n"
+        results = results + "  Total (MB)    : " + str(t_mem) + "\n"
+        results = results + "  High used (MB): " + str(u_high) + "\n"
+        results = results + "  Low used (MB) : " + str(u_low) + "\n"
+
+        return results
+    
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.put_msg("E",f"monitor.getMemory Exception: {e}")
 
 
 def getRegisters(id):

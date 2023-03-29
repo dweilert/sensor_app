@@ -64,6 +64,8 @@ def resetCheck(nowDay):
         cda.sensor_B_registers = []
         cda.sensor_C_registers = []
         cda.sensor_D_registers = []
+        cda.cpu_temps = []
+        cda.cpu_ram = []
 
 
 def mainLine():
@@ -120,9 +122,12 @@ def mainLine():
             # get Raspberry Pi temp and save
             cpu = CPUTemperature()
             cda.cpu_temps.append(cpu.temperature)
+            cda.cpu_ram.append(getRAMinfo())
 
+            # Return RAM information (unit=kb) in a list                                        
 
-            logger.put_msg("I",f"Interval count({cda.iCnt})")
+            if config.get("Debug","status") == "true":
+                logger.put_msg("I",f"Interval count({cda.iCnt})")
 
             # check if the CLI interface has any requests
             getCmdInfo.checkForCommandFile()
@@ -137,7 +142,19 @@ def mainLine():
         logger.put_msg("E",f"monitor.mainLine Exception: {e}")
         time.sleep(15)
         mainLine()
-	
+
+# Index 0: total RAM                                                                
+# Index 1: used RAM                                                                 
+# Index 2: free RAM                                                                 
+def getRAMinfo():
+    p = os.popen('free')
+    i = 0
+    while 1:
+        i = i + 1
+        line = p.readline()
+        if i==2:
+            return(line.split()[1:4])
+
 
 # Main section 
 if __name__ == "__main__":

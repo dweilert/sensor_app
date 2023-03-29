@@ -67,6 +67,7 @@ def getResults():
 def show_help():
     print(" ")
     print("  Valid commands: ")
+    print("    f  - free and used memory information")
     print("    h  - show this help information")
     print("    l  - log data")
     print("    m  - monitor service current status")
@@ -100,6 +101,8 @@ def getCommand():
                 show_help()
             elif cmd == "s":
                 writeCommand("sensors")
+            elif cmd == "f":
+                writeCommand("memory")
             elif cmd == "p":
                 writeCommand("pumps")
             elif cmd == "m":
@@ -133,8 +136,8 @@ def getCommand():
                     else:
                         results_check_cnt = results_check_cnt + 1
                         dots = dots + "."
-                        if results_check_cnt > 5:
-                            print("stopped waiting for command results, retry", end="\r")
+                        if results_check_cnt > 8:
+                            print("stopped waiting for results, retry", end="\r")
                             break
                         print("waiting " + dots, end="\r")
                         time.sleep(2)

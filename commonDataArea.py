@@ -95,3 +95,4 @@ iCnt = 0
 error_cnt = 0
 
 cpu_temps = []
+cpu_ram = []
