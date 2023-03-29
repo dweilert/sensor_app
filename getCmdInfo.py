@@ -248,18 +248,19 @@ def formatRegisters(registers):
     pwfac = registers[8]*0.01
     alarm = registers[9]
     if alarm == 0x0000:
-        alarmtran = 'NORMAL JA'
+        alarmtran = 'OFF'
     elif alarm == 0xFFFF:
-        alarmtran = 'ALARM'
+        alarmtran = 'ON'
     else:
         alarmtran = 'N/A'
-    pwangle=math.acos(pwfac)
-    apparent = power/math.cos(pwangle)
-    reactive = apparent*math.sin(pwangle)
-    impedance= apparent/(amp*amp)
-    rinline = impedance*math.cos(pwangle)
-    xinline = impedance*math.sin(pwangle)
-    data = f"volt: {volt}  amp: {amp}  power {power} energy: {energy} freq: {freq}  pwfac:{pwfac}  reactive: {reactive}  apparent: {apparent}  powerangle: {pwangle}  impedance: {impedance}  rinline: {rinline}  xinline: {xinline}  status: {alarmtran}"
+    #pwangle=math.acos(pwfac)
+    #apparent = power/math.cos(pwangle)
+    #reactive = apparent*math.sin(pwangle)
+    #impedance= apparent/(amp*amp)
+    #rinline = impedance*math.cos(pwangle)
+    #xinline = impedance*math.sin(pwangle)
+    #data = f"volt: {volt}  amp: {amp}  power {power} energy: {energy} freq: {freq}  pwfac:{pwfac}  reactive: {reactive}  apparent: {apparent}  powerangle: {pwangle}  impedance: {impedance}  rinline: {rinline}  xinline: {xinline}  status: {alarmtran}"
+    data = f"volt:{volt}  amp:{amp}  power:{power}  energy:{energy}  freq:{freq}  pwfac:{pwfac}  alarm:{alarmtran}"
        
     return data
 
