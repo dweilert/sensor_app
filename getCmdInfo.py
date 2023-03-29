@@ -222,6 +222,7 @@ def getRegisters(id):
                 p = a_start
                 while p <= a_len:
                     results = results + "(" + str(p) + ") " + formatRegisters(cda.sensor_A_registers[p]) + "\n"
+                    p = p + 1
                 results = results + "\n"
         if id == "B":
             if b_len > 0:
@@ -229,6 +230,7 @@ def getRegisters(id):
                 p = b_start
                 while p <= b_len:
                     results = results + "(" + str(p) + ") " + formatRegisters(cda.sensor_B_registers[p]) + "\n"
+                    p = p + 1
                 results = results + "\n"
         if id == "C":
             if c_len > 0:
@@ -236,6 +238,7 @@ def getRegisters(id):
                 p = c_start
                 while p <= c_len:
                     results = results + "(" + str(p) + ") " + formatRegisters(cda.sensor_C_registers[p]) + "\n"
+                    p = p + 1
                 results = results + "\n"
 
         if id == "D":
@@ -244,6 +247,7 @@ def getRegisters(id):
                 p = d_start
                 while p <= d_len:
                     results = results + "(" + str(p) + ") " + formatRegisters(cda.sensor_D_registers[p]) + "\n"
+                    p = p + 1
                 results = results + "\n"
 
         return results
