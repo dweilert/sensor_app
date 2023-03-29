@@ -52,7 +52,9 @@ def saveData(data, id):
                 if cda.pumpA_status == "OFF":
                     cda.pumpA_status = "ON"		
                     cda.pumpA_start = row[1]
+                    cda.pumpA_stop = ""
                     cda.pumpA_energy_start = row[7]
+                    cda.pumpA_energy_latest = 0
                     cda.pumpA_cycles = []
                     cda.pumpA_cycles.append(row)
                     cda.pumpA_cycle_cnt = cda.pumpA_cycle_cnt + 1  
@@ -76,12 +78,10 @@ def saveData(data, id):
                     record['ah'] = cda.pumpA_amp_high
                     record['al'] = cda.pumpA_amp_low
                     record['aa'] = cda.pumpA_amp_avg
+
                     # Reset pump data
                     cda.pumpA_status = "OFF"
-                    cda.pumpA_start = ""
-                    cda.pumpA_energy_start = ""
-                    cda.pumpA_stop = ""
-                    cda.pumpA_energy_latest = ""
+
                     # Send data to AWS
                     awsHandler.putSensorData(record)		    		
         
@@ -92,8 +92,10 @@ def saveData(data, id):
                 if cda.pumpB_status == "OFF":
                     cda.pumpB_status = "ON"		
                     cda.pumpB_start = row[1]
+                    cda.pumpB_stop = ""
                     cda.pumpB_energy_start = row[7]
-                    cda.pumpA_cycles = []
+                    cda.pumpB_energy_latest = 0
+                    cda.pumpB_cycles = []
                     cda.pumpB_cycles.append(row)
                     cda.pumpB_cycle_cnt = cda.pumpB_cycle_cnt + 1 
                 else:
@@ -115,12 +117,10 @@ def saveData(data, id):
                     record['ah'] = cda.pumpB_amp_high
                     record['al'] = cda.pumpB_amp_low
                     record['aa'] = cda.pumpB_amp_avg
+
                     # Reset pump data
                     cda.pumpB_status = "OFF"
-                    cda.pumpB_start = ""
-                    cda.pumpB_energy_start = ""
-                    cda.pumpB_stop = ""
-                    cda.pumpB_energy_latest = ""
+
                     # Send data to AWS
                     awsHandler.putSensorData(record)		    		
 

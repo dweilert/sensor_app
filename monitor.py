@@ -107,8 +107,7 @@ def getTempInfo():
         
         avg = total / cnt
         results = "Temperature information" + "\n"
-        results = results + ("  Average temp: {:6.3f}".format(avg)) + "\n"
-        results = results + "  Avgerage temp: " + str(avg) + "\n"
+        results = results + ("  Average temp : {:6.3f}".format(avg)) + "\n"
         results = results + "  High temp    : " + str(high) + "\n"
         results = results + "  Low temp     : " + str(low) + "\n"
         return results
@@ -127,11 +126,32 @@ def getPumpInfo():
     try:
         result = "\nPump 1: \n"
         result = result + "  On/Off status: " + cda.pumpA_status + "\n"
-        result = result + "  Cycle count  : " + str(cda.pumpA_cycle_cnt) + "\n"
+        result = result + "  ---- Latest information ----" + "\n"
+        result = result + "  Cycle count     : " + str(cda.pumpA_cycle_cnt) + "\n"
+        result = result + "  Start date/time : " + str(cda.pumpA_start) + "\n"
+        result = result + "  End date/time   : " + str(cda.pumpA_end) + "\n"
+        result = result + "  Start energy    : " + str(cda.pumpA_energy_start) + "\n"
+        result = result + "  End energy      : " + str(cda.pumpA_energy_latest) + "\n"
+        result = result + "  Amps high       : " + str(cda.pumpA_amp_high) + "\n"
+        result = result + "  Amps low        : " + str(cda.pumpA_amp_low) + "\n"
+        result = result + ("  Amps avg        : {:6.3f}".format(cda.pupmA_amp_avg)) + "\n"
+        result = result + "  ---- Current cycle information ----" + "\n"
+        result = result + "  Cycles       : " + cda.pumpA_cycles
+
         result = result + "\n"
         result = result + "Pump 2: \n"
         result = result + "  On/Off status: " + cda.pumpB_status + "\n"
-        result = result + "  Cycle count  : " + str(cda.pumpB_cycle_cnt) + "\n"
+        result = result + "  ---- Latest information ----" + "\n"
+        result = result + "  Cycle count     : " + str(cda.pumpB_cycle_cnt) + "\n"
+        result = result + "  Start date/time : " + str(cda.pumpB_start) + "\n"
+        result = result + "  End date/time   : " + str(cda.pumpB_end) + "\n"
+        result = result + "  Start energy    : " + str(cda.pumpB_energy_start) + "\n"
+        result = result + "  End energy      : " + str(cda.pumpB_energy_latest) + "\n"
+        result = result + "  Amps high       : " + str(cda.pumpB_amp_high) + "\n"
+        result = result + "  Amps low        : " + str(cda.pumpB_amp_low) + "\n"
+        result = result + ("  Amps avg        : {:6.3f}".format(cda.pupmB_amp_avg)) + "\n"
+        result = result + "  ---- Current cycle information ----" + "\n"
+        result = result + "  Cycles       : " + cda.pumpB_cycles
         return result
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
