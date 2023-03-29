@@ -84,6 +84,13 @@ def checkForCommandFile():
             os.remove(filename)
 
     except Exception as e:
+        errorLine = f"Exception: {e}"
+
+        if "[Errno " in errorLine:
+            f = open(config.get("CommandInterface","results_file"), "w")
+            f.write("Error: " + errorLine) 
+            f.close()
+
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
@@ -109,10 +116,13 @@ def getTempInfo():
             avg = total / cnt
         else:
             avg = 0
+        avg = "{:6.3f}".format(avg)
+
         results = "Temperature information" + "\n"
-        results = results + ("  Average temp : {:6.3f}".format(avg)) + "\n"
+        results = results + "  Average temp : " + str(avg) + "\n"
         results = results + "  High temp    : " + str(high) + "\n"
         results = results + "  Low temp     : " + str(low) + "\n"
+        print(results)
         return results
     
     except Exception as e:
