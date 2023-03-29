@@ -225,7 +225,7 @@ def getRegisters(id):
         else:
             d_start = 0
 
-        if id == "A" and a_len > 0:
+        if id == "A":
             if a_len > 0:
                 results = results + "Sensor 1: \n"
                 p = a_start
@@ -233,10 +233,10 @@ def getRegisters(id):
                     results = results + "(" + str(p) + ") " + formatRegisters(cda.sensor_A_registers[p]) + "\n"
                     p = p + 1
                 results = results + "\n"
-        else:
-            results = "No data for reqister" + "\n"
+            else:
+                results = "No data for reqister" + "\n"
 
-        if id == "B" and b_len > 0:
+        if id == "B":
             if b_len > 0:
                 results = results + "Sensor 2: \n"
                 p = b_start
@@ -244,10 +244,10 @@ def getRegisters(id):
                     results = results + "(" + str(p) + ") " + formatRegisters(cda.sensor_B_registers[p]) + "\n"
                     p = p + 1
                 results = results + "\n"
-        else:
-            results = "No data for reqister" + "\n"
+            else:
+                results = "No data for reqister" + "\n"
 
-        if id == "C" and c_len > 0:
+        if id == "C":
             if c_len > 0:
                 results = results + "Sensor 3: \n"
                 p = c_start
@@ -255,10 +255,10 @@ def getRegisters(id):
                     results = results + "(" + str(p) + ") " + formatRegisters(cda.sensor_C_registers[p]) + "\n"
                     p = p + 1
                 results = results + "\n"
-        else:
-            results = "No data for reqister" + "\n"
+            else:
+                results = "No data for reqister" + "\n"
 
-        if id == "D" and d_len > 0:
+        if id == "D":
             if d_len > 0:
                 results = results + "Sensor 4: \n"
                 p = d_start
@@ -266,8 +266,8 @@ def getRegisters(id):
                     results = results + "(" + str(p) + ") " + formatRegisters(cda.sensor_D_registers[p]) + "\n"
                     p = p + 1
                 results = results + "\n"
-        else:
-            results = "No data for reqister" + "\n"
+            else:
+                results = "No data for reqister" + "\n"
 
         return results
 
