@@ -40,11 +40,31 @@ from twilio.rest import Client
 import config
 import awsHandler
 import logger
+import commonDataArea as cda
 
 # Download the helper library from https://www.twilio.com/docs/python/install
 # Find your Account SID and Auth Token at twilio.com/console
 # and set the environment variables. See http://twil.io/secure
 
+def checkSMS():
+    try:
+        if len(cda.smsMsg) > 0:
+            for s in cda.smsMsg:
+                numbers = ""
+                if s[1] == "developer":
+                    numbers = config.get("SMSNumbers","developer")
+                if s[1] == "maintenance":
+                    numbers = config.get("SMSNumbers","maintenance")
+                if s[1] == "owners":
+                    numbers = config.get("SMSNumbers","owners")
+                sendSMS(numbers, s[0], s[1])
+            cda.smsMsg = []
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
+        logger.put_msg("E",f"smsHandler.checkSMS ERROR: {e}")
 
 def sendSMS(toNumbers, msgBody, who):
     try:
@@ -96,6 +116,3 @@ def sendSMS(toNumbers, msgBody, who):
 
     finally:
         return msg
-
-def testSMS():    
-    sendSMS(config.get("Twilio","test_number"), config.get("Twilio","test_message"), "Test")

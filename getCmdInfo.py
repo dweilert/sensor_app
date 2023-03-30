@@ -39,6 +39,7 @@ import config
 import commonDataArea as cda
 import upsHandler
 import logger
+import reset
 
 
 def checkForCommandFile():
@@ -71,6 +72,8 @@ def checkForCommandFile():
                     results = getRegisters("C")    
                 elif "r4" in line:
                     results = getRegisters("D")    
+                elif "zero" in line:
+                    results = reset.clearEnergy()    
                 elif "logs" in line:
                     for m in cda.log_messages:
                         results = results + m + "\n"

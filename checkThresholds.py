@@ -77,17 +77,26 @@ def check(pzem_data,id):
             if (pzem_data[0] == "nodata"):
                 cda.aNoD = cda.aNoD + 1
                 if cda.aNoD > int(config.get("Limits","no_data")):
-                    cda.smsMsg.append("Pump A" + " " + config.get("Limits","no_data_msg"))
+                    entry = []
+                    entry.append("Pump A " + config.get("Limits","no_data_msg"))
+                    entry.append(config.get("Limits","no_data_who"))
+                    cda.smsMsg.append(entry)
                     cda.aNoD = 0
             else:
                 msg = voltage(pzem_data,"A")
                 if msg != "noMsg":
-                    cda.smsMsg.append(msg)                 
+                    entry = []
+                    entry.append(msg)
+                    entry.append(config.get("Limits","no_voltage_who"))
+                    cda.smsMsg.append(entry)                 
                     cda.aNoV = 0
 
                 msg = power(pzem_data,"A")
                 if msg != "noMsg":
-                    cda.smsMsg.append(msg)                 
+                    entry = []
+                    entry.append(msg)
+                    entry.append(config.get("Limits","no_power_who"))
+                    cda.smsMsg.append(entry)                 
                     cda.aNoP = 0
        
         # pumpB
@@ -95,16 +104,25 @@ def check(pzem_data,id):
             if (pzem_data[0] == "nodata"):
                 cda.bNoD = cda.bNoD + 1
                 if cda.bNoD > int(config.get("Limits","no_data")):
-                    cda.smsMsg.append("Pump B" + " " + config.get("Limits","no_data_msg"))
+                    entry = []
+                    entry.append("Pump B " + config.get("Limits","no_data_msg"))
+                    entry.append(config.get("Limits","no_data_who"))
+                    cda.smsMsg.append(entry)
                     cda.bNoD = 0
             else:
                 msg = voltage(pzem_data,"B")
                 if msg != "noMsg":
-                    cda.smsMsg.append(msg)                 
+                    entry = []
+                    entry.append(msg)
+                    entry.append(config.get("Limits","no_voltage_who"))
+                    cda.smsMsg.append(entry)
                     cda.bNoV = 0
                 msg = power(pzem_data,"B")
                 if msg != "noMsg":
-                    cda.smsMsg.append(msg)                 
+                    entry = []
+                    entry.append(msg)
+                    entry.append(config.get("Limits","no_power_who"))
+                    cda.smsMsg.append(entry)
                     cda.bNoP = 0
 
         # alarm
@@ -112,13 +130,19 @@ def check(pzem_data,id):
             if (pzem_data[0] == "nodata"):
                 cda.cNoD = cda.cNoD + 1
                 if cda.cNoD > int(config.get("Limits","no_data")):
-                    cda.smsMsg.append("Alarm" + " " + config.get("Limits","no_data_msg"))
+                    entry = []
+                    entry.append("Alarm " +  config.get("Limits","no_data_msg"))
+                    entry.append(config.get("Limits","no_data_who"))
+                    cda.smsMsg.append(entry)
                     cda.cNoD = 0
                     cda.alarm_msg_cnt = 0
             else:
                 if (pzem_data[1] > 0):
                     if cda.alarm_msg_sent == False:
-                        cda.smsMsg.append(config.get("Messages","alarm_msg"))
+                        entry = []
+                        entry.append(config.get("Limits","alarm_msg"))
+                        entry.append(config.get("Limits","alarm_who"))
+                        cda.smsMsg.append(entry)
                         cda.alarm_msg_sent = True
                     else:
                         cda.alarm_msg_cnt = cda.alarm_msg_cnt + 1
@@ -137,7 +161,10 @@ def check(pzem_data,id):
             else:
                 if (pzem_data[1] == 0):
                     if cda.overall_msg_sent == False:
-                        cda.smsMsg.append(config.get("Messages","overall_power_msg"))
+                        entry = []
+                        entry.append(config.get("Limits","overall_power_msg"))
+                        entry.append(config.get("Limits","overall_power_who"))
+                        cda.smsMsg.append(entry)
                         cda.overall_msg_sent = True
                     else:
                         cda.overall_msg_cnt = cda.overall_msg_cnt + 1
@@ -172,7 +199,7 @@ def checkSensors():
             msg = msg + " " + connErr
             msgOut = []
             msgOut.append(msg)
-            smsHandler.sendSMS(config.get("Developer","phones"), msgOut, "Developer")
+            smsHandler.sendSMS(config.get("SMSNumbers","developer"), msgOut, "Developer")
             cda.sensor_connect_error_msg_cnt = cda.sensor_connect_error_msg_cnt + 1
         else:
             cda.sensor_connect_error_msg_cnt = cda.sensor_connect_error_msg_cnt + 1
@@ -202,7 +229,7 @@ def checkSensors():
                 msg = config.get("Pzem","sensor_lost_power_msg")
                 msgOut = []
                 msgOut.append(msg)
-                smsHandler.sendSMS(config.get("Maintenance","phones"), msgOut, "Developer")
+                smsHandler.sendSMS(config.get("Limits","developer"), msgOut, "Developer")
                 cda.sensor_lost_power_msg_cnt = cda.sensor_lost_power_msg_cnt + 1
             else:
                 cda.sensor_lost_power_msg_cnt = cda.sensor_lost_power_msg_cnt + 1
@@ -213,7 +240,7 @@ def checkSensors():
                 msg = config.get("Pzem","sensor_io_error_msg") + " " + ioErr
                 msgOut = []
                 msgOut.append(msg)
-                smsHandler.sendSMS(config.get("Developer","phones"), msgOut, "Developer")
+                smsHandler.sendSMS(config.get("Limits","developer"), msgOut, "Developer")
                 cda.sensor_io_error_msg_cnt = cda.sensor_io_error_msg_cnt + 1
             else:
                 cda.sensor_io_error_msg_cnt = cda.sensor_io_error_msg_cnt + 1
@@ -221,22 +248,11 @@ def checkSensors():
                     cda.sensor_io_error_msg_cnt = 0
 
 
-def checkMsg(msg):
-    try:
-        global smsMsg
-        if msg != "noMsg":
-            cda.smsMsg.append(msg)     
-    except Exception as e:
-        logger.put_msg("E",f"checkThresholds.checkMsg ERROR: {e}")
-
-
 def checkSMS():
     try:
         # Should SMS be sent
         if (len(cda.smsMsg) > 0):
-            numbers = config.get("Maintenance","phones")
-            # Pass phone numbers and message array to handler
-            smsHandler.sendSMS(numbers, cda.smsMsg, 'Maintenance')
+            smsHandler.checkSMS()
     except Exception as e:
         logger.put_msg("E",f"checkThresholds.checkSMS ERROR: {e}")   
 	     

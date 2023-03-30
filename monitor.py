@@ -46,7 +46,11 @@ def getPorts():
         pzemHandler.find_usb_ports()
         cda.getPortsCnt = cda.getPortsCnt + 1
         if cda.getPortsCnt > int(config.get("Limits","no_ports")):
-            smsHandler.sendSMS(config.get("Limits","no_ports_number"), config.get("Limits","no_ports_msg"), config.get("Limits","no_ports_who"))
+            entry = []
+            entry.append(config.get("Limits","no_ports_msg"))
+            entry.append(config.get("Limits","no_ports_who"))
+            cda.smsMsg.append(entry)
+            smsHandler.checkSMS()
             cda.getPortsCnt = 0
     except Exception as e:
         logger.put_msg("E","monitor.getPorts ERROR: " + e)
@@ -66,10 +70,12 @@ def resetCheck(nowDay):
         cda.sensor_D_registers = []
         cda.cpu_temps = []
         cda.cpu_ram = []
+    
 
 
 def mainLine():
     try:
+        current_hour = 99
         while True:
             getPorts()
             cnt = 0   
@@ -93,8 +99,9 @@ def mainLine():
 
             now = datetime.now()
             nowDay = now.strftime("%Y_%m_%d")
-            resetCheck(nowDay)
 
+            resetCheck(nowDay)
+            
             cda.iCnt = cda.iCnt + 1
             rtn = pzemHandler.monitor(cda.portA,"A")
             checkThresholds.check(rtn,"A")
@@ -143,10 +150,11 @@ def mainLine():
         time.sleep(15)
         mainLine()
 
-# Index 0: total RAM                                                                
-# Index 1: used RAM                                                                 
-# Index 2: free RAM                                                                 
+                                                                
 def getRAMinfo():
+    # Index 0: total RAM                                                                
+    # Index 1: used RAM                                                                 
+    # Index 2: free RAM 
     p = os.popen('free')
     i = 0
     while 1:
