@@ -83,7 +83,7 @@ def checkUPSCharge(charge):
 	
 def checkUPSPercent(pct):
     # Check if Raspberry Pi UPS percent is below level
-    if pct < int(config.get("Limits","")):
+    if pct < int(float(config.get("Limits","") ) ):
         cda.ups_percent_cnt = cda.ups_percent_cnt + 1
         if cda.ups_percent_cnt > int(config.get("Limits","ups_percent_cnt")):
             msg = []
