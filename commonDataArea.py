@@ -95,5 +95,8 @@ iCnt = 0
 error_cnt = 0
 
 cpu_temps = []
+high_temp_cnt = 0
 cpu_ram = []
 upsData = []
+ups_charge_cnt = 0
+ups_percent_cnt = 0

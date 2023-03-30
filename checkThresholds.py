@@ -61,7 +61,39 @@ cda.alarm_msg_cnt = 0
 # SMS message array
 cda.smsMsg = []
 	
+def checkTemperature(temp):
+    # Check if Raspberry Pi temperature is too high
+    if temp > int(config.get("Limits","temp_high")):
+        cda.high_temp_cnt = cda.high_temp_cnt + 1
+        if cda.high_temp_cnt > int(config.get("Limits","temp_high_cnt")):
+            msg = []
+            msg.append(config.get("Limits","temp_high_msg"))
+            smsHandler.sendSMS(config.get("SMSNumbers","developer"), msg, "Developer")
+            cda.high_temp_cnt = 0
 	
+def checkUPSCharge(charge):
+    # Check if Raspberry Pi UPS has been charging for a long time
+    if charge < 0:
+        cda.ups_charge_cnt = cda.ups_charge_cnt + 1
+        if charge > int(config.get("Limits","ups_charge_cnt")):
+            msg = []
+            msg.append(config.get("Limits","ups_charge_msg"))
+            smsHandler.sendSMS(config.get("SMSNumbers","developer"), msg, "Developer")
+            cda.ups_charge_cnt = 0
+	
+def checkUPSPercent(pct):
+    # Check if Raspberry Pi UPS percent is below level
+    if pct < int(config.get("Limits","")):
+        cda.ups_percent_cnt = cda.ups_percent_cnt + 1
+        if cda.ups_percent_cnt > int(config.get("Limits","ups_percent_cnt")):
+            msg = []
+            msg.append(config.get("Limits","ups_percent_msg"))
+            smsHandler.sendSMS(config.get("SMSNumbers","developer"), msg, "Developer")
+            cda.ups_persent_cnt = 0
+	
+
+
+
 def check(pzem_data,id):
     try:
         # print(type(pzem_data))
@@ -181,7 +213,8 @@ def check(pzem_data,id):
         line_number = exception_traceback.tb_lineno
         logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.put_msg("E",f"checkThresholds.check ERROR for sensor{id}: {e}")
-    
+
+
 def checkSensors():
     # Check if sensors are not connected
     connErr = ""

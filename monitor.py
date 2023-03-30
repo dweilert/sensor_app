@@ -72,7 +72,9 @@ def resetCheck(nowDay):
         cda.cpu_temps = []
         cda.cpu_ram = []
         cda.upsData = []
-    
+        cda.high_temp_cnt = 0
+        cda.ups_charge_cnt = 0
+        cda.ups_percent_cnt = 0
 
 
 def mainLine():
@@ -125,16 +127,22 @@ def mainLine():
             if len(rtn) > 8:
                 cda.sensor_D_registers.append(rtn)
 
+            # Check for io errors and connection errors
+            checkThresholds.checkSensors()
+
             # get Raspberry Pi temp and save
             cpu = CPUTemperature()
             cda.cpu_temps.append(cpu.temperature)
+            checkThresholds.checkTemperature(cpu.temperature)
+
+            # get Raspberry Pi UPS info
+            upsI = upsHandler.getUPSInfo(False)
+            checkThresholds.checkUPSCharge(upsI[0])
+            checkThresholds.checkUPSPercent(upsI[1])
+
+            # get Raspberry Pi memory usage data
             cda.cpu_ram.append(getRAMinfo())
 
-            # get Raspberry Pi temp and save
-            upsHandler.getUPSInfo(False)
-
-            # Check for io errors and connection errors
-            checkThresholds.checkSensors()
 
             # Return RAM information (unit=kb) in a list                                        
             if config.get("Debug","status") == "true":
