@@ -104,24 +104,11 @@ import dataHandler
 import logger
 
 def resetEnergy(usbPort):
+# Not currently working
     try:
-
-
-#!/usr/bin/python
-
-import minimalmodbus
-
-pz = minimalmodbus.Instrument('/dev/ttyUSB0', 1)
-pz.serial.baudrate = 9600
-
-pz._performCommand(66, '')
-
-
         client = ModbusSerialClient(port=usbPort,timeout=int(config.get("Pzem","timeout")),baudrate=9600,bytesize=8,parity="N",stopbits=1)
         client.connect()
         result = client.write_register(1,0x42)
-        if isinstance(reply, ModbusIOException):
-    print(reply)
         print(result)
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()

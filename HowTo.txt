@@ -1,0 +1,14 @@
+The monitor application is started at boot time with the use of system services. 
+Definition of the service is defined in this file:
+
+    /etc/systemd/system/monitor.service 
+
+If there is a need to stop, restart, disable, etc. use a command similar to the 
+following:
+
+    systemctl <stop, start, etc.> monitor
+
+The monitor system has a CLI to communicate with the service that can be used
+to view pump, sensor, ups, temerature, registers, and logs.  Run the command 
+shell cli.sh to start the interface.
+
