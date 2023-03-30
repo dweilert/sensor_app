@@ -243,7 +243,7 @@ def getUPSInfo(returnData):
         entry = []
         entry.append(current)
         entry.append("{:3.1f}%".format(p))
-        cda.upsData.append(current)
+        cda.upsData.append(entry)
         # check if formatted data is returned
         if (returnData == True):
             result = "UPS information" + "\n"
@@ -256,7 +256,7 @@ def getUPSInfo(returnData):
             result = result + (" ") + "\n"
             return result
         else:
-            return current, p
+            return current, "{:3.1f}%".format(p)
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename

@@ -137,6 +137,8 @@ def mainLine():
 
             # get Raspberry Pi UPS info
             upsI = upsHandler.getUPSInfo(False)
+            print(upsI[0])
+            print(upsI[1])
             checkThresholds.checkUPSCharge(upsI[0])
             checkThresholds.checkUPSPercent(upsI[1])
 
