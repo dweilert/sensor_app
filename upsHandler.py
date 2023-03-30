@@ -256,7 +256,7 @@ def getUPSInfo(returnData):
             result = result + (" ") + "\n"
             return result
         else:
-            return current, "{:3.1f}".format(p)
+            return current, int(p)
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
