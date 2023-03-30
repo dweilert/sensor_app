@@ -73,8 +73,8 @@ def checkTemperature(temp):
 	
 def checkUPSCharge(charge):
     # Check if Raspberry Pi UPS has been charging for a long time
-    print(charge[0:1])
-    if charge[0:1] == "-":
+    print(type(charge))
+    if charge < 0:
         cda.ups_charge_cnt = cda.ups_charge_cnt + 1
         if charge > int(config.get("Limits","ups_charge_cnt")):
             msg = []
