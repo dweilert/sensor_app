@@ -71,6 +71,7 @@ def resetCheck(nowDay):
         cda.sensor_D_registers = []
         cda.cpu_temps = []
         cda.cpu_ram = []
+        cda.upsData = []
     
 
 
