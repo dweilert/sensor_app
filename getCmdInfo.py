@@ -39,6 +39,7 @@ import config
 import commonDataArea as cda
 import upsHandler
 import logger
+import smsHandler
 
 
 def checkForCommandFile():
@@ -58,7 +59,7 @@ def checkForCommandFile():
                 elif "sensor" in line:
                     results = getSensorInfo()
                 elif "ups" in line:
-                    results = upsHandler.getUPSInfo()    
+                    results = upsHandler.getUPSInfo(True)    
                 elif "temp" in line:
                     results = getTempInfo()  
                 elif "memory" in line:
@@ -71,6 +72,18 @@ def checkForCommandFile():
                     results = getRegisters("C")    
                 elif "r4" in line:
                     results = getRegisters("D")       
+                elif "sms_dev" in line:
+                    smsHandler.sendSMS(config.get("SMSNumbers","developer"),config.get("TestMsg","developer_msg"),"developer")  
+                    results = "Test SMS sent to developer"     
+                elif "sms_man" in line:
+                    smsHandler.sendSMS(config.get("SMSNumbers","maintenace"),config.get("TestMsg","maintenance_msg"),"maintenance")  
+                    results = "Test SMS sent to maintenace"     
+                elif "sms_own" in line:
+                    smsHandler.sendSMS(config.get("SMSNumbers","owners"),config.get("TestMsg","owners_msg"),"owners")  
+                    results = "Test SMS sent to owners"     
+                elif "sms_fixed" in line:
+                    smsHandler.sendSMS(config.get("SMSNumbers","owners"),config.get("AllClear","owners_msg"),"owners")  
+                    results = "All clear SMS sent to owners"     
                 elif "logs" in line:
                     for m in cda.log_messages:
                         results = results + m + "\n"

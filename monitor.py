@@ -39,6 +39,7 @@ import pzemHandler
 import smsHandler
 import checkThresholds
 import getCmdInfo
+import upsHandler
 
 
 def getPorts():
@@ -123,16 +124,18 @@ def mainLine():
             if len(rtn) > 8:
                 cda.sensor_D_registers.append(rtn)
 
-            # Check for io errors and connection errors
-            checkThresholds.checkSensors()
-
             # get Raspberry Pi temp and save
             cpu = CPUTemperature()
             cda.cpu_temps.append(cpu.temperature)
             cda.cpu_ram.append(getRAMinfo())
 
-            # Return RAM information (unit=kb) in a list                                        
+            # get Raspberry Pi temp and save
+            upsHandler.getUPSInfo(False)
 
+            # Check for io errors and connection errors
+            checkThresholds.checkSensors()
+
+            # Return RAM information (unit=kb) in a list                                        
             if config.get("Debug","status") == "true":
                 logger.put_msg("I",f"Interval count({cda.iCnt})")
 

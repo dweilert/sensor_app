@@ -80,6 +80,11 @@ def show_help():
     print("    s  - sensors USB mappings and status")
     print("    t  - temperature information for Raspberry Pi")
     print("    u  - ups information for Raspberry Pi")
+    print("  SMS related commands")
+    print("    sms_own   - send test SMS message to owners")
+    print("    sms_man   - send test SMS message to maintenace")
+    print("    sms_dev   - send test teXt message to developer")
+    print("    sms_fixed - send all clear SMS to owners.  Send this after issues are resovled.")
  
     print(" ")
     print("---")
@@ -121,6 +126,14 @@ def getCommand():
                 writeCommand("r3")
             elif cmd == "r4":
                 writeCommand("r4")
+            elif cmd == "sms_own":
+                writeCommand("sms_own")                
+            elif cmd == "sms_man":
+                writeCommand("sms_man")                
+            elif cmd == "sms_dev":
+                writeCommand("sms_dev")                
+            elif cmd == "sms_fixed":
+                writeCommand("sms_fixed")                
             else:
                 print("Invalid command, type h for help")
                 print("\n" + "---")

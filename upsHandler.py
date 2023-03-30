@@ -220,7 +220,7 @@ class INA219:
         return value * self._power_lsb
 
 
-def getUPSInfo():
+def getUPSInfo(returnData):
     try:
         # Create an INA219 instance.
         ina219 = INA219(addr=0x42)
@@ -237,18 +237,24 @@ def getUPSInfo():
         ina219 = None
         cda.upsPower = "{:6.3f}".format(power)
         
-        # If current is negative the UPS battery is not charging
-        # or drawing more than it is charging
-        cda.upsCurrent = "{:9.6f}".format(current/1000)
-        result = "UPS information" + "\n"
-        result = result + ("  PSU Voltage:   {:6.3f} V".format(bus_voltage + shunt_voltage)) + "\n"
-        result = result + ("  Shunt Voltage: {:9.6f} V".format(shunt_voltage)) + "\n"
-        result = result + ("  Load Voltage:  {:6.3f} V".format(bus_voltage)) + "\n"
-        result = result + ("  Current:       {:9.6f} A".format(current/1000)) + "\n"
-        result = result + ("  Power:         {:6.3f} W".format(power)) + "\n"
-        result = result + ("  Percent:       {:3.1f}%".format(p)) + "\n"
-        result = result + (" ") + "\n"
-        return result
+        # Note: if the current value is negative, it means that the batteries
+        # are feeding the Raspberry Pi. If the current value is positive, 
+        # it means that the batteries are charging.
+        entry = []
+        entry.append(current)
+        entry.append(p)
+        cda.upsData.append(current)
+        # check if formatted data is returned
+        if (returnData == True):
+            result = "UPS information" + "\n"
+            result = result + ("  PSU Voltage:   {:6.3f} V".format(bus_voltage + shunt_voltage)) + "\n"
+            result = result + ("  Shunt Voltage: {:9.6f} V".format(shunt_voltage)) + "\n"
+            result = result + ("  Load Voltage:  {:6.3f} V".format(bus_voltage)) + "\n"
+            result = result + ("  Current:       {:9.6f} A".format(current/1000)) + "\n"
+            result = result + ("  Power:         {:6.3f} W".format(power)) + "\n"
+            result = result + ("  Percent:       {:3.1f}%".format(p)) + "\n"
+            result = result + (" ") + "\n"
+            return result
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
