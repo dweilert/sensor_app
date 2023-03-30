@@ -73,7 +73,6 @@ def checkTemperature(temp):
 	
 def checkUPSCharge(charge):
     # Check if Raspberry Pi UPS has been charging for a long time
-    print(type(charge))
     if charge < 0:
         cda.ups_charge_cnt = cda.ups_charge_cnt + 1
         if charge > int(config.get("Limits","ups_charge_cnt")):
@@ -84,7 +83,7 @@ def checkUPSCharge(charge):
 	
 def checkUPSPercent(pct):
     # Check if Raspberry Pi UPS percent is below level
-    if int(pct) < int(config.get("Limits","")):
+    if pct < int(config.get("Limits","")):
         cda.ups_percent_cnt = cda.ups_percent_cnt + 1
         if cda.ups_percent_cnt > int(config.get("Limits","ups_percent_cnt")):
             msg = []
