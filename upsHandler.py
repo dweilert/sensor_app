@@ -242,7 +242,7 @@ def getUPSInfo(returnData):
         # it means that the batteries are charging.
         entry = []
         entry.append(current)
-        entry.append(p)
+        entry.append("{:3.1f}%".format(p))
         cda.upsData.append(current)
         # check if formatted data is returned
         if (returnData == True):
