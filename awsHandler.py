@@ -64,7 +64,6 @@ def putSensorData(sdata):
 def putSMSData(mdata):
     id = getPutID()
     smsUrl = config.get("AWSGateWay","sms_data")
-    #SAMPLE DATA: {"id":"03222023164840","d":"03/21/2023-23:58:04","m":"MMPOAII Sewer Alert : (1) Power has been lost for all equipment","w":"Maintenance"}
     try:
         mdata["id"] = id
         mdata = mdata

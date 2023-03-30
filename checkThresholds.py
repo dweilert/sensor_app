@@ -69,7 +69,7 @@ def checkTemperature(temp):
             if cda.high_temp_cnt > int(config.get("Limits","temp_high_cnt")):
                 msg = []
                 msg.append(config.get("Limits","temp_high_msg"))
-                smsHandler.sendSMS(config.get("SMSNumbers","developer"), msg, "Developer")
+                smsHandler.sendSMS(config.get("SMSNumbers","developer"), msg, "developer")
                 cda.high_temp_cnt = 0
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
@@ -86,7 +86,7 @@ def checkUPSCharge(charge):
             if charge > int(config.get("Limits","ups_charge_cnt")):
                 msg = []
                 msg.append(config.get("Limits","ups_charge_msg"))
-                smsHandler.sendSMS(config.get("SMSNumbers","developer"), msg, "Developer")
+                smsHandler.sendSMS(config.get("SMSNumbers","developer"), msg, "developer")
                 cda.ups_charge_cnt = 0
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
@@ -103,8 +103,8 @@ def checkUPSPercent(pct):
             if cda.ups_percent_cnt > int(config.get("Limits","ups_percent_cnt")):
                 msg = []
                 msg.append(config.get("Limits","ups_percent_msg"))
-                smsHandler.sendSMS(config.get("SMSNumbers","developer"), msg, "Developer")
-                cda.ups_persent_cnt = 0
+                smsHandler.sendSMS(config.get("SMSNumbers","developer"), msg, "developer")
+                cda.ups_percent_cnt = 0
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
@@ -253,7 +253,7 @@ def checkSensors():
             msg = msg + " " + connErr
             msgOut = []
             msgOut.append(msg)
-            smsHandler.sendSMS(config.get("SMSNumbers","developer"), msgOut, "Developer")
+            smsHandler.sendSMS(config.get("SMSNumbers","developer"), msgOut, "developer")
             cda.sensor_connect_error_msg_cnt = cda.sensor_connect_error_msg_cnt + 1
         else:
             cda.sensor_connect_error_msg_cnt = cda.sensor_connect_error_msg_cnt + 1
@@ -283,7 +283,7 @@ def checkSensors():
                 msg = config.get("Pzem","sensor_lost_power_msg")
                 msgOut = []
                 msgOut.append(msg)
-                smsHandler.sendSMS(config.get("Limits","developer"), msgOut, "Developer")
+                smsHandler.sendSMS(config.get("Limits","developer"), msgOut, "developer")
                 cda.sensor_lost_power_msg_cnt = cda.sensor_lost_power_msg_cnt + 1
             else:
                 cda.sensor_lost_power_msg_cnt = cda.sensor_lost_power_msg_cnt + 1
@@ -294,7 +294,7 @@ def checkSensors():
                 msg = config.get("Pzem","sensor_io_error_msg") + " " + ioErr
                 msgOut = []
                 msgOut.append(msg)
-                smsHandler.sendSMS(config.get("Limits","developer"), msgOut, "Developer")
+                smsHandler.sendSMS(config.get("Limits","developer"), msgOut, "developer")
                 cda.sensor_io_error_msg_cnt = cda.sensor_io_error_msg_cnt + 1
             else:
                 cda.sensor_io_error_msg_cnt = cda.sensor_io_error_msg_cnt + 1
