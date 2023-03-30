@@ -242,7 +242,7 @@ def getUPSInfo(returnData):
         # it means that the batteries are charging.
         entry = []
         entry.append(current)
-        entry.append("{:3.1f}%".format(p))
+        entry.append("{:3.1f}".format(p))
         cda.upsData.append(entry)
         # check if formatted data is returned
         if (returnData == True):
@@ -256,7 +256,7 @@ def getUPSInfo(returnData):
             result = result + (" ") + "\n"
             return result
         else:
-            return current, "{:3.1f}%".format(p)
+            return current, "{:3.1f}".format(p)
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
