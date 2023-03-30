@@ -57,7 +57,9 @@ def checkSMS():
                     numbers = config.get("SMSNumbers","maintenance")
                 if s[1] == "owners":
                     numbers = config.get("SMSNumbers","owners")
-                sendSMS(numbers, s[0], s[1])
+                msg = []
+                msg.append(s[0])
+                sendSMS(numbers, msg, s[1])
             cda.smsMsg = []
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
@@ -66,7 +68,7 @@ def checkSMS():
         logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
         logger.put_msg("E",f"smsHandler.checkSMS ERROR: {e}")
 
-def sendSMS(toNumbers, msgBody, who):
+def sendSMS(toNumbers, msgArray, who):
     try:
         if "," in toNumbers:
             newNum = toNumbers.split(",")
@@ -82,7 +84,7 @@ def sendSMS(toNumbers, msgBody, who):
         cnt = 1
 
         # Build the message to send
-        for m in msgBody:
+        for m in msgArray:
             msg = msg + "(" + str(cnt) + ") " + m + " "
             cnt = cnt + 1
 	
