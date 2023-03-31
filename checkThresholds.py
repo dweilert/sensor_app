@@ -308,7 +308,7 @@ def checkSensors():
             if ioCnt == int(config.get("Pzem","total_sensors")):
                 # If all sensors have I/O error it means power was lost
                 cda.all_sensors_io_error_cnt = cda.all_sensors_io_error_cnt + 1
-                if cda.all_sensors_io_error_cnt > config.get("Limits","all_sensors_io_error"):
+                if cda.all_sensors_io_error_cnt > int(config.get("Limits","all_sensors_io_error")):
                     sms = []
                     sms.append(config.get("Messages","all_sensors_io_error_msg") + connErr)
                     sms.append(config.get("Messages","all_sensors_io_error_who"))
@@ -317,7 +317,7 @@ def checkSensors():
                     smsHandler.checkSMS("all_sensors_io_error")
             else:
                 cda.sensor_io_error_cnt = cda.sensor_io_error_cnt + 1
-                if cda.sensor_io_error_cnt > config.get("Limits","sensor_io_error")== 0:
+                if cda.sensor_io_error_cnt > int(config.get("Limits","sensor_io_error")):
                     sms = []
                     sms.append(config.get("Messages","sensor_io_error_msg") + connErr)
                     sms.append(config.get("Messages","sensor_io_error_who"))

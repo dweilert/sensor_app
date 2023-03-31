@@ -136,11 +136,8 @@ def checkSMS(what):
 
 def sendSMS():
     try:
-        print(cda.smsMsg)
         who = cda.smsMsg[0][1]
-        print(f'who: {who}')
         toNumbers = config.get("SMSNumbers", who)
-        print(f'toNumbers: {toNumbers}')
 
         if "," in toNumbers:
             newNum = toNumbers.split(",")
