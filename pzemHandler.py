@@ -124,15 +124,19 @@ def monitor(usbPort, id):
         # Check if sensor was found, if not skip
         if cda.portA == "na" and id == "A": 
             rtn.append(False)
+            rtn.append("na")
             return rtn
         if cda.portB == "na" and id == "B": 
             rtn.append(False)
+            rtn.append("na")
             return rtn
         if cda.portC == "na" and id == "C":
             rtn.append(False)
+            rtn.append("na")
             return rtn
         if cda.portD == "na" and id == "D":
             rtn.append(False)
+            rtn.append("na")
             return rtn   
              
         client = ModbusSerialClient(port=usbPort,timeout=int(config.get("Pzem","timeout")),baudrate=9600,bytesize=8,parity="N",stopbits=1)
@@ -150,6 +154,7 @@ def monitor(usbPort, id):
                 cda.sensor_D_connect_error = True
 
             rtn.append(False)
+            rtn.append("connection failed")
             return rtn
 
         request = client.read_input_registers(0,10,1)
@@ -187,6 +192,7 @@ def monitor(usbPort, id):
                 cda.sensor_D_io_error = True
 
             rtn.append(False)
+            rtn.append("IOException")
             client.close()
             return rtn
         
@@ -201,11 +207,14 @@ def monitor(usbPort, id):
                 cda.sensor_D_connect_error = True
 
             rtn.append(False)
+            rtn.append("ConnectionError")
             client.close()
             return rtn        
 
         else:
             rtn.append(False)
+            rtn.append(f"Other {type(request)}")
+
             client.close()
             return rtn
 
