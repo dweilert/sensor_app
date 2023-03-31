@@ -43,6 +43,7 @@ portA = "na"
 portB = "na"
 portC = "na"
 portD = "na"
+
 wait_to_check_sensors = 15
 wait_to_check_for_ports = 15
 
@@ -51,20 +52,16 @@ sensor_A_io_error = False
 sensor_B_io_error = False
 sensor_C_io_error = False
 sensor_D_io_error = False
-sensor_io_error_msg_cnt = 0
-sensor_lost_power_msg_cnt = 0
 
 sensor_A_connect_error = False
 sensor_B_connect_error = False
 sensor_C_connect_error = False
 sensor_D_connect_error = False
-sensor_connect_error_msg_cnt = 0
 
 sensor_A_registers = []
 sensor_B_registers = []
 sensor_C_registers = []
 sensor_D_registers = []
-
 
 # Pump A data
 pumpA_status = "OFF"
@@ -95,8 +92,29 @@ iCnt = 0
 error_cnt = 0
 
 cpu_temps = []
-high_temp_cnt = 0
 cpu_ram = []
 upsData = []
+
+high_temp_cnt = 0
 ups_charge_cnt = 0
 ups_percent_cnt = 0
+
+sensor_io_error_cnt = 0
+all_sensors_io_error_cnt = 0
+sensor_connect_error_cnt = 0
+
+resend_wait = 1440
+
+resend_sensor_io_error_cnt = 0
+resend_all_sensors_io_error_cnt = 0
+resend_sensor_connect_error_cnt = 0
+
+resend_sensor_no_power_cnt = 0
+resend_sensor_no_data_cnt = 0
+resend_sensor_no_voltage_cnt = 0
+resend_sensor_amps_cnt = 0
+
+resend_rasp_temp_cnt = 0
+resend_rasp_ups_charge_cnt = 0
+resend_rasp_ups_percent_cnt = 0
+

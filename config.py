@@ -41,9 +41,14 @@ def readConfig():
             cda.debug = True
         else:
             cda.debug = False
+
+        setValues()
         return True
     except Exception as e:
-        logger.put_msg("E",f"config.readConfig ERROR: {e}")
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.msg("E",f"readConfig() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
         return False
 
 def get(k1, k2):
@@ -51,5 +56,19 @@ def get(k1, k2):
         data = configI[k1][k2]
         return data
     except Exception as e:
-        logger.put_msg("E",f"config.get ERROR: {e}")
+        logger.msg("E",f"config.get ERROR: {e}")
         return  "err"
+
+def setValues():
+    try:
+        wait_secs = int(get("Interval","wait_to_check_sensors_seconds"))
+        resend_delay = int(get("Interval","wait_to_resend_sms_hours"))
+        resend_delay = resend_delay * 3600   # multiple hours times seconds in hours
+        cda.resend_wait = round(resend_delay / wait_secs)
+        print(f"resend_wait_cnt: {cda.resend_wait}")
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.msg("E",f"setValues() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
+     

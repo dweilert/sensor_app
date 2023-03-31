@@ -114,8 +114,7 @@ def resetEnergy(usbPort):
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
-        logger.put_msg("E",f"pzemHandler.resetEnergy Exception: {e}")
+        logger.msg("E",f"resetEnergy() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
 
 
 def monitor(usbPort, id):
@@ -181,7 +180,11 @@ def monitor(usbPort, id):
             elif id == "D":
                 cda.sensor_D_connect_error = True
                
-        logger.put_msg("E",f"pzemHandler.monitor Sensor {id} Exception: {e}")
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.msg("E",f"monitor() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
+
         client.close()
         return ["nodata"]
 
@@ -232,19 +235,19 @@ def find_usb_ports():
 
                 if cda.portA == chkUSB:
                     if config.get("Debug","show_dmesg") == "true":
-                        logger.put_msg("I",f"Sensor 1 disconned from USB port: {chkUSB}")
+                        logger.msg("I",f"Sensor 1 disconned from USB port: {chkUSB}")
                     cda.portA = "na"
                 elif cda.portB == chkUSB:
                     if config.get("Debug","show_dmesg") == "true":
-                        logger.put_msg("I",f"Sensor 2 disconned from USB port: {chkUSB}")
+                        logger.msg("I",f"Sensor 2 disconned from USB port: {chkUSB}")
                     cda.portB = "na"
                 elif cda.portC == chkUSB:
                     if config.get("Debug","show_dmesg") == "true":    
-                        logger.put_msg("I",f"Sensor 3 disconned from USB port: {chkUSB}")
+                        logger.msg("I",f"Sensor 3 disconned from USB port: {chkUSB}")
                     cda.portC = "na"
                 elif cda.portD == chkUSB:
                     if config.get("Debug","show_dmesg") == "true":
-                        logger.put_msg("I",f"Sensor 4 disconned from USB port: {chkUSB}")
+                        logger.msg("I",f"Sensor 4 disconned from USB port: {chkUSB}")
                     cda.portD = "na"
 
             if portA_sig in line:
@@ -253,7 +256,7 @@ def find_usb_ports():
                         pid = line[65:72]
                         cda.portA = "/dev/" + pid
                         if config.get("Debug","show_dmesg") == "true":
-                            logger.put_msg("I",f"Sensor 1 set to USB port: {cda.portA}")
+                            logger.msg("I",f"Sensor 1 set to USB port: {cda.portA}")
         
             if portB_sig in line:
                 if cda.portB == "na":
@@ -261,7 +264,7 @@ def find_usb_ports():
                         pid = line[65:72]
                         cda.portB = "/dev/" + pid
                         if config.get("Debug","show_dmesg") == "true":
-                            logger.put_msg("I",f"Sensor 2 set to USB port: {cda.portB}")
+                            logger.msg("I",f"Sensor 2 set to USB port: {cda.portB}")
 
             if portC_sig in line:
                 if cda.portC == "na":
@@ -269,7 +272,7 @@ def find_usb_ports():
                         pid = line[65:72]
                         cda.portC = "/dev/" + pid
                         if config.get("Debug","show_dmesg") == "true":
-                            logger.put_msg("I",f"Sensor 3 set to USB port: {cda.portC}")
+                            logger.msg("I",f"Sensor 3 set to USB port: {cda.portC}")
 
             if portD_sig in line:
                 if cda.portD == "na":
@@ -277,19 +280,19 @@ def find_usb_ports():
                         pid = line[65:72]
                         cda.portD = "/dev/" + pid
                         if config.get("Debug","show_dmesg") == "true":
-                            logger.put_msg("I",f"Sensor 4 set to USB port: {cda.portD}")
+                            logger.msg("I",f"Sensor 4 set to USB port: {cda.portD}")
             
             # Decrease line to get
             ln = ln + 1
 
             # No more lines to process
             if ln >= hl:
-                logger.put_msg("I","------------")
-                logger.put_msg("I",f"Sensor 1 usb port: {cda.portA}")
-                logger.put_msg("I",f"Sensor 2 usb port: {cda.portB}")
-                logger.put_msg("I",f"Sensor 3 usb port: {cda.portC}")
-                logger.put_msg("I",f"Sensor 4 usb port: {cda.portD}")
-                logger.put_msg("I","------------")
+                logger.msg("I","------------")
+                logger.msg("I",f"Sensor 1 usb port: {cda.portA}")
+                logger.msg("I",f"Sensor 2 usb port: {cda.portB}")
+                logger.msg("I",f"Sensor 3 usb port: {cda.portC}")
+                logger.msg("I",f"Sensor 4 usb port: {cda.portD}")
+                logger.msg("I","------------")
                 break
                         
         return
@@ -297,5 +300,4 @@ def find_usb_ports():
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
-        logger.put_msg("E",f"pzemHandler.find_usb_ports Exception: {e}")
+        logger.msg("E",f"find_usb_ports() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               

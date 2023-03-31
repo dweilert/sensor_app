@@ -46,30 +46,100 @@ import commonDataArea as cda
 # Find your Account SID and Auth Token at twilio.com/console
 # and set the environment variables. See http://twil.io/secure
 
-def checkSMS():
+def checkSMS(what):
     try:
-        if len(cda.smsMsg) > 0:
-            for s in cda.smsMsg:
-                numbers = ""
-                if s[1] == "developer":
-                    numbers = config.get("SMSNumbers","developer")
-                if s[1] == "maintenance":
-                    numbers = config.get("SMSNumbers","maintenance")
-                if s[1] == "owners":
-                    numbers = config.get("SMSNumbers","owners")
-                msg = []
-                msg.append(s[0])
-                sendSMS(numbers, msg, s[1])
-            cda.smsMsg = []
+        send = True
+        if what == "no_data":
+            cda.resend_sensor_no_data_cnt +=1
+            if cda.resend_sensor_no_data_cnt < cda.resend_wait:
+                send = False
+            else:
+                cda.resend_sensor_no_data_cnt = 1
+
+        elif what == "no_voltage":
+            cda.resend_sensor_no_voltage_cnt +=1
+            if cda.resend_sensor_no_voltage_cnt < cda.resend_wait:
+                send = False
+            else:
+                cda.resend_sensor_no_voltage_cnt = 1
+
+        elif what == "no_power":
+            cda.resend_sensor_no_power_cnt +=1
+            if cda.resend_sensor_no_power_cnt < cda.resend_wait:
+                send = False
+            else:
+                cda.resend_sensor_no_power_cnt = 1
+
+        elif what == "io_error":
+            cda.resend_sensor_io_error_cnt +=1
+            if cda.resend_sensor_io_error_cnt < cda.resend_wait:
+                send = False
+            else:
+                cda.resend_sensor_io_error_cnt = 1
+
+        elif what == "all_sensors_io_error":
+            cda.resend_all_sensors_io_error_cnt +=1
+            if cda.resend_all_sensors_io_error_cnt < cda.resend_wait:
+                send = False
+            else:
+                cda.resend_all_sensors_io_error_cnt = 1
+
+        elif what == "connect_error":
+            cda.resend_sensor_connect_error_cnt +=1
+            if cda.resend_sensor_connect_error_cnt < cda.resend_wait:
+                send = False
+            else:
+                cda.resend_sensor_connect_error_cnt = 1
+
+        elif what == "amps":
+            cda.resend_sensor_amps_cnt +=1
+            if cda.resend_sensor_amps_cnt < cda.resend_wait:
+                send = False
+            else:
+                cda.resend_sensor_amps_cnt = 1
+
+        elif what == "temp":
+            cda.resend_rasp_temp_cnt +=1
+            if cda.resend_rasp_temp_cnt < cda.resend_wait:
+                send = False
+            else:
+                cda.resend_rasp_temp_cnt = 1
+
+        elif what == "ups_charge":
+            cda.resend_rasp_ups_charge_cnt +=1
+            if cda.resend_rasp_ups_charge_cnt < cda.resend_wait:
+                send = False
+            else:
+                cda.resend_rasp_ups_charge_cnt = 1
+
+        elif what == "ups_percent":
+            cda.resend_rasp_ups_percent_cnt +=1
+            if cda.resend_rasp_ups_percent_cnt < cda.resend_wait:
+                send = False
+            else:
+                cda.resend_rasp_ups_percent_cnt = 1
+
+        else:
+            if what != "other":
+                send = False
+                logger.msg("W",f"smsHandler.checkSMS did not receive valid type, RECEIVED: {what}")
+
+        if send == True:
+            sendSMS()
+
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
-        logger.put_msg("E",f"smsHandler.checkSMS ERROR: {e}")
+        logger.msg("E",f"checkSMS() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
 
-def sendSMS(toNumbers, msgArray, who):
+def sendSMS():
     try:
+        who = cda.smsMsg[1]
+        print(f'who: {who}')
+        toNumbers = config.get("SMSNumber", )
+        print(f'toNumbers: {toNumbers}')
+
         if "," in toNumbers:
             newNum = toNumbers.split(",")
             toNumbers = newNum
@@ -81,19 +151,14 @@ def sendSMS(toNumbers, msgArray, who):
         now = datetime.now()
         fmtDate = now.strftime("%m/%d/%Y at %H:%M:%S")
         msg = config.get("Twilio","msg_header") + " " + fmtDate + " - "
-        cnt = 1
-
-        # Build the message to send
-        for m in msgArray:
-            msg = msg + "(" + str(cnt) + ") " + m + " "
-            cnt = cnt + 1
+        msg = msg + " " + cda.smsMsg[0]
 	
         client = Client(config.get("Twilio","accountSID"), config.get("Twilio","authToken"))    
         first_msg = True
         for number in toNumbers:
             #print("Send message to: ", number)
             if config.get("Twilio","skip_sending") == "true":
-                logger.put_msg("I","Skipped sending SMS: " + msg )
+                logger.msg("I","Skipped sending SMS: " + msg )
             else:
                 client.messages.create(
                     to=number, 
@@ -101,7 +166,7 @@ def sendSMS(toNumbers, msgArray, who):
                     body=msg)
                 if first_msg == True:
                     first_msg = False				    	    
-                    logger.put_msg("I","Sent SMS: " + msg + " to " + who )		
+                    logger.msg("I","Sent SMS: " + msg + " to " + who )		
                     j_data = {}
                     j_data["d"] = fmtDate
                     j_data["m"] = msg
@@ -113,9 +178,5 @@ def sendSMS(toNumbers, msgArray, who):
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
-        logger.put_msg("E",f"smsHandler.sendSMS ERROR: {e}")
-
-    finally:
-        return msg
+        logger.msg("E",f"sendSMS() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
 

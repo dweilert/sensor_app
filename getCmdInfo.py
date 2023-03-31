@@ -117,8 +117,7 @@ def checkForCommandFile():
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-        logger.put_msg("E",f"monitor.checkForCommandFile Exception: {e}")
+        logger.msg("E",f"checkForCommandFile() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
 
 
 def getTempInfo():
@@ -152,8 +151,8 @@ def getTempInfo():
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-        logger.put_msg("E",f"monitor.getTempInfo Exception: {e}")
+        logger.msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"monitor.getTempInfo Exception: {e}")
 
 
 def getPumpInfo():
@@ -194,8 +193,8 @@ def getPumpInfo():
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-        logger.put_msg("E",f"monitor.getPumpInfo Exception: {e}")
+        logger.msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"monitor.getPumpInfo Exception: {e}")
 
 
 def getSensorInfo():
@@ -222,8 +221,8 @@ def getSensorInfo():
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-        logger.put_msg("E",f"monitor.checkForCommandFile Exception: {e}")
+        logger.msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"monitor.checkForCommandFile Exception: {e}")
 
 
 def getMonitorStatus():
@@ -271,8 +270,8 @@ def getMemory():
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-        logger.put_msg("E",f"monitor.getMemory Exception: {e}")
+        logger.msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"monitor.getMemory Exception: {e}")
 
 
 def getRegisters(id):
@@ -356,8 +355,8 @@ def getRegisters(id):
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.put_msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-        logger.put_msg("E",f"monitor.checkForCommandFile Exception: {e}")
+        logger.msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"monitor.checkForCommandFile Exception: {e}")
         return "Error getting sensor register information"
 
 

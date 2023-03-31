@@ -36,7 +36,7 @@ import config
 logData = []
 
 
-def put_msg(lvl, msg):
+def msg(lvl, msg):
     try:
         now = datetime.now()
         ts = now.strftime("%Y-%m-%d %H:%M:%S.%f")
