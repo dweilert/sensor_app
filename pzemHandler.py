@@ -147,6 +147,7 @@ def monitor(usbPort, id):
             elif id == "D":
                 cda.sensor_D_connect_error = True
             rtn = ["nodata"]
+            client = None
             return rtn
 
         if type(request) == "pymodbus.register_read_message.ReadInputRegistersResponse":
@@ -198,7 +199,7 @@ def monitor(usbPort, id):
 
 
         client.close()
-        print(f"pzem rtn type: {type(rtn)}  rtn: {rtn}")
+        # print(f"pzem rtn type: {type(rtn)}  rtn: {rtn}")
         return rtn
     except Exception as e:
         errorLine = f"Exception: {e}"
