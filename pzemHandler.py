@@ -160,10 +160,10 @@ def monitor(usbPort, id):
         request = client.read_input_registers(0,10,1)
 
         what =  type(request.__name__)
-        
+
         print(f"what type: {type(what)} what: {what}")
 
-        if what == "pymodbus.register_read_message.ReadInputRegistersResponse":
+        if "pymodbus.register_read_message.ReadInputRegistersResponse" in what:
             dataHandler.saveData(request.registers, id)
 
             # No errors so set flags to False
@@ -185,7 +185,7 @@ def monitor(usbPort, id):
             client.close()
             return rtn
 
-        elif what == "pymodbus.exceptions.ModbusIOException":
+        elif "pymodbus.exceptions.ModbusIOException" in what:
             if id == "A":
                 cda.sensor_A_io_error = True
             elif id == "B":
@@ -200,7 +200,7 @@ def monitor(usbPort, id):
             client.close()
             return rtn
         
-        elif what == "pymodbus.exceptions.ConnectionException":
+        elif "pymodbus.exceptions.ConnectionException" in what:
             if id == "A":
                 cda.sensor_A_connect_error = True
             elif id == "B":
