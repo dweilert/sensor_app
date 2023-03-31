@@ -108,25 +108,24 @@ def mainLine():
             
             cda.iCnt = cda.iCnt + 1
             rtn = pzemHandler.monitor(cda.portA,"A")
-            print(f"rtn type: {type(rtn)}")            
-            checkThresholds.checkPump(rtn,"A")
-            if len(rtn) > 8:
-                cda.sensor_A_registers.append(rtn)
+            if rtn[0] != False:
+                checkThresholds.checkPump(rtn[1],"A")
+                cda.sensor_A_registers.append(rtn[1])
             
             rtn = pzemHandler.monitor(cda.portB,"B")
-            checkThresholds.checkPump(rtn,"B")
-            if len(rtn) > 8:
-                cda.sensor_B_registers.append(rtn)
+            if rtn[0] != False:
+                checkThresholds.checkPump(rtn[1],"B")
+                cda.sensor_B_registers.append(rtn[1])
 
-            rtn = pzemHandler.monitor(cda.portC,"C") 
-            checkThresholds.checkPump(rtn,"C")
-            if len(rtn) > 8:
-                cda.sensor_C_registers.append(rtn)
-
-            rtn = pzemHandler.monitor(cda.portD,"D")          
-            checkThresholds.checkPump(rtn,"D")
-            if len(rtn) > 8:
-                cda.sensor_D_registers.append(rtn)
+            rtn = pzemHandler.monitor(cda.portA,"C")
+            if rtn[0] != False:
+                checkThresholds.checkPump(rtn[1],"C")
+                cda.sensor_C_registers.append(rtn[1])
+            
+            rtn = pzemHandler.monitor(cda.portB,"D")
+            if rtn[0] != False:
+                checkThresholds.checkPump(rtn[1],"D")
+                cda.sensor_D_registers.append(rtn[1])
 
             # Check for io errors and connection errors
             checkThresholds.checkSensors()

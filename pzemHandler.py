@@ -120,24 +120,26 @@ def resetEnergy(usbPort):
 def monitor(usbPort, id):
     #Get register data
     try:
-        rtn = ["nodata"]
+        rtn = []
         # Check if sensor was found, if not skip
         if cda.portA == "na" and id == "A": 
+            rtn.append(False)
             return rtn
         if cda.portB == "na" and id == "B": 
+            rtn.append(False)
             return rtn
         if cda.portC == "na" and id == "C":
+            rtn.append(False)
             return rtn
         if cda.portD == "na" and id == "D":
+            rtn.append(False)
             return rtn   
              
         client = ModbusSerialClient(port=usbPort,timeout=int(config.get("Pzem","timeout")),baudrate=9600,bytesize=8,parity="N",stopbits=1)
         status = client.connect()
 
-        if status == True:
-            print(f"usbPort: {usbPort} id: {id} status: {status} - invoking client.read_input_registers()")
-            request = client.read_input_registers(0,10,1)
-        else:
+        if status != True:
+            client = None
             if id == "A":
                 cda.sensor_A_connect_error = True
             elif id == "B":
@@ -146,9 +148,11 @@ def monitor(usbPort, id):
                 cda.sensor_C_connect_error = True
             elif id == "D":
                 cda.sensor_D_connect_error = True
-            rtn = ["nodata"]
-            client = None
+
+            rtn.append(False)
             return rtn
+
+        request = client.read_input_registers(0,10,1)
 
         if type(request) == "pymodbus.register_read_message.ReadInputRegistersResponse":
             dataHandler.saveData(request.registers, id)
@@ -167,7 +171,10 @@ def monitor(usbPort, id):
                 cda.sensor_D_io_error = False
                 cda.sensor_D_connect_error = False
 
-            rtn = request.registers
+            rtn.append(True)
+            rtn.append(request.registers)
+            client.close()
+            return rtn
 
         elif type(request) == "pymodbus.exceptions.ModbusIOException":
             if id == "A":
@@ -179,8 +186,10 @@ def monitor(usbPort, id):
             elif id == "D":
                 cda.sensor_D_io_error = True
 
-            rtn = "[nodata]"
-
+            rtn.append(False)
+            client.close()
+            return rtn
+        
         elif type(request) == "pymodbus.exceptions.ConnectionException":
             if id == "A":
                 cda.sensor_A_connect_error = True
@@ -191,19 +200,17 @@ def monitor(usbPort, id):
             elif id == "D":
                 cda.sensor_D_connect_error = True
 
-            rtn = "[nodata]"
-        
+            rtn.append(False)
+            client.close()
+            return rtn        
+
         else:
-            print(type(request))
-            rtn = "[nodata]"
+            rtn.append(False)
+            client.close()
+            return rtn
 
-
-        client.close()
-        # print(f"pzem rtn type: {type(rtn)}  rtn: {rtn}")
-        return rtn
     except Exception as e:
         errorLine = f"Exception: {e}"
-        print("========================================")
         print(f"errorLine: {errorLine}")
 
         if config.get("Pzem","ioException") in errorLine:
@@ -232,7 +239,9 @@ def monitor(usbPort, id):
         logger.msg("E",f"monitor() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
         logger.msg(f"Error: {e}")
         
-        return ["nodata"]
+        rtn = []
+        rtn.append(False)
+        return rtn
 
 """
 Determine which ttyUSB* ports are supporting the connected PZEM modules.
