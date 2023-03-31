@@ -48,6 +48,7 @@ import commonDataArea as cda
 
 def checkSMS(what):
     try:
+        print(f"what {what}")
         send = True
         if what == "no_data":
             cda.resend_sensor_no_data_cnt +=1
@@ -135,9 +136,10 @@ def checkSMS(what):
 
 def sendSMS():
     try:
+        print(cda.smsMsg)
         who = cda.smsMsg[1]
         print(f'who: {who}')
-        toNumbers = config.get("SMSNumber", )
+        toNumbers = config.get("SMSNumber", who)
         print(f'toNumbers: {toNumbers}')
 
         if "," in toNumbers:
