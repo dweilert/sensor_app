@@ -186,6 +186,7 @@ def monitor(usbPort, id):
 
 
         client.close()
+        print(f"pzem rtn type: {type(rtn)}  rtn: {rtn}")
         return rtn
     except Exception as e:
         errorLine = f"Exception: {e}"

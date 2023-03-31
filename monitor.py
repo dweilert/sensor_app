@@ -108,6 +108,7 @@ def mainLine():
             
             cda.iCnt = cda.iCnt + 1
             rtn = pzemHandler.monitor(cda.portA,"A")
+            print(f"rtn type: {type(rtn)}")            
             checkThresholds.checkPump(rtn,"A")
             if len(rtn) > 8:
                 cda.sensor_A_registers.append(rtn)
