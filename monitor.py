@@ -47,10 +47,10 @@ def getPorts():
         pzemHandler.find_usb_ports()
         cda.getPortsCnt = cda.getPortsCnt + 1
         if cda.getPortsCnt > int(config.get("Limits","no_ports")):
-            entry = []
-            entry.append(config.get("Limits","no_ports_msg"))
-            entry.append(config.get("Limits","no_ports_who"))
-            cda.smsMsg.append(entry)
+            sms = []
+            sms.append(config.get("Limits","no_ports_msg"))
+            sms.append(config.get("Limits","no_ports_who"))
+            cda.smsMsg.append(sms)
             smsHandler.checkSMS()
             cda.getPortsCnt = 0
     except Exception as e:

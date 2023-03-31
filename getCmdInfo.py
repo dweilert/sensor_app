@@ -73,24 +73,32 @@ def checkForCommandFile():
                 elif "r4" in line:
                     results = getRegisters("D")       
                 elif "sms_dev" in line:
-                    msg = []
-                    msg.append(config.get("TestMsg","developer_msg"))
-                    smsHandler.sendSMS(config.get("SMSNumbers","developer"), msg, "developer")  
+                    sms = []
+                    sms.append(config.get("TestMsg","developer_msg"))
+                    sms.append(config.get("TestMsg","developer_who"))
+                    cda.smsMsg.append(sms)
+                    smsHandler.checkSMS("other")
                     results = "Test SMS sent to developer"     
                 elif "sms_man" in line:
-                    msg = []
-                    msg.append(config.get("TestMsg","maintenance_msg"))
-                    smsHandler.sendSMS(config.get("SMSNumbers","maintenace"), msg, "maintenance")  
+                    sms = []
+                    sms.append(config.get("TestMsg","maintenance_msg"))
+                    sms.append(config.get("TestMsg","maintenance_who"))
+                    cda.smsMsg.append(sms)
+                    smsHandler.checkSMS("other")
                     results = "Test SMS sent to maintenace"     
                 elif "sms_own" in line:
-                    msg = []
-                    msg.append(config.get("TestMsg","owner_msg"))
-                    smsHandler.sendSMS(config.get("SMSNumbers","owners"), msg, "owners")  
+                    sms = []
+                    sms.append(config.get("TestMsg","owners_msg"))
+                    sms.append(config.get("TestMsg","owners_who"))
+                    cda.smsMsg.append(sms)
+                    smsHandler.checkSMS("other")
                     results = "Test SMS sent to owners"     
-                elif "sms_fixed" in line:
-                    msg = []
-                    msg.append(config.get("AllClear","owner_msg"))
-                    smsHandler.sendSMS(config.get("SMSNumbers","owners"), msg, "owners")  
+                elif "all_clear" in line:
+                    sms = []
+                    sms.append(config.get("Messages","all_clear_msg"))
+                    sms.append(config.get("Messages","all_clear_who"))
+                    cda.smsMsg.append(sms)
+                    smsHandler.checkSMS("other")
                     results = "All clear SMS sent to owners"     
                 elif "logs" in line:
                     for m in cda.log_messages:
