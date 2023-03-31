@@ -159,7 +159,8 @@ def monitor(usbPort, id):
 
         request = client.read_input_registers(0,10,1)
 
-        what =  type(request.__name__)
+        what =  type(request)
+        what = str(what)
 
         print(f"what type: {type(what)} what: {what}")
 
