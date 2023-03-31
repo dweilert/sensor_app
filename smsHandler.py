@@ -137,7 +137,7 @@ def checkSMS(what):
 def sendSMS():
     try:
         print(cda.smsMsg)
-        who = cda.smsMsg[1]
+        who = cda.smsMsg[0][1]
         print(f'who: {who}')
         toNumbers = config.get("SMSNumber", who)
         print(f'toNumbers: {toNumbers}')
@@ -153,7 +153,7 @@ def sendSMS():
         now = datetime.now()
         fmtDate = now.strftime("%m/%d/%Y at %H:%M:%S")
         msg = config.get("Twilio","msg_header") + " " + fmtDate + " - "
-        msg = msg + " " + cda.smsMsg[0]
+        msg = msg + " " + cda.smsMsg[0][0]
 	
         client = Client(config.get("Twilio","accountSID"), config.get("Twilio","authToken"))    
         first_msg = True
