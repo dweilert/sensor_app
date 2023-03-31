@@ -132,9 +132,8 @@ def monitor(usbPort, id):
             return rtn   
              
         client = ModbusSerialClient(port=usbPort,timeout=int(config.get("Pzem","timeout")),baudrate=9600,bytesize=8,parity="N",stopbits=1)
-
-        client.connect()
-
+        status = client.connect()
+        print(f"status: {status}")
         request = client.read_input_registers(0,10,1)
 
         # Save the sensor data is in the registers element
@@ -162,6 +161,7 @@ def monitor(usbPort, id):
         return rtn
     except Exception as e:
         errorLine = f"Exception: {e}"
+        print(f"errorLine: {errorLine}")
 
         if config.get("Pzem","ioException") in errorLine:
             if id == "A":
