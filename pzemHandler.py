@@ -168,6 +168,18 @@ def monitor(usbPort, id):
 
             rtn = "[nodata]"
 
+        elif type(request) == "pymodbus.exceptions.ConnectionException":
+            if id == "A":
+                cda.sensor_A_connect_error = True
+            elif id == "B":
+                cda.sensor_B_connect_error = True
+            elif id == "C":
+                cda.sensor_C_connect_error = True
+            elif id == "D":
+                cda.sensor_D_connect_error = True
+
+            rtn = "[nodata]"
+        
         else:
             print(type(request))
             rtn = "[nodata]"
