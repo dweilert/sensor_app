@@ -187,7 +187,7 @@ def monitor(usbPort, id):
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"monitor() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
-
+        logger.msg(f"Error: {e}")
         client.close()
         return ["nodata"]
 
