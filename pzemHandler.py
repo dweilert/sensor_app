@@ -133,34 +133,47 @@ def monitor(usbPort, id):
              
         client = ModbusSerialClient(port=usbPort,timeout=int(config.get("Pzem","timeout")),baudrate=9600,bytesize=8,parity="N",stopbits=1)
         status = client.connect()
+
         print(f"usbPort: {usbPort} id: {id} status: {status} - invoking client.read_input_registers()")
         request = client.read_input_registers(0,10,1)
 
-        # Save the sensor data is in the registers element
-        # print(f"registers: {request.registers} id: {id}")
-            
-        print(type(request))        
-        print(type(request.registers))        
+        if type(request) == "pymodbus.register_read_message.ReadInputRegistersResponse":
+            dataHandler.saveData(request.registers, id)
 
-        dataHandler.saveData(request.registers, id)
+            # No errors so set flags to False
+            if id == "A":
+                cda.sensor_A_io_error = False
+                cda.sensor_A_connect_error = False
+            elif id == "B":
+                cda.sensor_B_io_error = False
+                cda.sensor_B_connect_error = False
+            elif id == "C":
+                cda.sensor_C_io_error = False
+                cda.sensor_C_connect_error = False
+            elif id == "D":
+                cda.sensor_D_io_error = False
+                cda.sensor_D_connect_error = False
 
-        rtn = request.registers
+            rtn = request.registers
+
+        elif type(request) == "pymodbus.exceptions.ModbusIOException":
+            if id == "A":
+                cda.sensor_A_io_error = True
+            elif id == "B":
+                cda.sensor_B_io_error = True
+            elif id == "C":
+                cda.sensor_C_io_error = True
+            elif id == "D":
+                cda.sensor_D_io_error = True
+
+            rtn = "[nodata]"
+
+        else:
+            print(type(request))
+            rtn = "[nodata]"
+
+
         client.close()
-
-        # No errors so set flags to False
-        if id == "A":
-            cda.sensor_A_io_error = False
-            cda.sensor_A_connect_error = False
-        elif id == "B":
-            cda.sensor_B_io_error = False
-            cda.sensor_B_connect_error = False
-        elif id == "C":
-            cda.sensor_C_io_error = False
-            cda.sensor_C_connect_error = False
-        elif id == "D":
-            cda.sensor_D_io_error = False
-            cda.sensor_D_connect_error = False
-
         return rtn
     except Exception as e:
         errorLine = f"Exception: {e}"
