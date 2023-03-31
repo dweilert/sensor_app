@@ -84,7 +84,8 @@ def show_help():
     print("    sms_own   - send test SMS message to owners")
     print("    sms_man   - send test SMS message to maintenace")
     print("    sms_dev   - send test teXt message to developer")
-    print("    sms_fixed - send all clear SMS to owners.  Send this after issues are resovled.")
+    print(" ")
+    print("    all_clear - send all clear SMS to owners.  Send this after issues are resovled.")
  
     print(" ")
     print("---")
@@ -132,8 +133,8 @@ def getCommand():
                 writeCommand("sms_man")                
             elif cmd == "sms_dev":
                 writeCommand("sms_dev")                
-            elif cmd == "sms_fixed":
-                writeCommand("sms_fixed")                
+            elif cmd == "all_clear":
+                writeCommand("all_clear")                
             else:
                 print("Invalid command, type h for help")
                 print("\n" + "---")
