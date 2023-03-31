@@ -134,8 +134,20 @@ def monitor(usbPort, id):
         client = ModbusSerialClient(port=usbPort,timeout=int(config.get("Pzem","timeout")),baudrate=9600,bytesize=8,parity="N",stopbits=1)
         status = client.connect()
 
-        print(f"usbPort: {usbPort} id: {id} status: {status} - invoking client.read_input_registers()")
-        request = client.read_input_registers(0,10,1)
+        if status == True:
+            print(f"usbPort: {usbPort} id: {id} status: {status} - invoking client.read_input_registers()")
+            request = client.read_input_registers(0,10,1)
+        else:
+            if id == "A":
+                cda.sensor_A_connect_error = True
+            elif id == "B":
+                cda.sensor_B_connect_error = True
+            elif id == "C":
+                cda.sensor_C_connect_error = True
+            elif id == "D":
+                cda.sensor_D_connect_error = True
+            rtn = ["nodata"]
+            return rtn
 
         if type(request) == "pymodbus.register_read_message.ReadInputRegistersResponse":
             dataHandler.saveData(request.registers, id)
@@ -190,6 +202,7 @@ def monitor(usbPort, id):
         return rtn
     except Exception as e:
         errorLine = f"Exception: {e}"
+        print("========================================")
         print(f"errorLine: {errorLine}")
 
         if config.get("Pzem","ioException") in errorLine:
@@ -217,7 +230,7 @@ def monitor(usbPort, id):
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"monitor() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
         logger.msg(f"Error: {e}")
-        client.close()
+        
         return ["nodata"]
 
 """
