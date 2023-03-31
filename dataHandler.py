@@ -33,7 +33,6 @@ import commonDataArea as cda
 import logger
 import awsHandler
 
-
 def saveData(data, id):
     try:
         now = datetime.now()

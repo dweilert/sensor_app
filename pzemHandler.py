@@ -137,6 +137,7 @@ def monitor(usbPort, id):
 
         request = client.read_input_registers(0,10,1)
         # Save the sensor data is in the registers element
+        print(f"registers: {request.registers} id: {id}")
         dataHandler.saveData(request.registers, id)
         #print(request.registers)
         rtn = request.registers
