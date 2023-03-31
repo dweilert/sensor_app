@@ -133,12 +133,15 @@ def monitor(usbPort, id):
              
         client = ModbusSerialClient(port=usbPort,timeout=int(config.get("Pzem","timeout")),baudrate=9600,bytesize=8,parity="N",stopbits=1)
         status = client.connect()
-        print(f"status: {status}")
+        print(f"usbPort: {usbPort} id: {id} status: {status} - invoking client.read_input_registers()")
         request = client.read_input_registers(0,10,1)
 
         # Save the sensor data is in the registers element
         # print(f"registers: {request.registers} id: {id}")
+            
+        print(type(request))        
         print(type(request.registers))        
+
         dataHandler.saveData(request.registers, id)
 
         rtn = request.registers
