@@ -107,25 +107,30 @@ def mainLine():
             resetCheck(nowDay)
             
             cda.iCnt = cda.iCnt + 1
+
+            rtn = []
             rtn = pzemHandler.monitor(cda.portA,"A")
             print(f"A rtn {rtn}")
             if rtn[0] != False:
                 checkThresholds.checkPump(rtn[1],"A")
                 cda.sensor_A_registers.append(rtn[1])
             
+            rtn = []
             rtn = pzemHandler.monitor(cda.portB,"B")
             print(f"B rtn {rtn}")
             if rtn[0] != False:
                 checkThresholds.checkPump(rtn[1],"B")
                 cda.sensor_B_registers.append(rtn[1])
 
-            rtn = pzemHandler.monitor(cda.portA,"C")
+            rtn = []
+            rtn = pzemHandler.monitor(cda.portC,"C")
             print(f"C rtn {rtn}")
             if rtn[0] != False:
                 checkThresholds.checkPump(rtn[1],"C")
                 cda.sensor_C_registers.append(rtn[1])
             
-            rtn = pzemHandler.monitor(cda.portB,"D")
+            rtn = []
+            rtn = pzemHandler.monitor(cda.portD,"D")
             print(f"D rtn {rtn}")
             if rtn[0] != False:
                 checkThresholds.checkPump(rtn[1],"D")

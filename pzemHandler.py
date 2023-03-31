@@ -123,18 +123,22 @@ def monitor(usbPort, id):
         rtn = []
         # Check if sensor was found, if not skip
         if cda.portA == "na" and id == "A": 
+            rtn = []
             rtn.append(False)
             rtn.append("na")
             return rtn
-        if cda.portB == "na" and id == "B": 
+        if cda.portB == "na" and id == "B":
+            rtn = [] 
             rtn.append(False)
             rtn.append("na")
             return rtn
         if cda.portC == "na" and id == "C":
+            rtn = []
             rtn.append(False)
             rtn.append("na")
             return rtn
         if cda.portD == "na" and id == "D":
+            rtn = []
             rtn.append(False)
             rtn.append("na")
             return rtn   
@@ -153,6 +157,7 @@ def monitor(usbPort, id):
             elif id == "D":
                 cda.sensor_D_connect_error = True
 
+            rtn = []
             rtn.append(False)
             rtn.append("connection failed")
             return rtn
@@ -179,6 +184,7 @@ def monitor(usbPort, id):
                 cda.sensor_D_io_error = False
                 cda.sensor_D_connect_error = False
 
+            rtn = []
             rtn.append(True)
             rtn.append(request.registers)
             client.close()
@@ -194,6 +200,7 @@ def monitor(usbPort, id):
             elif id == "D":
                 cda.sensor_D_io_error = True
 
+            rtn = []
             rtn.append(False)
             rtn.append("IOException")
             client.close()
@@ -209,15 +216,16 @@ def monitor(usbPort, id):
             elif id == "D":
                 cda.sensor_D_connect_error = True
 
+            rtn = []
             rtn.append(False)
             rtn.append("ConnectionError")
             client.close()
             return rtn        
 
         else:
+            rtn = []
             rtn.append(False)
             rtn.append(f"Other {rType}")
-
             client.close()
             return rtn
 
@@ -251,6 +259,7 @@ def monitor(usbPort, id):
         
         rtn = []
         rtn.append(False)
+        rtn.append(exception_type)
         return rtn
 
 """
