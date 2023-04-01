@@ -112,7 +112,8 @@ resend_sensor_io_error_cnt = 0
 resend_all_sensors_io_error_cnt = 0
 resend_sensor_connect_error_cnt = 0
 
-resend_sensor_no_power_cnt = 0
+resend_sensor_no_power_a_cnt = 0
+resend_sensor_no_power_b_cnt = 0
 resend_sensor_no_data_cnt = 0
 resend_sensor_amps_cnt = 0
 

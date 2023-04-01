@@ -138,7 +138,7 @@ def checkPump(pzem_data,id):
                         sms.append(config.get("Messages","no_power_who"))
                         cda.smsMsg.append(sms)
                         cda.aNoP = 0
-                        smsHandler.checkSMS("no_power")
+                        smsHandler.checkSMS("no_power_a")
 
         elif id == "B": 
             if (len(pzem_data) == 0):
@@ -160,7 +160,7 @@ def checkPump(pzem_data,id):
                         sms.append(config.get("Messages","no_power_who"))
                         cda.smsMsg.append(sms)
                         cda.bNoP = 0
-                        smsHandler.checkSMS("no_power")
+                        smsHandler.checkSMS("no_power_b")
 
         elif id == "C": 
             if (len(pzem_data) == 0):
