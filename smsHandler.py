@@ -48,7 +48,7 @@ import commonDataArea as cda
 
 def checkSMS(what): 
     try:
-        print(f"checkSMS parameter: {what}")
+        print(f"checkSMS parameter: {what} from sensor: {cda.from_sensor}")
         send = True
         if what == "no_data":
             if cda.resend_sensor_no_data_cnt == 0:

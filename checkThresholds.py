@@ -128,6 +128,7 @@ def checkPump(pzem_data,id):
     # Increment counters and check against thresholds.
     try:
         cda.smsMsg = []
+        cda.from_sensor = id
         if id == "A": 
             if (pzem_data[0] == "nodata"):
                 cda.aNoD = cda.aNoD + 1
