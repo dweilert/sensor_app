@@ -198,7 +198,7 @@ def checkPump(pzem_data,id):
                 # Check current
                 if (pzem_data[1] == 0):
                     cda.dNoP = cda.dNoP + 1
-                    if cda.dNoP > int(config.get("Limits","no_overall_no_power")):
+                    if cda.dNoP > int(config.get("Limits","no_overall_power")):
                         sms = []
                         sms.append("Pump D sensor " + config.get("Messages","no_overall_power_msg"))
                         sms.append(config.get("Messages","no_overall_power_who"))
