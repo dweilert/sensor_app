@@ -34,40 +34,39 @@ import logger
 import awsHandler
 
 
-def saveData(data, id):
+def saveData(row, id):
     try:
-        print(f" dataHandler data: {data} id: {id}")
-        now = datetime.now()
-        new = id + "," + now.strftime("%m/%d/%Y-%H:%M:%S")
-        for item in data:
-            new = new + "," + str(item) 
+        print(f" dataHandler data: {row} id: {id}")
+        print(f"type(data) {type(row)}")
         
-        row = new.split(",")
-        # Record format for A & B  : 
-        #id, start date, start energy, stop date, latest energy, energy used
+        now = datetime.now()
+        ts = now.strftime("%m/%d/%Y-%H:%M:%S")
+
         record = {}
         energy = 0
-        if row[0] == "A":
-            # Check if Current in row[3] is seen 	
-            if int(row[3]) > 0:
+        if id == "A":
+            # Check if Current in row[1] is seen 	
+            if int(row[1]) > 0:
                 if cda.pumpA_status == "OFF":
                     cda.pumpA_status = "ON"		
-                    cda.pumpA_start = row[1]
+                    cda.pumpA_start = ts
                     cda.pumpA_stop = ""
-                    cda.pumpA_energy_start = row[7]
+                    cda.pumpA_energy_start = row[5]
                     cda.pumpA_energy_latest = 0
                     cda.pumpA_cycles = []
                     cda.pumpA_cycles.append(row)
                     cda.pumpA_cycle_cnt = cda.pumpA_cycle_cnt + 1  
                 else:
-                    cda.pumpA_energy_latest = row[7]
-                    cda.pumpA_stop = row[1]	
+                    cda.pumpA_energy_latest = row[5]
+                    cda.pumpA_stop = ts
+                    row.append(ts)	
                     cda.pumpA_cycles.append(row)	 
                      		    				    
             else:		
                 if cda.pumpA_status == "ON":
+                    row.append(ts)
                     cda.pumpA_cycles.append(row)
-                    cda.pumpA_stop = row[1]
+                    cda.pumpA_stop = ts
                     setHLA("A")
                     energy = int(cda.pumpA_energy_latest) - int(cda.pumpA_energy_start)
                     record['p'] = "A"                                          # pump
@@ -87,26 +86,28 @@ def saveData(data, id):
                     awsHandler.putSensorData(record)		    		
         
         
-        elif row[0] == "B":
+        elif id == "B":
             # Check if Current is seen 	
-            if int(row[3]) > 0:
+            if int(row[1]) > 0:
                 if cda.pumpB_status == "OFF":
                     cda.pumpB_status = "ON"		
-                    cda.pumpB_start = row[1]
+                    cda.pumpB_start = ts
                     cda.pumpB_stop = ""
-                    cda.pumpB_energy_start = row[7]
+                    cda.pumpB_energy_start = row[5]
                     cda.pumpB_energy_latest = 0
                     cda.pumpB_cycles = []
                     cda.pumpB_cycles.append(row)
                     cda.pumpB_cycle_cnt = cda.pumpB_cycle_cnt + 1 
                 else:
-                    cda.pumpB_energy_latest = row[7]
-                    cda.pumpB_stop = row[1]
+                    cda.pumpB_energy_latest = row[5]
+                    cda.pumpB_stop = ts
+                    row.append(ts)
                     cda.pumpB_cycles.append(row)		    		    				    
             else:		
                 if cda.pumpB_status == "ON":
+                    row.append(ts)
                     cda.pumpB_cycles.append(row)
-                    cda.pumpB_stop = row[1]
+                    cda.pumpB_stop = ts
                     setHLA("B")
                     energy = int(cda.pumpB_energy_latest) - int(cda.pumpB_energy_start)
                     record['p'] = "B"                                          # pump
