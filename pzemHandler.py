@@ -169,7 +169,8 @@ def monitor(usbPort, id):
         rType = str(rType)
 
         if "pymodbus.register_read_message.ReadInputRegistersResponse" in rType:
-            dataHandler.saveData(request.registers, id)
+            if id == "A" or id == "B":
+                dataHandler.saveData(request.registers, id)
 
             # No errors so set flags to False
             if id == "A":
