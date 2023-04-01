@@ -103,19 +103,8 @@ sensor_io_error_cnt = 0
 all_sensors_io_error_cnt = 0
 sensor_connect_error_cnt = 0
 
-first_sensor_io_error_cnt = 0
-first_all_sensors_io_error_cnt = 0
-first_sensor_connect_error_cnt = 0
-
-first_sensor_no_power_cnt = 0
-first_sensor_no_data_cnt = 0
-first_sensor_no_voltage_cnt = 0
-first_sensor_amps_cnt = 0
-
-first_rasp_temp_cnt = 0
-first_rasp_ups_charge_cnt = 0
-first_rasp_ups_percent_cnt = 0
-
+no_overall_power_cnt = 0
+high_level_alarm_cnt = 0
 
 resend_wait = 1440
 
@@ -125,8 +114,10 @@ resend_sensor_connect_error_cnt = 0
 
 resend_sensor_no_power_cnt = 0
 resend_sensor_no_data_cnt = 0
-resend_sensor_no_voltage_cnt = 0
 resend_sensor_amps_cnt = 0
+
+resend_no_overall_power_cnt = 0
+resend_high_level_alarm_cnt = 0
 
 resend_rasp_temp_cnt = 0
 resend_rasp_ups_charge_cnt = 0

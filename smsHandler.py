@@ -61,17 +61,6 @@ def checkSMS(what):
                 else:
                     cda.resend_sensor_no_data_cnt = 0
 
-        elif what == "no_voltage":
-            if cda.resend_sensor_no_voltage_cnt == 0:
-                send = True
-                cda.resend_sensor_no_voltage_cnt = 1
-            else:             
-                cda.resend_sensor_no_voltage_cnt +=1
-                if cda.resend_sensor_no_voltage_cnt < cda.resend_wait:
-                    send = False
-                else:
-                    cda.resend_sensor_no_voltage_cnt = 0
-
         elif what == "no_power":
             if cda.resend_sensor_no_power_cnt == 0:
                 send = True
@@ -82,6 +71,28 @@ def checkSMS(what):
                     send = False
                 else:
                     cda.resend_sensor_no_power_cnt = 0
+
+        elif what == "no_overall_power":
+            if cda.resend_no_overall_power_cnt == 0:
+                send = True
+                cda.resend_no_overall_power_cnt = 1
+            else:             
+                cda.resend_no_overall_power_cnt +=1
+                if cda.resend_no_overall_power_cnt < cda.resend_wait:
+                    send = False
+                else:
+                    cda.resend_no_overall_power_cnt = 0
+
+        elif what == "high_level_alarm":
+            if cda.resend_high_level_alarm_cnt == 0:
+                send = True
+                cda.resend_high_level_alarm_cnt = 1
+            else:             
+                cda.resend_high_level_alarm_cnt +=1
+                if cda.resend_high_level_alarm_cnt < cda.resend_wait:
+                    send = False
+                else:
+                    cda.resend_high_level_alarm_cnt = 0
 
         elif what == "io_error":
             if cda.resend_sensor_io_error_cnt == 0:

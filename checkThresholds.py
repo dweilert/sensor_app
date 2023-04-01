@@ -35,12 +35,6 @@ import commonDataArea as cda
 import smsHandler
 import logger
 
-# Voltage
-cda.aNoV = 0
-cda.bNoV = 0
-cda.cNoV = 0
-cda.dNoV = 0
-
 # Power
 cda.aNoP = 0
 cda.bNoP = 0
@@ -52,11 +46,6 @@ cda.aNoD = 0
 cda.bNoD = 0
 cda.cNoD = 0
 cda.dNoD = 0
-
-cda.overall_msg_sent = False
-cda.overall_msg_cnt = 0
-cda.alarm_msg_sent = False
-cda.alarm_msg_cnt = 0
 
 # SMS message array
 cda.smsMsg = []
@@ -140,17 +129,6 @@ def checkPump(pzem_data,id):
                     cda.aNoD = 0
                     smsHandler.checkSMS("no_data")
             else:
-                # Check voltage
-                if (pzem_data[0] == 0):
-                    cda.aNoV = cda.aNoV + 1
-                    if cda.aNoV > int(config.get("Limits","no_voltage")):
-                        sms = []
-                        sms.append("Pump A sensor " + config.get("Messages","no_voltage_msg"))
-                        sms.append(config.get("Messages","no_voltage_who"))
-                        cda.smsMsg.append(sms)
-                        cda.aNoV = 0
-                        smsHandler.checkSMS("no_voltage")
-
                 # Check current (this is greater than zero when pump is using electricity)
                 if (pzem_data[1] == 0):
                     cda.aNoP = cda.aNoP + 1
@@ -173,17 +151,6 @@ def checkPump(pzem_data,id):
                     cda.bNoD = 0
                     smsHandler.checkSMS("no_data")
             else:
-                # Check voltage
-                if (pzem_data[0] == 0):
-                    cda.bNoV = cda.bNoV + 1
-                    if cda.bNoV > int(config.get("Limits","no_voltage")):
-                        sms = []
-                        sms.append("Pump B sensor " + config.get("Messages","no_voltage_msg"))
-                        sms.append(config.get("Messages","no_voltage_who"))
-                        cda.smsMsg.append(sms)
-                        cda.bNoV = 0
-                        smsHandler.checkSMS("no_voltage")
-
                 # Check current (this is greater than zero when pump is using electricity)
                 if (pzem_data[1] == 0):
                     cda.bNoP = cda.bNoP + 1
@@ -200,66 +167,45 @@ def checkPump(pzem_data,id):
                 cda.cNoD = cda.cNoD + 1
                 if cda.cNoD > int(config.get("Limits","no_data")):
                     sms = []
-                    sms.append("Pump C " + config.get("Messages","no_data_msg"))
+                    sms.append("High-level (3/C) " + config.get("Messages","no_data_msg"))
                     sms.append(config.get("Messages","no_data_who"))
                     cda.smsMsg.append(sms)
                     cda.cNoD = 0
                     smsHandler.checkSMS("no_data")
             else:
-                # Check voltage
-                if (pzem_data[0] == 0):
-                    cda.cNoV = cda.cNoV + 1
-                    if cda.cNoV > int(config.get("Limits","no_voltage")):
-                        sms = []
-                        sms.append("Pump C sensor " + config.get("Messages","no_voltage_msg"))
-                        sms.append(config.get("Messages","no_voltage_who"))
-                        cda.smsMsg.append(sms)
-                        cda.cNoV = 0
-                        smsHandler.checkSMS("no_voltage")
-
-                # Check current (this is greater than zero when pump is using electricity)
-                if (pzem_data[1] == 0):
+                # Check current, if found the high-level alarm is on
+                if (pzem_data[1] > 0):
                     cda.cNoP = cda.cNoP + 1
-                    if cda.cNoP > int(config.get("Limits","no_power")):
+                    if cda.cNoP > int(config.get("Limits","high_level_alarm")):
                         sms = []
-                        sms.append("Pump C " + config.get("Messages","no_power_msg"))
-                        sms.append(config.get("Messages","no_power_who"))
+                        sms.append(config.get("Messages","high_level_alarm_msg"))
+                        sms.append(config.get("Messages","high_level_alarm_who"))
                         cda.smsMsg.append(sms)
                         cda.cNoP = 0
-                        smsHandler.checkSMS("no_power")
+                        smsHandler.checkSMS("high_level_alarm")
 
         elif id == "D": 
             if (len(pzem_data) == 0):
                 cda.dNoD = cda.dNoD + 1
                 if cda.dNoD > int(config.get("Limits","no_data")):
                     sms = []
-                    sms.append("Pump D " + config.get("Messages","no_data_msg"))
+                    sms.append("Sensor D: " + config.get("Messages","no_data_msg"))
                     sms.append(config.get("Messages","no_data_who"))
                     cda.smsMsg.append(sms)
                     cda.dNoD = 0
                     smsHandler.checkSMS("no_data")
             else:
-                # Check voltage
-                if (pzem_data[0] == 0):
-                    cda.dNoV = cda.dNoV + 1
-                    if cda.dNoV > int(config.get("Limits","no_voltage")):
-                        sms = []
-                        sms.append("Pump D sensor " + config.get("Messages","no_voltage_msg"))
-                        sms.append(config.get("Messages","no_voltage_who"))
-                        cda.smsMsg.append(sms)
-                        cda.dNoV = 0
-                        smsHandler.checkSMS("no_voltage")
-
-                # Check current (this is greater than zero when pump is using electricity)
+                # Check current
                 if (pzem_data[1] == 0):
                     cda.dNoP = cda.dNoP + 1
-                    if cda.dNoP > int(config.get("Limits","no_power")):
+                    if cda.dNoP > int(config.get("Limits","no_overall_no_power")):
                         sms = []
-                        sms.append("Pump D " + config.get("Messages","no_power_msg"))
-                        sms.append(config.get("Messages","no_power_who"))
+                        sms.append("Pump D sensor " + config.get("Messages","no_overall_power_msg"))
+                        sms.append(config.get("Messages","no_overall_power_who"))
                         cda.smsMsg.append(sms)
                         cda.dNoP = 0
-                        smsHandler.checkSMS("no_power")
+                        smsHandler.checkSMS("no_overall_power")
+
 
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
