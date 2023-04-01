@@ -130,7 +130,7 @@ def checkPump(pzem_data,id):
         cda.smsMsg = []
         cda.from_sensor = id
         if id == "A": 
-            if (pzem_data[0] == "nodata"):
+            if (len(pzem_data) == 0):
                 cda.aNoD = cda.aNoD + 1
                 if cda.aNoD > int(config.get("Limits","no_data")):
                     sms = []
@@ -163,7 +163,7 @@ def checkPump(pzem_data,id):
                         smsHandler.checkSMS("no_power")
 
         elif id == "B": 
-            if (pzem_data[0] == "nodata"):
+            if (len(pzem_data) == 0):
                 cda.bNoD = cda.bNoD + 1
                 if cda.bNoD > int(config.get("Limits","no_data")):
                     sms = []
@@ -196,7 +196,7 @@ def checkPump(pzem_data,id):
                         smsHandler.checkSMS("no_power")
 
         elif id == "C": 
-            if (pzem_data[0] == "nodata"):
+            if (len(pzem_data) == 0):
                 cda.cNoD = cda.cNoD + 1
                 if cda.cNoD > int(config.get("Limits","no_data")):
                     sms = []
@@ -229,7 +229,7 @@ def checkPump(pzem_data,id):
                         smsHandler.checkSMS("no_power")
 
         elif id == "D": 
-            if (pzem_data[0] == "nodata"):
+            if (len(pzem_data) == 0):
                 cda.dNoD = cda.dNoD + 1
                 if cda.dNoD > int(config.get("Limits","no_data")):
                     sms = []
