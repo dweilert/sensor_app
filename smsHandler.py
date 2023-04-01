@@ -46,79 +46,119 @@ import commonDataArea as cda
 # Find your Account SID and Auth Token at twilio.com/console
 # and set the environment variables. See http://twil.io/secure
 
-def checkSMS(what):
+def checkSMS(what): 
     try:
         print(f"checkSMS parameter: {what}")
         send = True
         if what == "no_data":
-            cda.resend_sensor_no_data_cnt +=1
-            if cda.resend_sensor_no_data_cnt < cda.resend_wait:
-                send = False
-            else:
+            if cda.resend_sensor_no_data_cnt == 0:
+                send = True
                 cda.resend_sensor_no_data_cnt = 1
+            else:    
+                cda.resend_sensor_no_data_cnt +=1
+                if cda.resend_sensor_no_data_cnt < cda.resend_wait:
+                    send = False
+                else:
+                    cda.resend_sensor_no_data_cnt = 0
 
         elif what == "no_voltage":
-            cda.resend_sensor_no_voltage_cnt +=1
-            if cda.resend_sensor_no_voltage_cnt < cda.resend_wait:
-                send = False
-            else:
+            if cda.resend_sensor_no_voltage_cnt == 0:
+                send = True
                 cda.resend_sensor_no_voltage_cnt = 1
+            else:             
+                cda.resend_sensor_no_voltage_cnt +=1
+                if cda.resend_sensor_no_voltage_cnt < cda.resend_wait:
+                    send = False
+                else:
+                    cda.resend_sensor_no_voltage_cnt = 0
 
         elif what == "no_power":
-            cda.resend_sensor_no_power_cnt +=1
-            if cda.resend_sensor_no_power_cnt < cda.resend_wait:
-                send = False
-            else:
+            if cda.resend_sensor_no_power_cnt == 0:
+                send = True
                 cda.resend_sensor_no_power_cnt = 1
+            else:             
+                cda.resend_sensor_no_power_cnt +=1
+                if cda.resend_sensor_no_power_cnt < cda.resend_wait:
+                    send = False
+                else:
+                    cda.resend_sensor_no_power_cnt = 0
 
         elif what == "io_error":
-            cda.resend_sensor_io_error_cnt +=1
-            if cda.resend_sensor_io_error_cnt < cda.resend_wait:
-                send = False
-            else:
+            if cda.resend_sensor_io_error_cnt == 0:
+                send = True
                 cda.resend_sensor_io_error_cnt = 1
+            else:             
+                cda.resend_sensor_io_error_cnt +=1
+                if cda.resend_sensor_io_error_cnt < cda.resend_wait:
+                    send = False
+                else:
+                    cda.resend_sensor_io_error_cnt = 0
 
         elif what == "all_sensors_io_error":
-            cda.resend_all_sensors_io_error_cnt +=1
-            if cda.resend_all_sensors_io_error_cnt < cda.resend_wait:
-                send = False
-            else:
+            if cda.resend_all_sensors_io_error_cnt == 0:
+                send = True
                 cda.resend_all_sensors_io_error_cnt = 1
+            else:             
+                cda.resend_all_sensors_io_error_cnt +=1
+                if cda.resend_all_sensors_io_error_cnt < cda.resend_wait:
+                    send = False
+                else:
+                    cda.resend_all_sensors_io_error_cnt = 0
 
         elif what == "connect_error":
-            cda.resend_sensor_connect_error_cnt +=1
-            if cda.resend_sensor_connect_error_cnt < cda.resend_wait:
-                send = False
-            else:
+            if cda.resend_sensor_connect_error_cnt == 0:
+                send = True
                 cda.resend_sensor_connect_error_cnt = 1
+            else:             
+                cda.resend_sensor_connect_error_cnt +=1
+                if cda.resend_sensor_connect_error_cnt < cda.resend_wait:
+                    send = False
+                else:
+                    cda.resend_sensor_connect_error_cnt = 0
 
         elif what == "amps":
-            cda.resend_sensor_amps_cnt +=1
-            if cda.resend_sensor_amps_cnt < cda.resend_wait:
-                send = False
-            else:
+            if cda.resend_sensor_amps_cnt == 0:
+                send = True
                 cda.resend_sensor_amps_cnt = 1
+            else:             
+                cda.resend_sensor_amps_cnt +=1
+                if cda.resend_sensor_amps_cnt < cda.resend_wait:
+                    send = False
+                else:
+                    cda.resend_sensor_amps_cnt = 0
 
         elif what == "temp":
-            cda.resend_rasp_temp_cnt +=1
-            if cda.resend_rasp_temp_cnt < cda.resend_wait:
-                send = False
-            else:
+            if cda.resend_rasp_temp_cnt == 0:
+                send = True
                 cda.resend_rasp_temp_cnt = 1
+            else:             
+                cda.resend_rasp_temp_cnt +=1
+                if cda.resend_rasp_temp_cnt < cda.resend_wait:
+                    send = False
+                else:
+                    cda.resend_rasp_temp_cnt = 0
 
         elif what == "ups_charge":
-            cda.resend_rasp_ups_charge_cnt +=1
-            if cda.resend_rasp_ups_charge_cnt < cda.resend_wait:
-                send = False
-            else:
+            if cda.resend_rasp_ups_charge_cnt == 0:
+                send = True
                 cda.resend_rasp_ups_charge_cnt = 1
+            else:            
+                cda.resend_rasp_ups_charge_cnt +=1
+                if cda.resend_rasp_ups_charge_cnt < cda.resend_wait:
+                    send = False
+                else:
+                    cda.resend_rasp_ups_charge_cnt = 0
 
         elif what == "ups_percent":
-            cda.resend_rasp_ups_percent_cnt +=1
-            if cda.resend_rasp_ups_percent_cnt < cda.resend_wait:
-                send = False
-            else:
+            if cda.resend_rasp_ups_percent_cnt == 0:
+                send = True
                 cda.resend_rasp_ups_percent_cnt = 1
+            else:            
+                cda.resend_rasp_ups_percent_cnt +=1
+                if cda.resend_rasp_ups_percent_cnt < cda.resend_wait:
+                    send = False
+                else:
+                    cda.resend_rasp_ups_percent_cnt = 0
 
         else:
             if what != "other":

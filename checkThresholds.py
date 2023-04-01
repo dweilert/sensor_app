@@ -159,7 +159,7 @@ def checkPump(pzem_data,id):
                         sms.append(config.get("Messages","no_power_who"))
                         cda.smsMsg.append(sms)
                         cda.aNoP = 0
-                        smsHandler.checkSMS("no_voltage")
+                        smsHandler.checkSMS("no_power")
 
         elif id == "B": 
             if (pzem_data[0] == "nodata"):
@@ -192,7 +192,7 @@ def checkPump(pzem_data,id):
                         sms.append(config.get("Messages","no_power_who"))
                         cda.smsMsg.append(sms)
                         cda.bNoP = 0
-                        smsHandler.checkSMS("no_voltage")
+                        smsHandler.checkSMS("no_power")
 
         elif id == "C": 
             if (pzem_data[0] == "nodata"):
@@ -225,7 +225,7 @@ def checkPump(pzem_data,id):
                         sms.append(config.get("Messages","no_power_who"))
                         cda.smsMsg.append(sms)
                         cda.cNoP = 0
-                        smsHandler.checkSMS("no_voltage")
+                        smsHandler.checkSMS("no_power")
 
         elif id == "D": 
             if (pzem_data[0] == "nodata"):
@@ -258,7 +258,7 @@ def checkPump(pzem_data,id):
                         sms.append(config.get("Messages","no_power_who"))
                         cda.smsMsg.append(sms)
                         cda.dNoP = 0
-                        smsHandler.checkSMS("no_voltage")
+                        smsHandler.checkSMS("no_power")
 
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
