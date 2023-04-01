@@ -36,8 +36,6 @@ import awsHandler
 
 def saveData(row, id):
     try:
-        print(f" dataHandler data: {row} id: {id}")
-        print(f"type(data) {type(row)}")
         
         now = datetime.now()
         ts = now.strftime("%m/%d/%Y-%H:%M:%S")
@@ -169,7 +167,7 @@ def setHLA(id):
             cda.pumpB_amp_low = low
             cda.pumpB_amp_avg = avg
 
-        logger.msg("I", id + " - High:" + str(high) + " Low:" + str(low) + " Avg:" + str(avg))
+        #logger.msg("I", id + " - High:" + str(high) + " Low:" + str(low) + " Avg:" + str(avg))
 
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
