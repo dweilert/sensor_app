@@ -55,8 +55,7 @@ def msg(lvl, msg):
         # Determine if maximum log entries are in array and remove some
         # if reached
         if len(cda.log_messages) > int(config.get("Log","max_records")):
-            for i in range(int(config.get("Log","drop_count"))): 
-                cda.log_messages.pop(i)
+             wrapLogs()
 
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
@@ -66,3 +65,28 @@ def msg(lvl, msg):
         cda.log_messages.append(f"Logger - Exception type: {exception_type} File name: {filename} Line number: {line_number}")            
         cda.log_messages.append(f"Dropped msg: {msg}")
 
+def wrapLogs():
+    try:
+        hl = len(cda.log_messages)
+        if (hl > 10):
+            sp = round(hl/2)
+            newLog = []
+            ptr = sp
+            for i in sp:
+                newLog.append(cda.log_messages[ptr])
+                ptr = ptr + 1
+
+            cda.log_messages = newLog
+            newLog =  None    
+            return True
+        else:
+            return True
+
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        print(f"wrapLogs() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        print(f"wrapLogs() {e}")
+        cda.log_messages = []
+        return False

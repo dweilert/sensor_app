@@ -131,7 +131,9 @@ def saveData(data, id):
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.put_msg("E",f"saveData() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-    
+        logger.put_msg("E",f"saveData() {e}")
+                           
+
 def setHLA(id):
     try:
         high = 0
@@ -173,3 +175,4 @@ def setHLA(id):
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.put_msg("E",f"setHLA() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.put_msg("E",f"setHLA() {e}")

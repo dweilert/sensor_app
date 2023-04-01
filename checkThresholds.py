@@ -79,7 +79,8 @@ def checkTemperature(temp):
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"checkTemperature() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-	
+        logger.msg("E",f"checkTemperature() {e}")
+        	
 
 def checkUPSCharge(charge):
     # Check if Raspberry Pi UPS has been charging for a long time
@@ -99,6 +100,7 @@ def checkUPSCharge(charge):
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"checkUPSCharge() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"checkUPSCharge() {e}")
 
 	
 def checkUPSPercent(pct):
@@ -119,7 +121,8 @@ def checkUPSPercent(pct):
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"checkUPSPercent() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-	
+        logger.msg("E",f"checkUPSPercent() {e}")
+                   	
 
 def checkPump(pzem_data,id):
     # Increment counters and check against thresholds.
@@ -262,6 +265,7 @@ def checkPump(pzem_data,id):
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"checkPump() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"checkPump() {e}")
 
 
 def checkSensors():
@@ -330,3 +334,4 @@ def checkSensors():
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"checkSensors() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"checkSensors() {e}")

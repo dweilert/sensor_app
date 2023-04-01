@@ -48,7 +48,7 @@ import commonDataArea as cda
 
 def checkSMS(what):
     try:
-        print(f"what {what}")
+        print(f"checkSMS parameter: {what}")
         send = True
         if what == "no_data":
             cda.resend_sensor_no_data_cnt +=1
@@ -133,6 +133,8 @@ def checkSMS(what):
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"checkSMS() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
+        logger.msg("E",f"checkSMS() {e}")
+
 
 def sendSMS():
     try:
@@ -178,4 +180,4 @@ def sendSMS():
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"sendSMS() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
-
+        logger.msg("E",f"sendSMS() {e}")

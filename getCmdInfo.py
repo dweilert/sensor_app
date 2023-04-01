@@ -72,6 +72,8 @@ def checkForCommandFile():
                     results = getRegisters("C")    
                 elif "r4" in line:
                     results = getRegisters("D")       
+                elif "wrap" in line:
+                    results = wrapLog()       
                 elif "sms_dev" in line:
                     sms = []
                     sms.append(config.get("TestMsg","developer_msg"))
@@ -126,7 +128,14 @@ def checkForCommandFile():
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"checkForCommandFile() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"checkForCommandFile() {e}")
 
+def wrapLog():
+    status = logger.wrapLogs()
+    if status == True:
+        return "Logs wrapped"
+    else:
+        return "Status of log wrap unknown"
 
 def getTempInfo():
     try:
@@ -159,9 +168,9 @@ def getTempInfo():
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-        logger.msg("E",f"monitor.getTempInfo Exception: {e}")
-
+        logger.msg("E",f"getTempInfo() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"getTempInfo() Exception: {e}")
+        return "Error getting temperature information"
 
 def getPumpInfo():
     try:
@@ -201,8 +210,9 @@ def getPumpInfo():
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-        logger.msg("E",f"monitor.getPumpInfo Exception: {e}")
+        logger.msg("E",f"getPumpInfo() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"getPumpInfo()  {e}")
+        return "Error getting pump information"
 
 
 def getSensorInfo():
@@ -229,14 +239,25 @@ def getSensorInfo():
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-        logger.msg("E",f"monitor.checkForCommandFile Exception: {e}")
-
+        logger.msg("E",f"getSensorInfo() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"getSensorInfo() {e}")
+        return "Error getting sensor information"
+    
 
 def getMonitorStatus():
-    info = subprocess.run(["systemctl","status","monitor"], capture_output=True, text=True)
-    lines = info.stdout
-    return lines
+    try:
+        info = subprocess.run(["systemctl","status","monitor"], capture_output=True, text=True)
+        lines = info.stdout
+        return lines
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.msg("E",f"getMonitorStatus() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"getMonitorStatus() {e}")
+        return "Error getting monitor.service status"
+
+
 
 def getMemory():
     # Return RAM information (unit=kb) in a list                                        
@@ -278,8 +299,9 @@ def getMemory():
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-        logger.msg("E",f"monitor.getMemory Exception: {e}")
+        logger.msg("E",f"getMemory() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"getMemory() Exception: {e}")
+        return "Error getting memory data"
 
 
 def getRegisters(id):
@@ -363,42 +385,43 @@ def getRegisters(id):
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg("E",f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-        logger.msg("E",f"monitor.checkForCommandFile Exception: {e}")
+        logger.msg("E",f"getRegisters() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"getRegisters() {e}")
         return "Error getting sensor register information"
 
 
 def formatRegisters(registers):
-    if len(registers) < 8:
-        return "No data for register"
-    volt = registers[0]*0.1
-    volt = "{:5.2f}".format(volt)
-    amp = registers[1]*0.001
-    amp = "{:5.3f}".format(amp)
-    power = registers[3]*0.1
-    power = "{:6.2f}".format(power)
-    energy = registers[5]*0.001
-    energy = "{:4.2f}".format(energy)
-    freq = registers[7]*0.1
-    freq = "{:4.2f}".format(freq)
-    pwfac = registers[8]*0.01
-    pwfac = "{:3.2f}".format(pwfac)
+    try:
+        if len(registers) < 8:
+            return "No data for register"
+        volt = registers[0]*0.1
+        volt = "{:5.2f}".format(volt)
+        amp = registers[1]*0.001
+        amp = "{:5.3f}".format(amp)
+        power = registers[3]*0.1
+        power = "{:6.2f}".format(power)
+        energy = registers[5]*0.001
+        energy = "{:4.2f}".format(energy)
+        freq = registers[7]*0.1
+        freq = "{:4.2f}".format(freq)
+        pwfac = registers[8]*0.01
+        pwfac = "{:3.2f}".format(pwfac)
 
-    alarm = registers[9]
-    if alarm == 0x0000:
-        alarmtran = 'OFF'
-    elif alarm == 0xFFFF:
-        alarmtran = 'ON'
-    else:
-        alarmtran = 'N/A'
-    #pwangle=math.acos(pwfac)
-    #apparent = power/math.cos(pwangle)
-    #reactive = apparent*math.sin(pwangle)
-    #impedance= apparent/(amp*amp)
-    #rinline = impedance*math.cos(pwangle)
-    #xinline = impedance*math.sin(pwangle)
-    #data = f"volt: {volt}  amp: {amp}  power {power} energy: {energy} freq: {freq}  pwfac:{pwfac}  reactive: {reactive}  apparent: {apparent}  powerangle: {pwangle}  impedance: {impedance}  rinline: {rinline}  xinline: {xinline}  status: {alarmtran}"
-    data = f"volt: {volt}  amp: {amp}  power: {power}  energy: {energy}  freq: {freq}  pwfac: {pwfac}  alarm: {alarmtran}"
-       
-    return data
+        alarm = registers[9]
+        if alarm == 0x0000:
+            alarmtran = 'OFF'
+        elif alarm == 0xFFFF:
+            alarmtran = 'ON'
+        else:
+            alarmtran = 'N/A'
+        data = f"volt: {volt}  amp: {amp}  power: {power}  energy: {energy}  freq: {freq}  pwfac: {pwfac}  alarm: {alarmtran}"
+        
+        return data
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.msg("E",f"formatRegisters() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"formatRegisters() {e}")
+        return "Error formatting register information"
 

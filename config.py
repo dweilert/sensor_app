@@ -49,6 +49,7 @@ def readConfig():
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"readConfig() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
+        logger.msg("E",f"readConfig() {e}")
         return False
 
 def get(k1, k2):
@@ -71,4 +72,4 @@ def setValues():
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"setValues() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
-     
+        logger.msg("E",f"setValues() {e}")     

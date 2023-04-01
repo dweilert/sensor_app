@@ -53,28 +53,40 @@ def getPorts():
             cda.smsMsg.append(sms)
             smsHandler.checkSMS()
             cda.getPortsCnt = 0
+
     except Exception as e:
-        logger.msg("E","monitor.getPorts ERROR: " + e)
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.msg("E",f"getPorts() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"getPorts() {e}")
 
 
 def resetCheck(nowDay):
-    # Check if it is a new day, if so reset memory 
-    if cda.current_date != nowDay:
-        cda.current_date = nowDay
-        cda.iCnt = 0
-        cda.error_cnt = 0
-        cda.pumpB_cycle_cnt = 0
-        cda.pumpA_cycle_cnt = 0
-        cda.sensor_A_registers = []
-        cda.sensor_B_registers = []
-        cda.sensor_C_registers = []
-        cda.sensor_D_registers = []
-        cda.cpu_temps = []
-        cda.cpu_ram = []
-        cda.upsData = []
-        cda.high_temp_cnt = 0
-        cda.ups_charge_cnt = 0
-        cda.ups_percent_cnt = 0
+    try:
+        # Check if it is a new day, if so reset memory 
+        if cda.current_date != nowDay:
+            cda.current_date = nowDay
+            cda.iCnt = 0
+            cda.error_cnt = 0
+            cda.pumpB_cycle_cnt = 0
+            cda.pumpA_cycle_cnt = 0
+            cda.sensor_A_registers = []
+            cda.sensor_B_registers = []
+            cda.sensor_C_registers = []
+            cda.sensor_D_registers = []
+            cda.cpu_temps = []
+            cda.cpu_ram = []
+            cda.upsData = []
+            cda.high_temp_cnt = 0
+            cda.ups_charge_cnt = 0
+            cda.ups_percent_cnt = 0
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.msg("E",f"resetCheck() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"resetCheck() {e}")
 
 
 def mainLine():
@@ -167,22 +179,30 @@ def mainLine():
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"mainLine() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-        time.sleep(15)
+        logger.msg("E",f"mainLine() {e}")
+        time.sleep(5)
         mainLine()
 
                                                                 
 def getRAMinfo():
-    # Index 0: total RAM                                                                
-    # Index 1: used RAM                                                                 
-    # Index 2: free RAM 
-    p = os.popen('free')
-    i = 0
-    while 1:
-        i = i + 1
-        line = p.readline()
-        if i==2:
-            return(line.split()[1:4])
-
+    try:
+        # Index 0: total RAM                                                                
+        # Index 1: used RAM                                                                 
+        # Index 2: free RAM 
+        p = os.popen('free')
+        i = 0
+        while 1:
+            i = i + 1
+            line = p.readline()
+            if i==2:
+                return(line.split()[1:4])
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.msg("E",f"getRAMinfo() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"getRAMinfo() {e}")
+ 
 
 # Main section 
 if __name__ == "__main__":
@@ -206,5 +226,6 @@ if __name__ == "__main__":
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"__main__ Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
+        logger.msg("E",f"__main__ {e}")
         time.sleep(5)
         mainLine()

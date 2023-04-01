@@ -118,3 +118,4 @@ resend_rasp_temp_cnt = 0
 resend_rasp_ups_charge_cnt = 0
 resend_rasp_ups_percent_cnt = 0
 
+error_stack = []

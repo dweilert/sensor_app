@@ -262,5 +262,6 @@ def getUPSInfo(returnData):
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"getUPSInfo() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"getUPSInfo() {e}")
         if (returnData == True):
             return "Error getting UPS data" + "\n"

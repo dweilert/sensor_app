@@ -55,6 +55,7 @@ def putSensorData(sdata):
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"putSensorData() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
+        logger.msg("E",f"putSensorData() {e}")
     finally:
         if config.get("Debug","show_aws_put_info") == "true":
             logger.msg("D","putSensorData finished")
@@ -80,6 +81,7 @@ def putSMSData(mdata):
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"putSMSData() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
+        logger.msg("E",f"putSMSData() {e}")
     finally:
         if config.get("Debug","show_aws_put_info") == "true":
             logger.msg("D","putSMSData() finished")
@@ -97,3 +99,4 @@ def getPutID():
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"getPutID() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
+        logger.msg("E",f"getPutID() {e}")

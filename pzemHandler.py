@@ -115,6 +115,7 @@ def resetEnergy(usbPort):
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"resetEnergy() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
+        logger.msg("E",f"resetEnergy() {e}")
 
 
 def monitor(usbPort, id):
@@ -255,7 +256,7 @@ def monitor(usbPort, id):
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"monitor() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
-        logger.msg(f"Error: {e}")
+        logger.msg("E",f"monitor() {e}")
         
         rtn = []
         rtn.append(False)
@@ -375,3 +376,4 @@ def find_usb_ports():
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"find_usb_ports() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
+        logger.msg("E",f"find_usb_ports() {e}")
