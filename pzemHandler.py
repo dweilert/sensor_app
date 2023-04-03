@@ -258,6 +258,7 @@ def monitor(usbPort, id):
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"monitor() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
         logger.msg("E",f"monitor() {e}")
+        logger.msg("E",f"monitor() usbPort: {usbPort} id: {id}")
         
         rtn = []
         rtn.append(False)
