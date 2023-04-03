@@ -121,11 +121,11 @@ def mainLine():
             cda.iCnt = cda.iCnt + 1
 
             rtn = []
-            rtn = pzemHandler.monitor(cda.portA,"A")
+            rtn = pzemHandler.monitor(cda.portA,"C")
             #print(f"A rtn {rtn}")
             if rtn[0] == False:
                 rtn[1] = []
-            checkThresholds.checkPump(rtn[1],"A")
+            checkThresholds.checkPump(rtn[1],"C")
             cda.sensor_A_registers.append(rtn[1])
             
             rtn = []
@@ -137,11 +137,11 @@ def mainLine():
             cda.sensor_B_registers.append(rtn[1])
 
             rtn = []
-            rtn = pzemHandler.monitor(cda.portC,"C")
+            rtn = pzemHandler.monitor(cda.portC,"A")
             #print(f"C rtn {rtn}")
             if rtn[0] == False:
                 rtn[1] = []
-            checkThresholds.checkPump(rtn[1],"C")
+            checkThresholds.checkPump(rtn[1],"A")
             cda.sensor_C_registers.append(rtn[1])
             
             rtn = []
