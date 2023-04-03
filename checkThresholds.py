@@ -200,7 +200,7 @@ def checkPump(pzem_data,id):
                     cda.dNoP = cda.dNoP + 1
                     if cda.dNoP > int(config.get("Limits","no_overall_power")):
                         sms = []
-                        sms.append("config.get("Messages","no_overall_power_msg"))
+                        sms.append(config.get("Messages","no_overall_power_msg"))
                         sms.append(config.get("Messages","no_overall_power_who"))
                         cda.smsMsg.append(sms)
                         cda.dNoP = 0
