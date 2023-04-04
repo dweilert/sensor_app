@@ -80,7 +80,7 @@ def saveData(row, id):
                     # Reset pump data
                     cda.pumpA_status = "OFF"
 
-                    logger.put("I","PumpA cycles {cda.pumpA_cycles}")
+                    logger.msg("I","PumpA cycles {cda.pumpA_cycles}")
 
                     # Send data to AWS
                     awsHandler.putSensorData(record)		    		
@@ -123,7 +123,7 @@ def saveData(row, id):
                     # Reset pump data
                     cda.pumpB_status = "OFF"
 
-                    logger.put("I","PumpB cycles {cda.pumpB_cycles}")
+                    logger.msg("I","PumpB cycles {cda.pumpB_cycles}")
 
                     # Send data to AWS
                     awsHandler.putSensorData(record)		    		
