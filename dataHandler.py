@@ -40,6 +40,7 @@ def saveData(row, id):
         now = datetime.now()
         ts = now.strftime("%m/%d/%Y-%H:%M:%S")
 
+        amps = {}
         record = {}
         energy = 0
         if id == "A":
@@ -83,7 +84,11 @@ def saveData(row, id):
                     # Send data to AWS
                     awsHandler.putSensorData(record)		    		
 
-                    logger.msg("I","PumpA cycles {cda.pumpA_cycles}")
+                    #logger.msg("I","PumpA cycles {cda.pumpA_cycles}")
+                    amps = {}
+                    amps['s'] = "A"
+                    amps['p'] = cda.pumpA_cycles
+                    awsHandler.putAMPSData                    
         
         
         elif id == "B":
@@ -126,8 +131,11 @@ def saveData(row, id):
                     # Send data to AWS
                     awsHandler.putSensorData(record)		    		
 
-                    logger.msg("I","PumpB cycles {cda.pumpB_cycles}")
-
+                    #logger.msg("I","PumpB cycles {cda.pumpB_cycles}")
+                    amps = {}
+                    amps['s'] = "B"
+                    amps['p'] = cda.pumpB_cycles
+                    awsHandler.putAMPSData
 
         return 
     except Exception as e:

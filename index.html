@@ -45,7 +45,20 @@
             var xhr = new XMLHttpRequest();
 
             // Making our connection
-            var url = 'https://isf1iqwwv2.execute-api.us-east-2.amazonaws.com/data';
+            var sensor_url = 'https://isf1iqwwv2.execute-api.us-east-2.amazonaws.com/data';
+            var sms_url = 'https://isf1iqwwv2.execute-api.us-east-2.amazonaws.com/sms';
+            var amps_url = 'https://isf1iqwwv2.execute-api.us-east-2.amazonaws.com/amps';
+
+            if (kind === 's') {
+                url = sensor_url
+            } else if (kind === 'm') {
+                url = sms_url
+            } else if (kind === 'a') {
+                url = amps_url
+            }
+
+
+
             xhr.open("GET", url, true);
 
             // function execute after request is successful

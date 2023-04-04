@@ -35,6 +35,7 @@ from datetime import datetime
 import config
 import logger
 
+
 def putSensorData(sdata):
     id = getPutID()
     sensorUrl = config.get("AWSGateWay","sensor_data")
@@ -85,6 +86,32 @@ def putSMSData(mdata):
     finally:
         if config.get("Debug","show_aws_put_info") == "true":
             logger.msg("D","putSMSData() finished")
+
+
+def putAMPSData(adata):
+    id = getPutID()
+    ampsUrl = config.get("AWSGateWay","amps_data")
+    try:
+        adata["id"] = id
+        adata = adata
+        if config.get("Debug","show_aws_put_info") == "true":
+            logger.msg("D",f"putAMPSData() sdata: {adata}")
+        url = ampsUrl
+        response = requests.put(url, json=adata)
+        if config.get("Debug","show_aws_put_info") == "true":
+            logger.msg("D",f"putAMPSData() response: {response}")
+        res = response.json()
+        if config.get("Debug","show_aws_put_info") == "true":
+            logger.msg("D",f"putAMPSData() res: {res}")
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.msg("E",f"putAMPSData() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
+        logger.msg("E",f"putAMPSData() {e}")
+    finally:
+        if config.get("Debug","show_aws_put_info") == "true":
+            logger.msg("D","putAMPSData() finished")
 
 
 def getPutID():
