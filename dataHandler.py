@@ -80,10 +80,10 @@ def saveData(row, id):
                     # Reset pump data
                     cda.pumpA_status = "OFF"
 
-                    logger.msg("I","PumpA cycles {cda.pumpA_cycles}")
-
                     # Send data to AWS
                     awsHandler.putSensorData(record)		    		
+
+                    logger.msg("I","PumpA cycles {cda.pumpA_cycles}")
         
         
         elif id == "B":
@@ -123,10 +123,11 @@ def saveData(row, id):
                     # Reset pump data
                     cda.pumpB_status = "OFF"
 
-                    logger.msg("I","PumpB cycles {cda.pumpB_cycles}")
-
                     # Send data to AWS
                     awsHandler.putSensorData(record)		    		
+
+                    logger.msg("I","PumpB cycles {cda.pumpB_cycles}")
+
 
         return 
     except Exception as e:
