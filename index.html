@@ -24,6 +24,11 @@
             border-bottom: 1px solid #555;
             border-top: 1px solid #555;
         }
+
+        .amps-border {
+            border: 1px solid #ccc !important;
+            margin-bottom: 5px;
+        }
     </style>
 
 
@@ -51,13 +56,59 @@
         <div id="outputTable">
 
         </div>
+
+        <!-- ==================================== -->
+        <!-- Message Modal section              -->
+        <!-- ==================================== -->
+        <div class="modal fade" id="messageModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Detail pump information for selected entry</h5>
+
+                        <!-- <button onclick="closeModal()" type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button> -->
+                    </div>
+                    <div class="modal-body docBackground">
+                        <div id="messageBody">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button onclick="closeModal()" type="button" class="btn btn-secondary" data-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
     </div>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
         </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
     <script>
+
+        let pumpUsed = {};
+        let ampsUsed = {};
+        let energyUsed = {};
+        let timeUsed = {}
+
+        let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('messageModal')) // Returns a Bootstrap modal instance
+
+
+        // var myModal = new bootstrap.Modal(document.getElementById('exampleModal'))
+        // myModal.show()
+
         function getData(kind) {
             // Creating Our XMLHttpRequest object
             var xhr = new XMLHttpRequest();
@@ -98,11 +149,25 @@
             // convert data to JSON
             data = JSON.parse(data);
             let items = {}
-            let days = ""
+            let days = "";
+            let ampsHigh = "";
+            let energy = "";
             let dt = []
+            let duration = 0;
+            let highAmps = 0;
+            let highEnergy = 0;
             // Rows of requested data    
             for (let i = 0; i < data.length; i++) {
                 if (typeof data[i].pump !== 'undefined') {
+                    if (data[i].used_energy.startsWith("-")) {
+                        //console.log('Dropped: ' + JSON.stringify(data[i], null, 2))
+                        continue;
+                    }
+                    if (data[i].amps_low === "9999999" || data[i].amps_low === 9999999) {
+                        //console.log('Dropped: ' + JSON.stringify(data[i], null, 2))
+                        continue;
+                    }
+
                     dt = data[i].start_date.split("-")
                     if (typeof items[dt[0]] === 'undefined') {
                         items[dt[0]] = {}
@@ -121,8 +186,26 @@
                         period = 4
                     }
 
+                    // Save the pump on information
                     key = hr + "." + period
                     items[dt[0]][key] = data[i].pump
+                    key = dt[0] + "." + key
+                    pumpUsed[key] = data[i]
+
+                    // Save energy used
+                    energy = energy + data[i].used_energy + "#" + key + "@"
+                    if (data[i].used_energy > highEnergy) {
+                        highEnergy = data[i].used_energy;
+                    }
+
+                    // Save amps high
+                    ampsHigh = ampsHigh + padZ(data[i].amps_high) + "#" + key + "@"
+                    if (data[i].amps_high > highAmps) {
+                        highAmps = data[i].amps_high;
+                    }
+
+                } else {
+                    console.log('curl -X "DELETE" https://isf1iqwwv2.execute-api.us-east-2.amazonaws.com/data/' + data[i].id)
                 }
             }
 
@@ -136,33 +219,40 @@
             // build the new outputTable
             cnt = 0;
             h = '<h5>Pump running by day and hour segements </h5>'
+
+            h = h + '<div style="margin: 15px;"><p>A 15 minute period of the hour is used to identify when the pump started. ' +
+                'The first minute of the pump start time is used to place the information in the respective period. ' +
+                'The pump id, A (pump 1) or B (pump 2) is shown in the reported period.' +
+                '  Click on the colored A or B to view the detail for that pump cycle.' +
+                '</p></div>'
+
             h = h + '<table cellpadding="0" cellspacing="0" width="100%" border="0">'
             // Table headers
             h = h + '<thead><tr>' +
                 '<th style="text-align: center">Date</th>' +
-                '<th style="text-align: center" colspan="4" >00</th>' +
+                '<th style="text-align: center" colspan="4" bgcolor="#eee">00</th>' +
                 '<th style="text-align: center" colspan="4" >01</th>' +
-                '<th style="text-align: center" colspan="4" >02</th>' +
+                '<th style="text-align: center" colspan="4" bgcolor="#eee">02</th>' +
                 '<th style="text-align: center" colspan="4" >03</th>' +
-                '<th style="text-align: center" colspan="4" >04</th>' +
+                '<th style="text-align: center" colspan="4" bgcolor="#eee">04</th>' +
                 '<th style="text-align: center" colspan="4" >05</th>' +
-                '<th style="text-align: center" colspan="4" >06</th>' +
+                '<th style="text-align: center" colspan="4" bgcolor="#eee">06</th>' +
                 '<th style="text-align: center" colspan="4" >07</th>' +
-                '<th style="text-align: center" colspan="4" >08</th>' +
+                '<th style="text-align: center" colspan="4" bgcolor="#eee">08</th>' +
                 '<th style="text-align: center" colspan="4" >09</th>' +
-                '<th style="text-align: center" colspan="4" >10</th>' +
+                '<th style="text-align: center" colspan="4" bgcolor="#eee">10</th>' +
                 '<th style="text-align: center" colspan="4" >11</th>' +
-                '<th style="text-align: center" colspan="4" >12</th>' +
+                '<th style="text-align: center" colspan="4" bgcolor="#eee">12</th>' +
                 '<th style="text-align: center" colspan="4" >13</th>' +
-                '<th style="text-align: center" colspan="4" >14</th>' +
+                '<th style="text-align: center" colspan="4" bgcolor="#eee">14</th>' +
                 '<th style="text-align: center" colspan="4" >15</th>' +
-                '<th style="text-align: center" colspan="4" >16</th>' +
+                '<th style="text-align: center" colspan="4" bgcolor="#eee">16</th>' +
                 '<th style="text-align: center" colspan="4" >17</th>' +
-                '<th style="text-align: center" colspan="4" >18</th>' +
+                '<th style="text-align: center" colspan="4" bgcolor="#eee">18</th>' +
                 '<th style="text-align: center" colspan="4" >19</th>' +
-                '<th style="text-align: center" colspan="4" >20</th>' +
+                '<th style="text-align: center" colspan="4" bgcolor="#eee">20</th>' +
                 '<th style="text-align: center" colspan="4" >21</th>' +
-                '<th style="text-align: center" colspan="4" >22</th>' +
+                '<th style="text-align: center" colspan="4" bgcolor="#eee">22</th>' +
                 '<th style="text-align: center" colspan="4" >23</th>' +
                 '</tr></thead><tbody>'
             // Rows of requested data    
@@ -175,12 +265,10 @@
                         if (typeof day[key] !== 'undefined') {
                             if (day[key] === "A") {
                                 style = "text-align: center"
-                                line = line + "<td style='text-align: center; color: white' bgcolor='blue' width='1%'>" + day[key] + "</td>"
+                                line = line + "<td onclick='pumpUsage(\"" + da[i] + "." + key + "\")' style='text-align: center; color: white' bgcolor='blue' width='1%'>" + day[key] + "</td>"
                             } else {
-                                line = line + "<td style='text-align: center; color: white' bgcolor='green' width='1%'>" + day[key] + "</td>"
+                                line = line + "<td onclick='pumpUsage(\"" + da[i] + "." + key + "\")' style='text-align: center; color: white' bgcolor='green' width='1%'>" + day[key] + "</td>"
                             }
-
-
 
                         } else {
                             if (h === 0 || h === 2 || h === 4 || h === 6 || h === 8 || h === 10 || h === 12 || h === 14 || h === 16 || h === 18 || h === 20 || h === 22) {
@@ -197,11 +285,130 @@
 
             // Close the table
             h = h + '</tbody></table>'
+            // h = h + '<div style="margin: 15px;"><p>A 15 minute period of the hour is used to identify when the pump started. ' +
+            //     'The first minute of the pump start time is used to place the information in the respective period. ' +
+            //     'The pump id, A (pump 1) or B (pump 2) is shown in the reported period.' +
+            //     '  Click on the colored A or B to view the detail for that pump cycle.' +
+            //     '</p></div>'
+
+
+            let aH = buildAmpsUsed(data, highAmps, ampsHigh)
+            h = h + aH;
+
+            let eH = buildEnergyUsed(data, highEnergy, energy)
+            h = h + eH;
+
             // Add html to page
             document.getElementById("outputTable").innerHTML = h;
+        }
+
+        function buildEnergyUsed(data, high, energyKeys) {
+            let keys = energyKeys.split("@");
+            keys = keys.sort()
+            let h = "<div style='margin-top: 15px;'> <hr></div> <div style='margin-top: 15px; margin-bottom: 5px;'>" +
+                '<h5>Energy usage for each time either pump was active</h5>' +
+                '<div style="margin: 15px;"><p>Click any of the colored bars to view detail information.</p></div>';
+            let pct = 0;
+            let parts;
+            // let factor = Math.round(high / 100);
+            let factor = 5;
+            let colored;
+            let info;
+            let energy;
+            for (let k = 1; k <= keys.length; k++) {
+                if (typeof keys[k] !== 'undefined') {
+                    if (keys[k].indexOf("#") !== -1) {
+                        parts = keys[k].split("#");
+                        energy = parts[0];
+                        pct = Math.round(energy / factor)
+                        info = pumpUsed[parts[1]];
+                        color = "light-grey";
+                        if (info.pump === "A") {
+                            color = "blue";
+                        } else if (info.pump === "B") {
+                            color = "green";
+                        }
+                        h = h + '<div style="margin: 2px; border: 0px solid #ccc;">' +
+                            //'<div>' + parts[0] + '</div>' +
+                            '<div style="background-color: ' + color + '; height:15px; width:' + pct + '%;" ' +
+                            'onclick="pumpUsage(\'' + parts[1] + '\')"></div></div>';
+                    }
+                }
+            }
+            h = h + "<div style='margin-top: 15px;'> <hr></div>";
+            return h;
 
         }
 
+
+        function buildAmpsUsed(data, high, ampKeys) {
+            let keys = ampKeys.split("@");
+            keys = keys.sort();
+            let h = "<div style='margin-top: 15px;'> <hr></div> <div style='margin-top: 15px; margin-bottom: 5px;'>" +
+                '<h5>High AMPs for each time either pump was active</h5>' +
+                '<div style="margin: 15px;"><p>Click any of the colored bars to view detail information.</p></div>';
+            let pct = 0;
+            let parts;
+            let factor = Math.round(high / 100);
+            let colored;
+            let info;
+            let amps;
+            for (let k = 1; k <= keys.length; k++) {
+                if (typeof keys[k] !== 'undefined') {
+                    if (keys[k].indexOf("#") !== -1) {
+                        parts = keys[k].split("#");
+                        amps = parts[0];
+                        pct = Math.round(amps / factor)
+                        info = pumpUsed[parts[1]];
+                        color = "light-grey";
+                        if (info.pump === "A") {
+                            color = "blue";
+                        } else if (info.pump === "B") {
+                            color = "green";
+                        }
+                        h = h + '<div style="margin: 2px; border: 0px solid #ccc;">' +
+                            //'<div>' + parts[0] + '</div>' +
+                            '<div style="background-color: ' + color + '; height:15px; width:' + pct + '%;" ' +
+                            'onclick="pumpUsage(\'' + parts[1] + '\')"></div></div>';
+                    }
+                }
+            }
+
+
+            return h;
+        }
+
+
+        function pumpUsage(key) {
+            kp = key.split('.')
+            data = pumpUsed[key]
+            //alert(JSON.stringify(data, null, 2))
+            duration = calcInformation(data)
+            let h = '<h6>Entry - &nbsp;&nbsp;Day: ' + kp[0] + '&nbsp;&nbsp;&nbsp;Hour: ' + kp[1] + '&nbsp;&nbsp;&nbsp;Period: ' + kp[2] + '</h6>'
+            h = h + '<table cellpadding="2" cellspacing="0" width="100%" border="0" >'
+            // Table headers
+            h = h + '<thead><tr>' +
+                '<th style="text-align: center" bgcolor="#eee">Data</th>' +
+                '<th style="text-align: center" bgcolor="#eee">Value</th>' +
+                '</tr></thead><tbody>' +
+                '<tr><td>Pump</td><td>' + data.pump +
+                '</tr><tr><td>Start date/time</td><td>' + data.start_date +
+                '</tr><tr><td>End date/time</td><td>' + data.end_date +
+                '</tr><tr><td>Run duration (MM:SS)</td><td>' + duration +
+                '</tr><tr><td>Start energy</td><td>' + data.start_energy +
+                '</tr><tr><td>End energy</td><td>' + data.end_energy +
+                '</tr><tr><td>Used energy</td><td>' + data.used_energy +
+                '</tr><tr><td>AMPs low</td><td>' + data.amps_low +
+                '</tr><tr><td>AMPs average</td><td>' + Math.round(data.amps_avg) +
+                '</tr><tr><td>AMPs high</td><td>' + data.amps_high +
+                '</tr></table>'
+            document.getElementById("messageBody").innerHTML = h;
+            modal.show();
+        }
+
+        function closeModal() {
+            modal.hide();
+        }
 
         function formatSMS(data) {
             // convert data to JSON
@@ -295,6 +502,21 @@
             }
             return hrs + mins + secs
         }
+
+        function padZ(v) {
+            if (v < 100) {
+                return "0000" + v;
+            } else if (v < 1000) {
+                return "000" + v;
+            } else if (v < 1000) {
+                return "00" + v;
+            } else if (v < 10000) {
+                return "0" + v;
+            } else {
+                return v;
+            }
+        }
+
     </script>
 </body>
 
