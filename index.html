@@ -10,10 +10,27 @@
     <title>MMPOAII</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        td,
+        th {
+            border-left: 1px solid #bbb;
+            border-right: 1px solid #bbb;
+            border-bottom: 1px solid #555;
+            border-top: 1px solid #555;
+        }
+    </style>
+
+
+
 </head>
 
 <body>
-
     <div class="container">
         <header
             class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
@@ -34,8 +51,9 @@
         <div id="outputTable">
 
         </div>
-
     </div>
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
         </script>
@@ -43,13 +61,13 @@
         function getData(kind) {
             // Creating Our XMLHttpRequest object
             var xhr = new XMLHttpRequest();
-
+            var url;
             // Making our connection
             var sensor_url = 'https://isf1iqwwv2.execute-api.us-east-2.amazonaws.com/data';
             var sms_url = 'https://isf1iqwwv2.execute-api.us-east-2.amazonaws.com/sms';
             var amps_url = 'https://isf1iqwwv2.execute-api.us-east-2.amazonaws.com/amps';
 
-            if (kind === 's') {
+            if (kind === 'p') {
                 url = sensor_url
             } else if (kind === 'm') {
                 url = sms_url
@@ -57,81 +75,163 @@
                 url = amps_url
             }
 
-
-
             xhr.open("GET", url, true);
 
             // function execute after request is successful
             xhr.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    //console.log(this.responseText);
-                    formatData(this.responseText, kind)
+                    if (kind === 'p') {
+                        formatData(this.responseText)
+                    } else if (kind === 'm') {
+                        formatSMS(this.responseText)
+                    } else if (kind === 'a') {
+                        formatAmps(this.responseText)
+                    }
                 }
-
             }
             // Sending our request
             xhr.send();
         }
 
-        function formatData(data, kind) {
+
+        function formatData(data) {
             // convert data to JSON
             data = JSON.parse(data);
+            let items = {}
+            let days = ""
+            let dt = []
+            // Rows of requested data    
+            for (let i = 0; i < data.length; i++) {
+                if (typeof data[i].pump !== 'undefined') {
+                    dt = data[i].start_date.split("-")
+                    if (typeof items[dt[0]] === 'undefined') {
+                        items[dt[0]] = {}
+                    }
+                    if (days.indexOf(dt[0]) === -1) {
+                        days = days + dt[0] + "@"
+                    }
+                    hr = dt[1].substring(0, 2)
+                    min = dt[1].substring(3, 5)
+                    period = 1
+                    if (min > 15 && min < 31) {
+                        period = 2
+                    } else if (min > 30 && min < 46) {
+                        period = 3
+                    } else if (min > 45 && min < 60) {
+                        period = 4
+                    }
+
+                    key = hr + "." + period
+                    items[dt[0]][key] = data[i].pump
+                }
+            }
+
+            da = days.split("@");
+            da = da.sort();
+
+            // Sort data by desending date/time
+            // console.log(JSON.stringify(data, null, 2))
+            // clear outputTable in the html page
+            document.getElementById("outputTable").innerHTML = ""
+            // build the new outputTable
+            cnt = 0;
+            h = '<h5>Pump running by day and hour segements </h5>'
+            h = h + '<table cellpadding="0" cellspacing="0" width="100%" border="0">'
+            // Table headers
+            h = h + '<thead><tr>' +
+                '<th style="text-align: center">Date</th>' +
+                '<th style="text-align: center" colspan="4" >00</th>' +
+                '<th style="text-align: center" colspan="4" >01</th>' +
+                '<th style="text-align: center" colspan="4" >02</th>' +
+                '<th style="text-align: center" colspan="4" >03</th>' +
+                '<th style="text-align: center" colspan="4" >04</th>' +
+                '<th style="text-align: center" colspan="4" >05</th>' +
+                '<th style="text-align: center" colspan="4" >06</th>' +
+                '<th style="text-align: center" colspan="4" >07</th>' +
+                '<th style="text-align: center" colspan="4" >08</th>' +
+                '<th style="text-align: center" colspan="4" >09</th>' +
+                '<th style="text-align: center" colspan="4" >10</th>' +
+                '<th style="text-align: center" colspan="4" >11</th>' +
+                '<th style="text-align: center" colspan="4" >12</th>' +
+                '<th style="text-align: center" colspan="4" >13</th>' +
+                '<th style="text-align: center" colspan="4" >14</th>' +
+                '<th style="text-align: center" colspan="4" >15</th>' +
+                '<th style="text-align: center" colspan="4" >16</th>' +
+                '<th style="text-align: center" colspan="4" >17</th>' +
+                '<th style="text-align: center" colspan="4" >18</th>' +
+                '<th style="text-align: center" colspan="4" >19</th>' +
+                '<th style="text-align: center" colspan="4" >20</th>' +
+                '<th style="text-align: center" colspan="4" >21</th>' +
+                '<th style="text-align: center" colspan="4" >22</th>' +
+                '<th style="text-align: center" colspan="4" >23</th>' +
+                '</tr></thead><tbody>'
+            // Rows of requested data    
+            for (let i = 1; i < da.length; i++) {
+                line = "<tr><td>&nbsp;" + da[i] + "&nbsp;</td>";
+                day = items[da[i]]
+                for (let h = 0; h < 24; h++) {
+                    for (let p = 1; p < 5; p++) {
+                        key = h + "." + p
+                        if (typeof day[key] !== 'undefined') {
+                            if (day[key] === "A") {
+                                style = "text-align: center"
+                                line = line + "<td style='text-align: center; color: white' bgcolor='blue' width='1%'>" + day[key] + "</td>"
+                            } else {
+                                line = line + "<td style='text-align: center; color: white' bgcolor='green' width='1%'>" + day[key] + "</td>"
+                            }
+
+
+
+                        } else {
+                            if (h === 0 || h === 2 || h === 4 || h === 6 || h === 8 || h === 10 || h === 12 || h === 14 || h === 16 || h === 18 || h === 20 || h === 22) {
+                                line = line + "<td bgcolor='#eee' width='1%'></td>"
+                            } else {
+                                line = line + "<td width='1%'></td>"
+                            }
+                        }
+                    }
+                }
+                line = line + "</tr>"
+                h = h + line
+            }
+
+            // Close the table
+            h = h + '</tbody></table>'
+            // Add html to page
+            document.getElementById("outputTable").innerHTML = h;
+
+        }
+
+
+        function formatSMS(data) {
+            // convert data to JSON
+            data = JSON.parse(data);
+            // Sort data by desending date/time
+            data.sort((a, b) => parseFloat(b.date) - parseFloat(a.date));
+
             console.log(JSON.stringify(data, null, 2))
             // clear outputTable in the html page
             document.getElementById("outputTable").innerHTML = ""
             // build the new outputTable
             cnt = 0;
-            h = ''
-            // Output type
-            if (kind === 'p') {
-                h = '<h5>Pump energy usage</h5>'
-            } else {
-                h = '<h5>SMS messaes sent</h5>'
-            }
+            h = '<h5>SMS messaes sent</h5>'
             // Table headers
-            h = h + "<table class='table table-striped'><thead><tr>";
-            if (kind === 'p') {
-                h = h +
-                    '<th scope="col">Pump</th>' +
-                    '<th scope="col">Start date/time</th>' +
-                    '<th scope="col">End date/time</th>' +
-                    '<th scope="col">Duration<br>(mm:ss) </th>' +
-                    '<th scope="col">Energy<br>Used</th>'
-            } else {
-                h = h +
-                    '<th scope="col">Date/Time</th>' +
-                    '<th scope="col">Who</th>' +
-                    '<th scope="col">Message</th>'
-            }
-            h = h + '</tr></thead><tbody>'
+            h = h + '<table class="table table-striped"><thead><tr>' +
+                '<th scope="col">Date/Time</th>' +
+                '<th scope="col">Who</th>' +
+                '<th scope="col">Message</th>' +
+                '</tr></thead><tbody>'
             // Rows of requested data    
             for (let i = 0; i < data.length; i++) {
                 r = ''
-                //console.log(typeof (data[i]))
-                //console.log(data[i])
-                if (kind === 'p') {
-                    if (typeof data[i].pump !== 'undefined') {
-                        duration = calcInformation(data[i])
-                        r = '<tr>' +
-                            '<td>' + data[i].pump + '</td>' +
-                            '<td>' + data[i].start_date + '</td>' +
-                            '<td>' + data[i].end_date + '</td>' +
-                            '<td>' + duration + '</td>' +
-                            '<td>' + data[i].used_energy + '</td>' +
-                            '</tr>'
-                        cnt++;
-                        h = h + r;
-                    }
-                } else {
-                    if (typeof data[i].message !== 'undefined') {
-                        r = '<tr>' +
-                            '<td>' + data[i].date + '</td>' +
-                            '<td>' + data[i].who + '</td>' +
-                            '<td>' + data[i].message + '</td>'
-                        '</tr>'
-                        cnt++
-                        h = h + r;
-                    }
+                if (typeof data[i].message !== 'undefined') {
+                    r = '<tr>' +
+                        '<td>' + data[i].date + '</td>' +
+                        '<td>' + data[i].who + '</td>' +
+                        '<td>' + data[i].message + '</td>'
+                    '</tr>'
+                    cnt++
+                    h = h + r;
                 }
             }
             // If no data inserted in table add this message
@@ -143,6 +243,7 @@
             // Add html to page
             document.getElementById("outputTable").innerHTML = h;
         }
+
 
         function calcInformation(data) {
             tmpS = data.start_date.split("-");
@@ -168,6 +269,12 @@
             sec = s % 60
             if (sec === 00) {
                 sec = '00'
+            }
+            if (sec < 10) {
+                sec = "0" + sec
+            }
+            if (min < 10) {
+                min = "0" + min
             }
             return min + ":" + sec
         }

@@ -88,7 +88,7 @@ def saveData(row, id):
                     amps = {}
                     amps['s'] = "A"
                     amps['p'] = cda.pumpA_cycles
-                    awsHandler.putAMPSData                    
+                    # awsHandler.putAMPSData                    
         
         
         elif id == "B":
@@ -135,7 +135,7 @@ def saveData(row, id):
                     amps = {}
                     amps['s'] = "B"
                     amps['p'] = cda.pumpB_cycles
-                    awsHandler.putAMPSData
+                    # awsHandler.putAMPSData
 
         return 
     except Exception as e:
