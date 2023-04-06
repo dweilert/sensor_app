@@ -139,6 +139,8 @@ def checkPump(pzem_data,id):
                         cda.smsMsg.append(sms)
                         cda.aNoP = 0
                         smsHandler.checkSMS("no_power_a")
+                else:
+                    cda.aNoP = 0
 
         elif id == "B": 
             if (len(pzem_data) == 0):
@@ -161,6 +163,8 @@ def checkPump(pzem_data,id):
                         cda.smsMsg.append(sms)
                         cda.bNoP = 0
                         smsHandler.checkSMS("no_power_b")
+                    else:
+                        cda.bNoP = 0
 
         elif id == "C": 
             if (len(pzem_data) == 0):
@@ -183,6 +187,9 @@ def checkPump(pzem_data,id):
                         cda.smsMsg.append(sms)
                         cda.cNoP = 0
                         smsHandler.checkSMS("high_level_alarm")
+                    else:
+                        cda.cNoP = 0
+
 
         elif id == "D": 
             if (len(pzem_data) == 0):
@@ -205,7 +212,8 @@ def checkPump(pzem_data,id):
                         cda.smsMsg.append(sms)
                         cda.dNoP = 0
                         smsHandler.checkSMS("no_overall_power")
-
+                    else:
+                        cda.dNoP = 0
 
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
