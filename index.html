@@ -128,7 +128,6 @@
             xhr.send();
         }
 
-
         function formatData(data) {
             let items = {};
             let days = "";
@@ -299,36 +298,59 @@
             document.getElementById("outputTable").innerHTML = h;
         }
 
-
         function buildEnergyUsed(data, high, energyKeys) {
             let keys = energyKeys.split("@");
-            keys = keys.sort()
             let h = "<div style='margin-top: 15px;'> <hr></div> <div style='margin-top: 15px; margin-bottom: 5px;'>" +
-                '<h5>Energy usage for each time a pump was active</h5>' +
+                '<h5>Duration and energy usage for each time a pump was active</h5>' +
                 '<div style="margin: 15px;"><p>Click any of the colored bars to view detail information.</p></div>';
             let pct = 0;
             let parts;
             let factor = 5;
-            let colored;
+            let color;
+            let textColor;
             let info;
             let energy;
-            for (let k = 1; k <= keys.length; k++) {
+            let dur;
+
+            keys = keys.sort();
+            let hl = keys.length - 1;
+
+            for (let k = hl; k > 0; k--) {
                 if (typeof keys[k] !== 'undefined') {
                     if (keys[k].indexOf("#") !== -1) {
                         parts = keys[k].split("#");
                         energy = parts[0];
                         pct = Math.round(energy / factor)
                         info = pumpUsed[parts[1]];
-                        color = "light-grey";
+                        color = "black";
+                        textColor = "white"
                         if (info.pump === "A") {
                             color = "blue";
                         } else if (info.pump === "B") {
                             color = "green";
                         }
+                        if (energy < 1) {
+                            color = "yellow";
+                            textColor = "black";
+                            pct = 20;
+                            dur = ''
+                        } else {
+                            dur = ', Duration: ' + calcInformation(info)
+                        }
                         h = h + '<div style="margin: 2px; border: 0px solid #ccc;">' +
-                            //'<div>' + parts[0] + '</div>' +
-                            '<div style="background-color: ' + color + '; height:15px; width:' + pct + '%;" ' +
-                            'onclick="pumpUsage(\'' + parts[1] + '\')"></div></div>';
+                            '<div style="background-color: ' + color + ';' +
+                            ' height:15px; ' +
+                            ' width:' + pct + '%; ' +
+                            ' text-align: right; ' +
+                            ' font-size: 12px;' +
+                            ' color: ' + textColor + ';' +
+                            ' pad-right: 5px;' +
+                            ' "' +
+                            'onclick="pumpUsage(\'' + parts[1] + '\')">' +
+                            info.start_date + ' -  Pump: ' + info.pump +
+                            ',  Energy: ' + energy +
+                            dur +
+                            '&nbsp;</div></div>';
                     }
                 }
             }
@@ -336,44 +358,59 @@
             return h;
         }
 
-
         function buildAmpsUsed(data, high, ampKeys) {
             let keys = ampKeys.split("@");
-
-            keys = keys.sort();
-            let hAmp = roundTo(high / 1000, 2);
             let factor = Math.round(high / 100);
             let h = "<div style='margin-top: 15px;'> <hr></div> <div style='margin-top: 15px; margin-bottom: 5px;'>" +
-                '<h5>High level amps for each time a pump was active.  Highest overall amps were: ' + hAmp + '</h5> ' +
+                '<h5>High level amps for each time a pump was active.</h5> ' +
                 '<div style="margin: 15px;"><p>Click any of the colored bars to view detail information.</p></div>';
             let pct = 0;
             let parts;
-            let colored;
+            let color;
+            let textColor;
             let info;
             let amps;
-            for (let k = 1; k <= keys.length; k++) {
+
+            keys = keys.sort();
+            let hl = keys.length - 1;
+
+            for (let k = hl; k > 0; k--) {
                 if (typeof keys[k] !== 'undefined') {
                     if (keys[k].indexOf("#") !== -1) {
                         parts = keys[k].split("#");
                         amps = parts[0];
                         pct = Math.round(amps / factor)
                         info = pumpUsed[parts[1]];
-                        color = "light-grey";
+                        color = "black";
+                        textColor = "white";
                         if (info.pump === "A") {
                             color = "blue";
                         } else if (info.pump === "B") {
                             color = "green";
                         }
+                        let pAmps = roundTo(amps / 1000, 2);
+                        if (pAmps < 1) {
+                            pct = 20;
+                            color = "yellow";
+                            textColor = "black";
+                        }
                         h = h + '<div style="margin: 2px; border: 0px solid #ccc;">' +
-                            //'<div>' + parts[0] + '</div>' +
-                            '<div style="background-color: ' + color + '; height:15px; width:' + pct + '%;" ' +
-                            'onclick="pumpUsage(\'' + parts[1] + '\')"></div></div>';
+                            '<div style="background-color: ' + color + ';' +
+                            ' height: 15px; ' +
+                            ' width:' + pct + '%; ' +
+                            ' text-align: right; ' +
+                            ' font-size: 12px;' +
+                            ' color: ' + textColor + ';' +
+                            ' pad-right: 5px;' +
+                            ' "' +
+                            ' onclick="pumpUsage(\'' + parts[1] + '\')" >' +
+                            info.start_date + " -  Pump: " + info.pump + ",  Amps: " + pAmps + '&nbsp;</div></div>';
+
                     }
                 }
             }
             return h;
         }
-
 
         function pumpUsage(key) {
             let kp = key.split('.')
@@ -466,7 +503,6 @@
             h = null;
             sData = []
         }
-
 
         function calcInformation(data) {
             tmpS = data.start_date.split("-");

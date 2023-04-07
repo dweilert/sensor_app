@@ -84,6 +84,8 @@ def checkUPSCharge(charge):
                 cda.smsMsg.append(sms)
                 cda.ups_charge_cnt = 0
                 smsHandler.checkSMS("ups_charge")
+        else:
+            cda.ups_charge_cnt = 0
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
@@ -105,6 +107,8 @@ def checkUPSPercent(pct):
                 cda.smsMsg.append(sms)
                 cda.ups_percent_cnt = 0
                 smsHandler.checkSMS("ups_percent")
+        else:
+            cda.ups_percent_cnt = 0
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
