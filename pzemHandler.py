@@ -259,14 +259,15 @@ def monitor(usbPort, id):
         
         print(f"================ Type for e {type(e)}")
 
-        eStr = e
-        if "Errno 71" in eStr:
-            eStr = None
-            cda.Errno71_cnt = cda.errno71_cnt + 1
-        else:
-            logger.msg("E",f"monitor() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
-            logger.msg("E",f"monitor() {e}")
-            logger.msg("E",f"monitor() usbPort: {usbPort} id: {id}")
+        # eStr = e
+        # if "Errno 71" in eStr:
+        #     eStr = None
+        #     cda.Errno71_cnt = cda.errno71_cnt + 1
+        # else:
+
+        logger.msg("E",f"monitor() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
+        logger.msg("E",f"monitor() {e}")
+        logger.msg("E",f"monitor() usbPort: {usbPort} id: {id}")
 
         rtn = []
         rtn.append(False)
