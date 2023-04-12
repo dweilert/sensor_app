@@ -117,14 +117,8 @@ def getCommand():
                 writeCommand("ups")
             elif cmd == "t":
                 writeCommand("temp")
-            elif cmd == "r1":
-                writeCommand("r1")
-            elif cmd == "r2":
-                writeCommand("r2")
-            elif cmd == "r3":
-                writeCommand("r3")
-            elif cmd == "r4":
-                writeCommand("r4")
+            elif cmd == "regs":
+                writeCommand("regs")
             elif cmd == "sms_own":
                 writeCommand("sms_own")                
             elif cmd == "sms_man":
