@@ -115,10 +115,8 @@ def putAMPSData(adata):
 
 
 def putDiagData(ddata):
-    id = getPutID()
     diagUrl = config.get("AWSGateWay","diag_data")
     try:
-        ddata["id"] = id
         ddata = ddata
         if config.get("Debug","show_aws_put_info") == "true":
             logger.msg("D",f"putDiagData() ddata: {ddata}")

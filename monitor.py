@@ -205,7 +205,11 @@ def checkDiag():
 
         if ("payload" in diag.text):
             result =  diagInfo()
-            awsHandler.putDiagData(result)
+            print("Result length: ", len(result))
+            record = {}
+            record['id'] = "1000"
+            record['p'] = result
+            awsHandler.putDiagData(record)
             url = config.get("AWSGateWay","requests_data")
             url = url + "/1000"
             delete_request = requests.delete(url)
@@ -220,11 +224,8 @@ def checkDiag():
 
 def diagInfo():
     try:
-        r = requests.get(config.get("AWSGateWay","diag_data"))
-        print(r.text)
-        if ("YES" in r.text):
-            result = getCmdInfo.getAllData()
-            return result
+        result = getCmdInfo.getAllData()
+        return result
 
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
