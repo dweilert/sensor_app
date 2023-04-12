@@ -64,14 +64,14 @@ def checkForCommandFile():
                     results = getTempInfo()  
                 elif "memory" in line:
                     results = getMemory()    
-                elif "r1" in line:
+                elif "regs" in line:
                     results = getRegisters("A")    
-                elif "r2" in line:
-                    results = getRegisters("B")    
-                elif "r3" in line:
-                    results = getRegisters("C")    
-                elif "r4" in line:
-                    results = getRegisters("D")       
+                    results = results + "\n";
+                    results = results + getRegisters("B")    
+                    results = results + "\n";
+                    results = results + getRegisters("C")    
+                    results = results + "\n";
+                    results = results + getRegisters("D")           
                 elif "wrap" in line:
                     results = wrapLog()       
                 elif "sms_dev" in line:
@@ -129,6 +129,38 @@ def checkForCommandFile():
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"checkForCommandFile() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.msg("E",f"checkForCommandFile() {e}")
+
+def getAllData():
+    results = ""
+    try:
+        results = getRegisters("A")    
+        results = results + "\n";
+        results = results + getRegisters("B")    
+        results = results + "\n";
+        results = results + getRegisters("C")    
+        results = results + "\n";
+        results = results + getRegisters("D") 
+
+        results = results + getMonitorStatus()
+        results = results + getPumpInfo()
+        results = results + getSensorInfo()
+        results = results + upsHandler.getUPSInfo(True)    
+        results = results + getTempInfo()  
+        results = results + getMemory() 
+
+        for m in cda.log_messages:
+            results = results + m + "\n"
+
+
+        return results
+    
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.msg("E",f"getAllData() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"getAllData() Exception: {e}")
+        return "Error getting all diag information"
 
 def wrapLog():
     status = logger.wrapLogs()

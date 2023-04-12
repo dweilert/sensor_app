@@ -31,12 +31,14 @@ import time
 import sys
 from datetime import datetime
 from gpiozero import CPUTemperature
+import requests
 
 import config
 import logger
 import commonDataArea as cda
 import pzemHandler
 import smsHandler
+import awsHandler
 import checkThresholds
 import getCmdInfo
 import upsHandler
@@ -90,6 +92,8 @@ def resetCheck(nowDay):
 
 
 def mainLine():
+    diagCnt = 0
+
     try:
         current_hour = 99
         while True:
@@ -177,6 +181,12 @@ def mainLine():
             getCmdInfo.checkForCommandFile()
 
             time.sleep(int(config.get("Interval","wait_to_check_sensors_seconds")))
+
+            if diagCnt == 5:
+                checkDiag()
+                diagCnt = 0
+            else:
+                diagCnt = diagCnt + 1
             
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
@@ -187,7 +197,39 @@ def mainLine():
         time.sleep(5)
         mainLine()
 
-                                                                
+def checkDiag():
+    try:
+        diag = requests.get(config.get("AWSGateWay","requests_data"))
+        print("Content: ", diag.content)
+        print("Text: ", diag.text)
+        if (diag.text == "Y"):
+            result =  diagInfo()
+            awsHandler.putDiagData(result)
+
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.msg("E",f"checkDiag() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"checkDiag() {e}")
+
+def diagInfo():
+    try:
+        r = requests.get(config.get("AWSGateWay","diag_data"))
+        print(r.text)
+        if ("YES" in r.text):
+            result = getCmdInfo.getAllData()
+            return result
+
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.msg("E",f"getDiagInfo() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"getDiagInfo() {e}")
+
+
+
 def getRAMinfo():
     try:
         # Index 0: total RAM                                                                

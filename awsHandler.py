@@ -114,6 +114,33 @@ def putAMPSData(adata):
             logger.msg("D","putAMPSData() finished")
 
 
+def putDiagData(ddata):
+    id = getPutID()
+    diagUrl = config.get("AWSGateWay","diag_data")
+    try:
+        ddata["id"] = id
+        ddata = ddata
+        if config.get("Debug","show_aws_put_info") == "true":
+            logger.msg("D",f"putDiagData() ddata: {ddata}")
+        url = diagUrl
+        response = requests.put(url, json=ddata)
+        if config.get("Debug","show_aws_put_info") == "true":
+            logger.msg("D",f"putDiagData() response: {response}")
+        res = response.json()
+        if config.get("Debug","show_aws_put_info") == "true":
+            logger.msg("D",f"putDiagData() res: {res}")
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.msg("E",f"putDiagData() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
+        logger.msg("E",f"putDiagData() {e}")
+    finally:
+        if config.get("Debug","show_aws_put_info") == "true":
+            logger.msg("D","putDiagData() finished")
+
+
+
 def getPutID():
     try:
         # return a unique value to be used for the ID of the put
