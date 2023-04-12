@@ -206,6 +206,10 @@ def checkDiag():
         if ("payload" in diag.text):
             result =  diagInfo()
             awsHandler.putDiagData(result)
+            url = config.get("AWSGateWay","requests_data")
+            url = url + "/1000"
+            delete_request = requests.delete(url)
+            print(delete_request.text)
 
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
