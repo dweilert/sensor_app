@@ -72,6 +72,8 @@ def checkForCommandFile():
                     results = results + getRegisters("C")    
                     results = results + "\n";
                     results = results + getRegisters("D")           
+                elif "get_all" in line:
+                    results = getAllData() 
                 elif "wrap" in line:
                     results = wrapLog()       
                 elif "sms_dev" in line:

@@ -119,6 +119,8 @@ def getCommand():
                 writeCommand("temp")
             elif cmd == "regs":
                 writeCommand("regs")
+            elif cmd == "get_all":
+                writeCommand("get_all")
             elif cmd == "sms_own":
                 writeCommand("sms_own")                
             elif cmd == "sms_man":
