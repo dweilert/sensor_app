@@ -257,6 +257,8 @@ def monitor(usbPort, id):
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         
+        print(f"================ Type for e {type(e)}")
+
         eStr = e
         if "Errno 71" in eStr:
             eStr = None
