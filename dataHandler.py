@@ -82,7 +82,8 @@ def saveData(row, id):
                     cda.pumpA_status = "OFF"
 
                     # Send data to AWS
-                    awsHandler.putSensorData(record)		    		
+                    if energy > 0:
+                        awsHandler.putSensorData(record)		    		
 
                     #logger.msg("I","PumpA cycles {cda.pumpA_cycles}")
                     amps = {}

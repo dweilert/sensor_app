@@ -91,6 +91,8 @@ current_date = ""
 iCnt = 0
 error_cnt = 0
 
+errno71_cnt = 0
+
 cpu_temps = []
 cpu_ram = []
 upsData = []

@@ -34,6 +34,7 @@ import config
 import commonDataArea as cda
 import smsHandler
 import logger
+from datetime import datetime
 
 # Power
 cda.aNoP = 0
@@ -117,7 +118,9 @@ def checkUPSPercent(pct):
         logger.msg("E",f"checkUPSPercent() {e}")
                    	
 
-def checkPump(pzem_data,id):
+def checkData(pzem_data,id):
+    now = datetime.now()
+    nowTime = now.strftime("%H:%M:%S")
     # Increment counters and check against thresholds.
     try:
         cda.smsMsg = []
