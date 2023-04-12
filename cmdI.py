@@ -66,7 +66,8 @@ def getResults():
 
 def show_help():
     print(" ")
-    print("  Valid commands: ")
+    print(" Valid commands: ")
+    print(" get_all - get all data")
     print("    f    - free and used memory information")
     print("    h    - show this help information")
     print("    l    - log data")
@@ -78,7 +79,7 @@ def show_help():
     print("    t    - temperature information for Raspberry Pi")
     print("    u    - ups information for Raspberry Pi")
     print("    w    - wrap logs (reduce log stack by 50%)")
-    print(" get_all - get all data")
+    print(" ")
     print("  SMS related commands")
     print("    sms_own   - send test SMS message to owners")
     print("    sms_man   - send test SMS message to maintenace")
