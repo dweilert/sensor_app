@@ -78,6 +78,7 @@ def show_help():
     print("    t    - temperature information for Raspberry Pi")
     print("    u    - ups information for Raspberry Pi")
     print("    w    - wrap logs (reduce log stack by 50%)")
+    print(" get_all - get all data")
     print("  SMS related commands")
     print("    sms_own   - send test SMS message to owners")
     print("    sms_man   - send test SMS message to maintenace")
