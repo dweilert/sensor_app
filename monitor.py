@@ -201,8 +201,9 @@ def checkDiag():
     try:
         diag = requests.get(config.get("AWSGateWay","requests_data"))
         print("Content: ", diag.content)
-        print("Text: ", diag.text)
-        if (diag.text == "Y"):
+        print("Text: ", diag.text, " type: ", type(diag.text))
+
+        if ("payload" in diag.text):
             result =  diagInfo()
             awsHandler.putDiagData(result)
 
