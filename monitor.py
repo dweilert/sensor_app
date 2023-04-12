@@ -200,12 +200,12 @@ def mainLine():
 def checkDiag():
     try:
         diag = requests.get(config.get("AWSGateWay","requests_data"))
-        print("Content: ", diag.content)
-        print("Text: ", diag.text, " type: ", type(diag.text))
+        #print("Content: ", diag.content)
+        #print("Text: ", diag.text, " type: ", type(diag.text))
 
         if ("payload" in diag.text):
             result =  diagInfo()
-            print("Result length: ", len(result))
+            #print("Result length: ", len(result))
             record = {}
             record['id'] = "1000"
             record['p'] = result
