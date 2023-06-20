@@ -29,6 +29,7 @@ LICENSE:
 import commonDataArea as cda
 import configparser
 import logger
+import sys
 
 configI = configparser.ConfigParser()
 
