@@ -12,3 +12,63 @@ The monitor system has a CLI to communicate with the service that can be used
 to view pump, sensor, ups, temerature, registers, and logs.  Run the command 
 shell cli.sh to start the interface.
 
+
+verify python installed
+
+python -version
+
+install pip3
+
+sudo apt install python3-pip
+
+pip install pymodbus
+pip install -U pymodbus[serial]
+pip install -U pymodbus[repl]
+
+  WARNING: The scripts pymodbus.console, pymodbus.server and pymodbus.simulator are 
+  installed in '/home/bob/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, 
+  use --no-warn-script-location.
+  
+
+Install additional libraries 
+
+pip install click
+pip install prompt_toolkit
+pip install pygments
+
+
+Install Twilio
+
+pip install twilio
+
+Install smbus
+
+pip install smbus  
+
+Install GIT
+sudo apt install git
+
+Install UPS support for Waveshare UPS HAT
+
+Configure/Enable IC@ Interface
+sudo raspi-config
+Select Interfacing Options -> I2C ->yes to start the i2C kernel driver
+
+Install p7zip
+sudo apt-get install p7zip
+
+
+WaveShare UPS HAT at https://www.waveshare.com/wiki/UPS_HAT
+Download UPS code and unzip into UPS_HAT directory
+wget https://www.waveshare.com/w/upload/d/d9/UPS_HAT.7z
+7zr x UPS_HAT.7z -r -o./UPS_HAT
+
+Test using the following
+cd UPS_HAT
+python INA219.py
+
+Create command input and output files and add read/write privledges
+
+
+sudo bash -c "$(curl -sN https://install.connect.sixfab.com)" -- -t Unwashed-Retold-Playhouse-Jaws-Discourse-Immortal isTrusted true

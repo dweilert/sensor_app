@@ -53,11 +53,12 @@ def readConfig():
         return False
 
 def get(k1, k2):
+    #print(f"Type: {k1}  Value: {k2}")
     try:
         data = configI[k1][k2]
         return data
     except Exception as e:
-        logger.msg("E",f"config.get ERROR: {e}")
+        logger.msg("E",f"config.get Type:{k1}  Value:{k2}  ERROR:{e}")
         return  "err"
 
 def setValues():
@@ -72,4 +73,4 @@ def setValues():
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"setValues() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
-        logger.msg("E",f"setValues() {e}")     
+        logger.msg("E",f"setValues() {e}") 

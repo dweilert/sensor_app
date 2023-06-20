@@ -170,7 +170,9 @@ if __name__ == "__main__":
         config.readConfig()
         cmd_file = config.get("CommandInterface","cmd_file")
         results_file = config.get("CommandInterface","results_file")
-
+        print(f" - Command input file: {cmd_file}")
+        print(f" - Result output file: {results_file}")
+        print(f" - Enter h for help information")
         getCommand()
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
