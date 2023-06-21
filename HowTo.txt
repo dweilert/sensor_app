@@ -72,3 +72,30 @@ Create command input and output files and add read/write privledges
 
 
 sudo bash -c "$(curl -sN https://install.connect.sixfab.com)" -- -t Unwashed-Retold-Playhouse-Jaws-Discourse-Immortal isTrusted true
+
+
+Add service definition to start python program:
+Create file /lib/systemd/system/monitor.service
+
+[Unit]
+Description=MMPOAII Monitor
+
+[Service]
+User=bob
+WorkingDirectory=/home/bob
+ExecStart=/usr/bin/python /home/bob/sensor_app/monitor.py
+Restart=on-abort
+#Environment=PYTHONPATH=/home/bob/sensor_app
+
+[Install]
+WantedBy=multi-user.target
+
+-- Run commands to start / stop / restart service
+
+sudo systemctl daemon-reload
+
+sudo systemctl start monitor.service
+
+sudo systemctl stop monitor.service
+
+sudo systemctl restart monitor.service

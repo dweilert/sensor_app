@@ -42,6 +42,7 @@ import awsHandler
 import checkThresholds
 import getCmdInfo
 import upsHandler
+import smsHandler
 
 
 def getPorts():
@@ -117,11 +118,20 @@ def mainLine():
                 cda.portC = "/dev/ttyUSB2"
                 cda.portD = "/dev/ttyUSB3"
                 logger.msg("I",f"Attempted to read USB ports 10 times, forced use of default USB ports")
+                sms = []
+                sms.append(config.get("Messages","sensors_default_msg"))
+                sms.append(config.get("Messages","sensors_default_who"))
+                cda.smsMsg.append(sms)
+                smsHandler.sendSMS()    
                 break
-
 
             # check if any ports were located
             if cnt > 0:
+                sms = []
+                sms.append(config.get("Messages","sensors_at_startup_msg")+" "+str(cnt))
+                sms.append(config.get("Messages","sensors_at_startup_who"))
+                cda.smsMsg.append(sms)
+                smsHandler.sendSMS() 
                 break
             else:	    
                 time.sleep(int(config.get("Interval","wait_to_check_for_ports_seconds")))

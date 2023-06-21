@@ -83,7 +83,6 @@ def checkSMS(what):
                 else:
                     cda.resend_sensor_no_power_b_cnt = 0
 
-
         elif what == "no_overall_power":
             if cda.resend_no_overall_power_cnt == 0:
                 send = True
