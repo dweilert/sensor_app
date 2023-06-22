@@ -6,7 +6,10 @@ Date: 3/19/2023
 REVISION HISTORY
   DATE        AUTHOR          CHANGES
   yyyy/mm/dd  --------------- -------------------------------------
-  2023/03/23  DaW             Initial creation 
+  2023/03/23  DaW             Initial creation
+  2023/06/21  DaW             1. Reformat exception error for better understanding
+                              2. Removed hard coded loaction for config.ini. Changed to
+                              PWD (present working directory)/config.ini 
 
 OVERVIEW:
     Module read configuration file config.ini. 
@@ -30,12 +33,16 @@ import commonDataArea as cda
 import configparser
 import logger
 import sys
+import os
 
 configI = configparser.ConfigParser()
 
 def readConfig():
     try:
-        #configI = configparser.ConfigParser()
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        cwd_path = os.getcwd()
+        print(dir_path)
+        print(cwd_path) 
         configI.read("/home/bob/sensor_app/config.ini")
         # Set debug flag from config.ini file
         if configI.get("Debug","status") == "true":
