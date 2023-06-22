@@ -9,6 +9,8 @@ REVISION HISTORY
   DATE        AUTHOR          CHANGES
   yyyy/mm/dd  --------------- -------------------------------------
   2023/03/19  DaW             Initial creation
+  2023/06/22  DaW             Added checkAmps function to check for high or 
+                              low amps on each pump
 
 OVERVIEW:
     Module to determine if monitor thresholds have been exceeded.  If the
@@ -50,6 +52,40 @@ cda.dNoD = 0
 
 # SMS message array
 cda.smsMsg = []
+
+def checkAmps(i):
+    try:
+        cda.smsMsg = []
+        high = 0
+        low = 99        
+        # Check pump amps for too high or to low
+        if i == "A":
+            high = cda.pumpA_amp_high
+            low = cda.pumpA_amp_low
+        else:
+            high = cda.pumpB_amp_high
+            low = cda.pumpB_amp_low
+
+        if high > int(config.get("Limits","amps_high")):
+            sms = []
+            sms.append(config.get("Messages","amps_high_msg"))
+            sms.append(config.get("Messages","amps_high_who"))
+            cda.smsMsg.append(sms)
+            smsHandler.checkSMS("amps")
+
+        if low < int(config.get("Limits","amps_low")):
+            sms = []
+            sms.append(config.get("Messages","amps_low_msg"))
+            sms.append(config.get("Messages","amps_low_who"))
+            cda.smsMsg.append(sms)
+            smsHandler.checkSMS("amps")
+
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.msg("E",f"checkAmps() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"checkAmps() {e}")    
 	
 def checkTemperature(temp):
     try:

@@ -7,6 +7,8 @@ REVISION HISTORY
   DATE        AUTHOR          CHANGES
   yyyy/mm/dd  --------------- -------------------------------------
   2023/03/19  DaW             Initial creation 
+  2023/06/21  DaW             Added messages at startup about number of sensors
+                              and if the default values are in use.
 
 OVERVIEW:
     <to be updated>
@@ -51,8 +53,8 @@ def getPorts():
         cda.getPortsCnt = cda.getPortsCnt + 1
         if cda.getPortsCnt > int(config.get("Limits","no_ports")):
             sms = []
-            sms.append(config.get("Limits","no_ports_msg"))
-            sms.append(config.get("Limits","no_ports_who"))
+            sms.append(config.get("Messages","no_ports_msg"))
+            sms.append(config.get("Messages","no_ports_who"))
             cda.smsMsg.append(sms)
             smsHandler.checkSMS()
             cda.getPortsCnt = 0
@@ -192,7 +194,6 @@ def mainLine():
 
             # get Raspberry Pi memory usage data
             cda.cpu_ram.append(getRAMinfo())
-
 
             # Return RAM information (unit=kb) in a list                                        
             if config.get("Debug","status") == "true":

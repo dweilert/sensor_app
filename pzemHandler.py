@@ -169,6 +169,7 @@ def monitor(usbPort, id):
         rType = str(rType)
 
         if "pymodbus.register_read_message.ReadInputRegistersResponse" in rType:
+            # If either one of the pumps save the data to AWS
             if id == "A" or id == "B":
                 dataHandler.saveData(request.registers, id)
 

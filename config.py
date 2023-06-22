@@ -9,7 +9,7 @@ REVISION HISTORY
   2023/03/23  DaW             Initial creation
   2023/06/21  DaW             1. Reformat exception error for better understanding
                               2. Removed hard coded loaction for config.ini. Changed to
-                              PWD (present working directory)/config.ini 
+                              CWD (current working directory)/config.ini 
 
 OVERVIEW:
     Module read configuration file config.ini. 
@@ -41,8 +41,8 @@ def readConfig():
     try:
         dir_path = os.path.dirname(os.path.realpath(__file__))
         cwd_path = os.getcwd()
-        print("os.path  : " + dir_path)
-        print("os.getcwd: " + cwd_path) 
+        logger.msg("I", "os.path  : " + dir_path)
+        logger.msg("I", "os.getcwd: " + cwd_path) 
         configI.read(cwd_path + "/config.ini")
         # Set debug flag from config.ini file
         if configI.get("Debug","status") == "true":
@@ -75,7 +75,7 @@ def setValues():
         resend_delay = int(get("Interval","wait_to_resend_sms_hours"))
         resend_delay = resend_delay * 3600   # multiple hours times seconds in hours
         cda.resend_wait = round(resend_delay / wait_secs)
-        print(f"resend_wait_cnt: {cda.resend_wait}")
+        logger.msg("I",f"Resend hours: {resend_delay} Resend seconds: {cda.resend_wait}")
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename

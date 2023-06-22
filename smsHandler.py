@@ -50,7 +50,55 @@ def checkSMS(what):
     try:
         #print(f"checkSMS parameter: {what} from sensor: {cda.from_sensor}")
         send = True
-        if what == "no_data":
+
+        if what == "all_sensors_io_error":
+            if cda.resend_all_sensors_io_error_cnt == 0:
+                send = True
+                cda.resend_all_sensors_io_error_cnt = 1
+            else:             
+                cda.resend_all_sensors_io_error_cnt +=1
+                if cda.resend_all_sensors_io_error_cnt < cda.resend_wait:
+                    send = False
+                else:
+                    cda.resend_all_sensors_io_error_cnt = 0
+
+        elif what == "amps":
+            send = True
+
+        elif what == "connect_error":
+            if cda.resend_sensor_connect_error_cnt == 0:
+                send = True
+                cda.resend_sensor_connect_error_cnt = 1
+            else:             
+                cda.resend_sensor_connect_error_cnt +=1
+                if cda.resend_sensor_connect_error_cnt < cda.resend_wait:
+                    send = False
+                else:
+                    cda.resend_sensor_connect_error_cnt = 0
+
+        elif what == "high_level_alarm":
+            if cda.resend_high_level_alarm_cnt == 0:
+                send = True
+                cda.resend_high_level_alarm_cnt = 1
+            else:             
+                cda.resend_high_level_alarm_cnt +=1
+                if cda.resend_high_level_alarm_cnt < cda.resend_wait:
+                    send = False
+                else:
+                    cda.resend_high_level_alarm_cnt = 0
+
+        elif what == "io_error":
+            if cda.resend_sensor_io_error_cnt == 0:
+                send = True
+                cda.resend_sensor_io_error_cnt = 1
+            else:             
+                cda.resend_sensor_io_error_cnt +=1
+                if cda.resend_sensor_io_error_cnt < cda.resend_wait:
+                    send = False
+                else:
+                    cda.resend_sensor_io_error_cnt = 0                    
+
+        elif what == "no_data":
             if cda.resend_sensor_no_data_cnt == 0:
                 send = True
                 cda.resend_sensor_no_data_cnt = 1
@@ -93,61 +141,6 @@ def checkSMS(what):
                     send = False
                 else:
                     cda.resend_no_overall_power_cnt = 0
-
-        elif what == "high_level_alarm":
-            if cda.resend_high_level_alarm_cnt == 0:
-                send = True
-                cda.resend_high_level_alarm_cnt = 1
-            else:             
-                cda.resend_high_level_alarm_cnt +=1
-                if cda.resend_high_level_alarm_cnt < cda.resend_wait:
-                    send = False
-                else:
-                    cda.resend_high_level_alarm_cnt = 0
-
-        elif what == "io_error":
-            if cda.resend_sensor_io_error_cnt == 0:
-                send = True
-                cda.resend_sensor_io_error_cnt = 1
-            else:             
-                cda.resend_sensor_io_error_cnt +=1
-                if cda.resend_sensor_io_error_cnt < cda.resend_wait:
-                    send = False
-                else:
-                    cda.resend_sensor_io_error_cnt = 0
-
-        elif what == "all_sensors_io_error":
-            if cda.resend_all_sensors_io_error_cnt == 0:
-                send = True
-                cda.resend_all_sensors_io_error_cnt = 1
-            else:             
-                cda.resend_all_sensors_io_error_cnt +=1
-                if cda.resend_all_sensors_io_error_cnt < cda.resend_wait:
-                    send = False
-                else:
-                    cda.resend_all_sensors_io_error_cnt = 0
-
-        elif what == "connect_error":
-            if cda.resend_sensor_connect_error_cnt == 0:
-                send = True
-                cda.resend_sensor_connect_error_cnt = 1
-            else:             
-                cda.resend_sensor_connect_error_cnt +=1
-                if cda.resend_sensor_connect_error_cnt < cda.resend_wait:
-                    send = False
-                else:
-                    cda.resend_sensor_connect_error_cnt = 0
-
-        elif what == "amps":
-            if cda.resend_sensor_amps_cnt == 0:
-                send = True
-                cda.resend_sensor_amps_cnt = 1
-            else:             
-                cda.resend_sensor_amps_cnt +=1
-                if cda.resend_sensor_amps_cnt < cda.resend_wait:
-                    send = False
-                else:
-                    cda.resend_sensor_amps_cnt = 0
 
         elif what == "temp":
             if cda.resend_rasp_temp_cnt == 0:

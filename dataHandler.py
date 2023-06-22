@@ -7,6 +7,8 @@ REVISION HISTORY
   DATE        AUTHOR          CHANGES
   yyyy/mm/dd  --------------- -------------------------------------
   2023/03/23  DaW             Initial creation 
+  2023/06/22  DaW             Added call to checkThreshold.checkAmps(id) 
+                              to check for high or low amps on each pump
 
 OVERVIEW:
     Module to store data in files.
@@ -32,6 +34,7 @@ from datetime import datetime
 import commonDataArea as cda
 import logger
 import awsHandler
+import checkThresholds  
 
 
 def saveData(row, id):
@@ -81,9 +84,10 @@ def saveData(row, id):
                     # Reset pump data
                     cda.pumpA_status = "OFF"
 
-                    # Send data to AWS
+                    # Send data to AWS and check amps
                     if energy > 0:
                         awsHandler.putSensorData(record)		    		
+                        checkThresholds.checkAmps("A")
 
                     #logger.msg("I","PumpA cycles {cda.pumpA_cycles}")
                     amps = {}
@@ -129,8 +133,10 @@ def saveData(row, id):
                     # Reset pump data
                     cda.pumpB_status = "OFF"
 
-                    # Send data to AWS
-                    awsHandler.putSensorData(record)		    		
+                    # Send data to AWS and check amps
+                    if energy > 0:
+                        awsHandler.putSensorData(record)		    		
+                        checkThresholds.checkAmps("B")	    		
 
                     #logger.msg("I","PumpB cycles {cda.pumpB_cycles}")
                     amps = {}
