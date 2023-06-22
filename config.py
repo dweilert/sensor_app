@@ -41,9 +41,9 @@ def readConfig():
     try:
         dir_path = os.path.dirname(os.path.realpath(__file__))
         cwd_path = os.getcwd()
-        print(dir_path)
-        print(cwd_path) 
-        configI.read("/home/bob/sensor_app/config.ini")
+        print("os.path  : " + dir_path)
+        print("os.getcwd: " + cwd_path) 
+        configI.read(cwd_path + "/config.ini")
         # Set debug flag from config.ini file
         if configI.get("Debug","status") == "true":
             cda.debug = True
