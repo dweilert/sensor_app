@@ -67,7 +67,9 @@ def get(k1, k2):
         data = configI[k1][k2]
         return data
     except Exception as e:
-        logger.msg("E",f"config.get Type:{k1}  Value:{k2}  ERROR:{e}")
+        logger.msg("E",f"config.get Type :{k1}")
+        logger.msg("E",f"config.get Value:{k2}")
+        logger.msg("E",f"config.get ERROR:{e}")
         return  "err"
 
 def setValues():
