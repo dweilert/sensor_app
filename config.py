@@ -39,10 +39,10 @@ configI = configparser.ConfigParser()
 
 def readConfig():
     try:
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-        cwd_path = os.getcwd()
-        logger.msg("I", "os.path  : " + dir_path)
-        logger.msg("I", "os.getcwd: " + cwd_path) 
+        #dir_path = os.path.dirname(os.path.realpath(__file__))
+        #cwd_path = os.getcwd()
+        #logger.msg("I", "os.path  : " + dir_path)
+        #logger.msg("I", "os.getcwd: " + cwd_path) 
         # configI.read(cwd_path + "/config.ini")
         configI.read("/home/bob/sensor_app/config.ini")
         # Set debug flag from config.ini file

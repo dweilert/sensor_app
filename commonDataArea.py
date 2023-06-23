@@ -28,13 +28,13 @@ LICENSE:
 
 
 # logger
-log_dir = "~"
-log_base = "monitor"
-log_date = ""
-log_file_name = ""
-log_old_name = ""
-log_sms = ""
-log_first_time = True
+#log_dir = "~"
+#log_base = "monitor"
+#log_date = ""
+#log_file_name = ""
+#log_old_name = ""
+#log_sms = ""
+#log_first_time = True
 log_messages = []
 
 # monitor
