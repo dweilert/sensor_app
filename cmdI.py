@@ -67,7 +67,7 @@ def getResults():
 def show_help():
     print(" ")
     print(" Valid commands: ")
-    print(" get_all - get all data")
+    print("   all   - get all data")
     print("    f    - free and used memory information")
     print("    h    - show this help information")
     print("    l    - log data")
@@ -103,6 +103,8 @@ def getCommand():
                 print("Command interface closed")
                 print("\n"+"---")
                 break
+            elif cmd == "all":
+                writeCommand("get_all")
             elif cmd == "h":
                 show_help()
             elif cmd == "s":
@@ -121,8 +123,6 @@ def getCommand():
                 writeCommand("temp")
             elif cmd == "regs":
                 writeCommand("regs")
-            elif cmd == "get_all":
-                writeCommand("get_all")
             elif cmd == "sms_own":
                 writeCommand("sms_own")                
             elif cmd == "sms_man":

@@ -43,7 +43,8 @@ def readConfig():
         cwd_path = os.getcwd()
         logger.msg("I", "os.path  : " + dir_path)
         logger.msg("I", "os.getcwd: " + cwd_path) 
-        configI.read(cwd_path + "/config.ini")
+        # configI.read(cwd_path + "/config.ini")
+        configI.read("/home/bob/sensor_app/config.ini")
         # Set debug flag from config.ini file
         if configI.get("Debug","status") == "true":
             cda.debug = True
