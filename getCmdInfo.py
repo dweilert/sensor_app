@@ -136,6 +136,7 @@ def checkForCommandFile():
         logger.msg("E",f"checkForCommandFile() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.msg("E",f"checkForCommandFile() {e}")
 
+
 def getAllData():
     results = ""
     try:
@@ -192,6 +193,7 @@ def wrapLog():
     else:
         return "Status of log wrap unknown"
 
+
 def getTempInfo():
     try:
         high = 0
@@ -227,11 +229,10 @@ def getTempInfo():
         logger.msg("E",f"getTempInfo() Exception: {e}")
         return "Error getting temperature information"
 
+
 def getPumpInfo():
     try:
-
         print(cda.pumpA_cycles)
-
         result = "Pump 1: \n"
         result = result + "  On/Off status: " + cda.pumpA_status + "\n"
         result = result + "  ---- Latest information ----" + "\n"
@@ -311,7 +312,6 @@ def getMonitorStatus():
         logger.msg("E",f"getMonitorStatus() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.msg("E",f"getMonitorStatus() {e}")
         return "Error getting monitor.service status"
-
 
 
 def getMemory():
