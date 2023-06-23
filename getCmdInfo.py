@@ -52,8 +52,11 @@ def checkForCommandFile():
                 if line.strip() == "":
                     results = "Failed to read command request, please retry"
                     break
+                
                 if "monitor" in line:
                     results = getMonitorStatus()
+                elif "count" in line:
+                    results = intervalCounts()
                 elif "pumps" in line:
                     results = getPumpInfo()
                 elif "sensor" in line:
@@ -74,8 +77,7 @@ def checkForCommandFile():
                     results = results + getRegisters("D")           
                 elif "get_all" in line:
                     results = getAllData() 
-                elif "wrap" in line:
-                    results = wrapLog()       
+      
                 elif "sms_dev" in line:
                     sms = []
                     sms.append(config.get("Messages","test_msg_dev_msg"))
@@ -97,6 +99,8 @@ def checkForCommandFile():
                     cda.smsMsg.append(sms)
                     smsHandler.checkSMS("other")
                     results = "Test SMS sent to owners"     
+                elif "wrap" in line:
+                    results = wrapLog()                     
                 elif "all_clear" in line:
                     sms = []
                     sms.append(config.get("Messages","all_clear_msg"))
@@ -153,7 +157,6 @@ def getAllData():
         for m in cda.log_messages:
             results = results + m + "\n"
 
-
         return results
     
     except Exception as e:
@@ -163,6 +166,22 @@ def getAllData():
         logger.msg("E",f"getAllData() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.msg("E",f"getAllData() Exception: {e}")
         return "Error getting all diag information"
+
+
+def intervalCounts():
+    results = ""
+    try:
+        results = "Interval count: " + str(cda.iCnt) + "\n"
+        return results
+    
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.msg("E",f"intervalCounts() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"intervalCounts() Exception: {e}")
+        return "Error getting interval counts information"
+
 
 def wrapLog():
     status = logger.wrapLogs()

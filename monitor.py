@@ -196,7 +196,7 @@ def mainLine():
             cda.cpu_ram.append(getRAMinfo())
 
             # Return RAM information (unit=kb) in a list                                        
-            if config.get("Debug","status") == "true":
+            if config.get("Debug","interval_count") == "true":
                 logger.msg("I",f"Interval count({cda.iCnt})")
 
             # check if the CLI interface has any requests

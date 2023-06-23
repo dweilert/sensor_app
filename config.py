@@ -81,7 +81,7 @@ def setValues():
         resend_delay = int(get("Interval","wait_to_resend_sms_hours"))
         resend_delay = resend_delay * 3600   # multiple hours times seconds in hours
         cda.resend_wait = round(resend_delay / wait_secs)
-        logger.msg("I",f"Resend hours: {resend_delay} Resend seconds: {cda.resend_wait}")
+        # logger.msg("I",f"Resend hours: {resend_delay} Resend seconds: {cda.resend_wait}")
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename

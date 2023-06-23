@@ -68,6 +68,7 @@ def show_help():
     print(" ")
     print(" Valid commands: ")
     print("   all   - get all data")
+    print("    c    - count of intervals since today")
     print("    f    - free and used memory information")
     print("    h    - show this help information")
     print("    l    - log data")
@@ -105,32 +106,34 @@ def getCommand():
                 break
             elif cmd == "all":
                 writeCommand("get_all")
-            elif cmd == "h":
-                show_help()
-            elif cmd == "s":
-                writeCommand("sensors")
+            elif cmd == "all_clear":
+                writeCommand("all_clear")
+            elif cmd == "c":
+                writeCommand("count")
             elif cmd == "f":
                 writeCommand("memory")
-            elif cmd == "p":
-                writeCommand("pumps")
-            elif cmd == "m":
-                writeCommand("monitor")
+            elif cmd == "h":
+                show_help()
             elif cmd == "l":
                 writeCommand("logs")
+            elif cmd == "m":
+                writeCommand("monitor")
+            elif cmd == "p":
+                writeCommand("pumps")
             elif cmd == "u":
                 writeCommand("ups")
-            elif cmd == "t":
-                writeCommand("temp")
             elif cmd == "regs":
                 writeCommand("regs")
+            elif cmd == "s":
+                writeCommand("sensors")
             elif cmd == "sms_own":
                 writeCommand("sms_own")                
             elif cmd == "sms_man":
                 writeCommand("sms_man")                
             elif cmd == "sms_dev":
                 writeCommand("sms_dev")                
-            elif cmd == "all_clear":
-                writeCommand("all_clear")
+            elif cmd == "t":
+                writeCommand("temp")
             elif cmd == "w":
                 writeCommand("wrap")                                
             else:
