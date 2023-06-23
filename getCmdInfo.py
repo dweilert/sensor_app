@@ -139,6 +139,8 @@ def checkForCommandFile():
 def getAllData():
     results = ""
     try:
+        results = intervalCounts()
+        results = results + "\n";        
         results = getRegisters("A")    
         results = results + "\n";
         results = results + getRegisters("B")    
@@ -171,7 +173,7 @@ def getAllData():
 def intervalCounts():
     results = ""
     try:
-        results = "Interval count: " + str(cda.iCnt) + "\n"
+        results = "Interval count for the day: " + str(cda.iCnt) + "\n"
         return results
     
     except Exception as e:
