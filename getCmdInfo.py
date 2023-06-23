@@ -78,22 +78,22 @@ def checkForCommandFile():
                     results = wrapLog()       
                 elif "sms_dev" in line:
                     sms = []
-                    sms.append(config.get("TestMsg","developer_msg"))
-                    sms.append(config.get("TestMsg","developer_who"))
+                    sms.append(config.get("Messages","test_msg_dev_msg"))
+                    sms.append(config.get("Messages","test_msg_dev_who"))
                     cda.smsMsg.append(sms)
                     smsHandler.checkSMS("other")
                     results = "Test SMS sent to developer"     
                 elif "sms_man" in line:
                     sms = []
-                    sms.append(config.get("TestMsg","maintenance_msg"))
-                    sms.append(config.get("TestMsg","maintenance_who"))
+                    sms.append(config.get("Messages","test_msg_maint_msg"))
+                    sms.append(config.get("Messages","test_msg_maint_who"))
                     cda.smsMsg.append(sms)
                     smsHandler.checkSMS("other")
                     results = "Test SMS sent to maintenace"     
                 elif "sms_own" in line:
                     sms = []
-                    sms.append(config.get("TestMsg","owners_msg"))
-                    sms.append(config.get("TestMsg","owners_who"))
+                    sms.append(config.get("Messages","test_msg_owners_msg"))
+                    sms.append(config.get("Messages","test_msg_owners_who"))
                     cda.smsMsg.append(sms)
                     smsHandler.checkSMS("other")
                     results = "Test SMS sent to owners"     

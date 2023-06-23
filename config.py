@@ -67,9 +67,12 @@ def get(k1, k2):
         data = configI[k1][k2]
         return data
     except Exception as e:
-        logger.msg("E",f"config.get Type :{k1}")
-        logger.msg("E",f"config.get Value:{k2}")
-        logger.msg("E",f"config.get ERROR:{e}")
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.msg("E",f"get() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"get Type :{k1}")
+        logger.msg("E",f"get Value:{k2}")
         return  "err"
 
 def setValues():
