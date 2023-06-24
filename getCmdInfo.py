@@ -7,6 +7,7 @@ REVISION HISTORY
   DATE        AUTHOR          CHANGES
   yyyy/mm/dd  --------------- -------------------------------------
   2023/03/19  DaW             Initial creation 
+  2023/06/23  DaW             Added C option, interval count
 
 OVERVIEW:
     <to be updated>
@@ -140,9 +141,9 @@ def checkForCommandFile():
 def getAllData():
     results = ""
     try:
-        results = intervalCounts()
+        results = results + intervalCounts()
         results = results + "\n";        
-        results = getRegisters("A")    
+        results = results + getRegisters("A")    
         results = results + "\n";
         results = results + getRegisters("B")    
         results = results + "\n";
