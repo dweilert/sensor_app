@@ -38,7 +38,7 @@ import fractions
 
 def getDailyData():
     try:
-        result = "---- Daily stats ---- \n"
+        result = ""
         result = result + "Pump A -\n"
         result = result + "  Used count: " + str(cda.daily_pump_A_cnt) + "\n"
         result = result + "  High amps : " + str(cda.daily_pump_A_amp_high) + "\n"
