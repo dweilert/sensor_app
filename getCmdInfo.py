@@ -267,7 +267,8 @@ def getTempInfo():
             prtD = ""
             for x in range(dots):
                 prtD = prtD + "*"
-            oT = "{:6.3f}".format(parts[1])
+
+            oT = "{:6.3f}".format(fT)
             print(f"Hour: {parts[0]} Temp: {oT} : {prtD}")
             results = results + f"Hour: {parts[0]} Temp: {oT} : {prtD}" + "\n"
 
