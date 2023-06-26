@@ -63,7 +63,7 @@ def getPorts():
         logger.msg("E",f"getPorts() {e}")
 
 
-def resetCheck(nowDay):
+def resetCheck(nowDay, nowHour):
     try:
         # Check if it is a new day, if so reset memory 
         if cda.current_date != nowDay:
@@ -160,7 +160,8 @@ def mainLine():
 
             now = datetime.now()
             nowDay = now.strftime("%Y_%m_%d")
-            resetCheck(nowDay)
+            nowHour = now.strftime("%H")
+            resetCheck(nowDay, nowHour)
             
             cda.iCnt = cda.iCnt + 1
 
@@ -199,9 +200,13 @@ def mainLine():
             # Check for io errors and connection errors
             checkThresholds.checkSensors()
 
-            # get Raspberry Pi temp and save
+            # get Raspberry Pi temp and save if it is a new hour
             cpu = CPUTemperature()
-            cda.cpu_temps.append(cpu.temperature)
+            if nowHour != cda.cpu_temp_hour:
+                cda.cpu_temps.append(nowHour + ":" + str(cpu.temperature))
+                cda.cpu_temp_hour = nowHour
+
+            # check temperature for out of threshoold ranges
             checkThresholds.checkTemperature(cpu.temperature)
 
             # get Raspberry Pi UPS info

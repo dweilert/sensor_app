@@ -94,6 +94,7 @@ error_cnt = 0
 errno71_cnt = 0
 
 cpu_temps = []
+cpu_temp_hour = 99
 cpu_ram = []
 upsData = []
 

@@ -226,11 +226,14 @@ def getTempInfo():
         total = 0
         cnt = 0
         for t in cda.cpu_temps:
-            if t > high:
-                high = t
-            if t < low:
-                low = t
-            total = total + t
+            parts = t.split(":")
+            temp = float(parts[1])
+            print(f"Temp at hour {parts[0]} is {temp}")
+            if temp > high:
+                high = temp[1]
+            if temp < low:
+                low = temp[1]
+            total = total + temp
             cnt = cnt + 1
         
         if total > 0:
