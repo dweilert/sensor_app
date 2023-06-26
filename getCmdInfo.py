@@ -35,6 +35,7 @@ from datetime import datetime
 import json
 from gpiozero import CPUTemperature
 import subprocess
+import math
 
 import config
 import commonDataArea as cda
@@ -246,6 +247,24 @@ def getTempInfo():
         results = results + "  Average temp : " + str(avg) + "\n"
         results = results + "  High temp    : " + str(high) + "\n"
         results = results + "  Low temp     : " + str(low) + "\n"
+
+        high = math.floor(high)
+        low = math.floor(low)
+        diff = high - low
+
+        print(f"High: {high}")
+        print(f"Low : {low}")
+        print(f"Diff: {diff}")
+
+        for t in cda.cpu_temps:
+            parts = t.split(":")
+            temp = math.floor((parts[1]))
+            dots = temp - diff
+            prtD = ""
+            for x in range(dots):
+                prtD = prtD + "*"
+            print(f"Hour: {parts[0]} Temp: {parts[1]} Dots: {prtD}")
+
 
         return results
     
