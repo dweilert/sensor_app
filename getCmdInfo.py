@@ -108,7 +108,14 @@ def checkForCommandFile():
                     sms.append(config.get("Messages","test_msg_owners_who"))
                     cda.smsMsg.append(sms)
                     smsHandler.checkSMS("other")
-                    results = "Test SMS sent to owners"     
+                    results = "Test SMS sent to owners" 
+                elif "sms_daily" in line:
+                    sms = []
+                    sms.append(config.get("Messages","end_of_day_msg") + endOfDay.getDailyData())
+                    sms.append(config.get("Messages","end_of_day_who"))
+                    cda.smsMsg.append(sms)
+                    smsHandler.checkSMS("other")
+                    results = "Test End-of-Day SMS sent to developer"                         
                 elif "wrap" in line:
                     results = wrapLog()                     
                 elif "all_clear" in line:

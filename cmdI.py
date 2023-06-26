@@ -150,7 +150,9 @@ def getCommand():
             elif cmd == "sms_man":
                 writeCommand("sms_man")                
             elif cmd == "sms_dev":
-                writeCommand("sms_dev")                
+                writeCommand("sms_dev")
+            elif cmd == "sms_daily":
+                writeCommand("sms_daily")                                
             elif cmd == "t":
                 writeCommand("temp")
             elif cmd == "w":
