@@ -129,3 +129,8 @@ resend_rasp_ups_percent_cnt = 0
 error_stack = []
 
 from_sensor = ""
+
+daily_pump_A_cnt = 0
+daily_pump_B_cnt = 0
+daily_pump_A_amp_high = 0
+daily_pump_B_amp_high = 0

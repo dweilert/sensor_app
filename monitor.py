@@ -47,7 +47,7 @@ import awsHandler
 import checkThresholds
 import getCmdInfo
 import upsHandler
-import smsHandler
+import endOfDay
 
 
 def getPorts():
@@ -83,6 +83,12 @@ def resetCheck(nowDay):
             cda.ups_charge_cnt = 0
             cda.ups_percent_cnt = 0
             cda.errno71_cnt = 0
+            # End of day message and stats
+            endOfDay.sendDailyInfo()
+            cda.daily_pump_A_cnt = 0
+            cda.daily_pump_B_cnt = 0
+            cda.daily_pump_A_high_amp = 0
+            cda.daily_pump_B_high_amp = 0
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename

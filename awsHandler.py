@@ -114,6 +114,32 @@ def putAMPSData(adata):
             logger.msg("D","putAMPSData() finished")
 
 
+def putDailyData(ddata):
+    # NOT CURRENTLY INVOKED
+    diagUrl = config.get("AWSGateWay","daily_data")
+    try:
+        ddata = ddata
+        if config.get("Debug","show_aws_put_info") == "true":
+            logger.msg("D",f"putDailyData() ddata: {ddata}")
+        url = diagUrl
+        response = requests.put(url, json=ddata)
+        if config.get("Debug","show_aws_put_info") == "true":
+            logger.msg("D",f"putDailyData() response: {response}")
+        res = response.json()
+        if config.get("Debug","show_aws_put_info") == "true":
+            logger.msg("D",f"putDailyData() res: {res}")
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.msg("E",f"putDailyData() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
+        logger.msg("E",f"putDailyData() {e}")
+    finally:
+        if config.get("Debug","show_aws_put_info") == "true":
+            logger.msg("D","putDailyData() finished")
+
+
+
 def putDiagData(ddata):
     diagUrl = config.get("AWSGateWay","diag_data")
     try:
@@ -136,7 +162,6 @@ def putDiagData(ddata):
     finally:
         if config.get("Debug","show_aws_put_info") == "true":
             logger.msg("D","putDiagData() finished")
-
 
 
 def getPutID():

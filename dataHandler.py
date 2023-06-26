@@ -92,7 +92,12 @@ def saveData(row, pump):
 
                     # Send data to AWS and check amps
                     if energy > 0:
-                        awsHandler.putSensorData(record)		    		
+                        awsHandler.putSensorData(record)
+                        # Set daily info
+                        daily_pump_A_cnt = daily_pump_A_cnt + 1
+                        if cda.pumpA_amp_high > daily_pump_A_amp_high:
+                            daily_pump_A_amp_high = cda.pumpA_amp_high 
+                        # Check thresholds                         		    		
                         checkThresholds.checkAmps("A")
 
                     #logger.msg("I","PumpA cycles {cda.pumpA_cycles}")
@@ -141,7 +146,12 @@ def saveData(row, pump):
 
                     # Send data to AWS and check amps
                     if energy > 0:
-                        awsHandler.putSensorData(record)		    		
+                        awsHandler.putSensorData(record)
+                        # Set daily info
+                        daily_pump_B_cnt = daily_pump_B_cnt + 1
+                        if cda.pumpB_amp_high > daily_pump_B_amp_high:
+                            daily_pump_B_amp_high = cda.pumpB_amp_high 
+                        # Check thresholds   		
                         checkThresholds.checkAmps("B")	    		
 
                     #logger.msg("I","PumpB cycles {cda.pumpB_cycles}")
