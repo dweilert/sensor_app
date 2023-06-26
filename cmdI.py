@@ -187,6 +187,7 @@ def callMonitor(cmd):
     try:
         info = subprocess.run(["systemctl",cmd,"monitor"], capture_output=True, text=True)
         lines = info.stdout
+        newLines = lines.splitlines()
         for l in lines:
             print(l)
         # return lines
