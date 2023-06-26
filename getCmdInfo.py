@@ -258,7 +258,8 @@ def getTempInfo():
 
         for t in cda.cpu_temps:
             parts = t.split(":")
-            temp = math.floor((parts[1]))
+            fT = float(parts[1])
+            temp = math.floor(fT)
             dots = temp - diff
             prtD = ""
             for x in range(dots):
