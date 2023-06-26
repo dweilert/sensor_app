@@ -265,7 +265,7 @@ def getTempInfo():
                 prtD = prtD + "*"
 
             oT = "{:6.3f}".format(fT)
-            results = results + f"At hour: {parts[0]} temp is: {oT} : {prtD}" + "\n"
+            results = results + f"  At hour: {parts[0]} temp is: {oT} : {prtD}" + "\n"
 
         return results
     
