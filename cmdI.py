@@ -72,14 +72,19 @@ def show_help():
     print("    f    - free and used memory information")
     print("    h    - show this help information")
     print("    l    - log data")
-    print("    m    - monitor service current status")
     print("    p    - pump information, both pumps")
     print("    q    - quit command interface")
-    print("    regs - register information for all sensors")
+    print("    r    - register information for all sensors")
     print("    s    - sensors USB mappings and status")
     print("    t    - temperature information for Raspberry Pi")
     print("    u    - ups information for Raspberry Pi")
     print("    w    - wrap logs (reduce log stack by 50%)")
+    print(" ")
+    print("  Monitor service related commands")
+    print("    m_status  - get monitor service status")
+    print("    m_start   - start monitor service")
+    print("    m_stop    - stop monitor service")
+    print("    m_restart - restart monitor service")
     print(" ")
     print("  SMS related commands")
     print("    sms_own   - send test SMS message to owners")
@@ -116,14 +121,20 @@ def getCommand():
                 show_help()
             elif cmd == "l":
                 writeCommand("logs")
-            elif cmd == "m":
-                writeCommand("monitor")
+            elif cmd == "m_status":
+                writeCommand("monitorStatus")
+            elif cmd == "m_stop":
+                writeCommand("monitorStop")
+            elif cmd == "m_start":
+                writeCommand("monitorStart")
+            elif cmd == "m_restart":
+                writeCommand("monitorRestart")
             elif cmd == "p":
                 writeCommand("pumps")
             elif cmd == "u":
                 writeCommand("ups")
-            elif cmd == "regs":
-                writeCommand("regs")
+            elif cmd == "r":
+                writeCommand("r")
             elif cmd == "s":
                 writeCommand("sensors")
             elif cmd == "sms_own":

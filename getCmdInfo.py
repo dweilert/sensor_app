@@ -54,8 +54,14 @@ def checkForCommandFile():
                     results = "Failed to read command request, please retry"
                     break
                 
-                if "monitor" in line:
-                    results = getMonitorStatus()
+                elif "monitorStatus" in line:
+                    results = callMonitorInterface("status")
+                elif "monitorStop" in line:
+                    results = callMonitorInterface("stop")
+                elif "monitorStart" in line:
+                    results = callMonitorInterface("start")
+                elif "monitorRestart" in line:
+                    results = callMonitorInterface("restart")
                 elif "count" in line:
                     results = intervalCounts()
                 elif "pumps" in line:
@@ -112,6 +118,12 @@ def checkForCommandFile():
                 elif "logs" in line:
                     for m in cda.log_messages:
                         results = results + m + "\n"
+                elif "stop" in line:
+                    results = wrapLog() 
+                elif "start" in line:
+                    results = wrapLog() 
+                elif "restart" in line:
+                    results = wrapLog()                        
                 else:
                     results = "Request " + line + " cannot be processed" + "\n"
 
@@ -151,7 +163,7 @@ def getAllData():
         results = results + "\n";
         results = results + getRegisters("D") 
 
-        results = results + getMonitorStatus()
+        results = results + callMonitorInterface("status")
         results = results + getPumpInfo()
         results = results + getSensorInfo()
         results = results + upsHandler.getUPSInfo(True)    
@@ -301,9 +313,9 @@ def getSensorInfo():
         return "Error getting sensor information"
     
 
-def getMonitorStatus():
+def callMonitorInterface(cmd):
     try:
-        info = subprocess.run(["systemctl","status","monitor"], capture_output=True, text=True)
+        info = subprocess.run(["systemctl",cmd,"monitor"], capture_output=True, text=True)
         lines = info.stdout
         return lines
     except Exception as e:
