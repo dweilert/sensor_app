@@ -250,7 +250,10 @@ def getTempInfo():
 
         high = math.floor(high)
         low = math.floor(low)
-        diff = high - low
+        if high > low:
+            diff = high - low
+        else:
+            diff = 0
 
         print(f"High: {high}")
         print(f"Low : {low}")
