@@ -7,8 +7,10 @@ REVISION HISTORY
   DATE        AUTHOR          CHANGES
   yyyy/mm/dd  --------------- -------------------------------------
   2023/03/23  DaW             Initial creation 
-  2023/06/22  DaW             Added call to checkThreshold.checkAmps(id) 
+  2023/06/22  DaW             Added call to checkThreshold.checkAmps(pump) 
                               to check for high or low amps on each pump
+  2023/06/26  DaW             Modified inpup parm "id" to "pump" and added
+                              message if an invalid pump id was provided.
 
 OVERVIEW:
     Module to store data in files.
@@ -37,16 +39,20 @@ import awsHandler
 import checkThresholds  
 
 
-def saveData(row, id):
+def saveData(row, pump):
+    """
+    An array of sensor data, parameter "row", is parsed to determine if the 
+    pump is on
+    """
     try:
-        
+        # Timestamp for event
         now = datetime.now()
         ts = now.strftime("%m/%d/%Y-%H:%M:%S")
-
+        # Clear variables
         amps = {}
         record = {}
         energy = 0
-        if id == "A":
+        if pump == "A":
             # Check if Current in row[1] is seen 	
             if int(row[1]) > 0:
                 if cda.pumpA_status == "OFF":
@@ -96,7 +102,7 @@ def saveData(row, id):
                     # awsHandler.putAMPSData                    
         
         
-        elif id == "B":
+        elif pump == "B":
             # Check if Current is seen 	
             if int(row[1]) > 0:
                 if cda.pumpB_status == "OFF":
@@ -143,7 +149,8 @@ def saveData(row, id):
                     amps['s'] = "B"
                     amps['p'] = cda.pumpB_cycles
                     # awsHandler.putAMPSData
-
+        else:
+            logger.msg("E",f"saveData() Received an unknown pump ID: {pump}, valid values are A or B")
         return 
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
@@ -153,17 +160,20 @@ def saveData(row, id):
         logger.msg("E",f"saveData() {e}")
                            
 
-def setHLA(id):
+def setHLA(pump):
+    # Calculate the High, Low, and Avgerage 
     try:
         high = 0
         low = 9999999
         total = 0
         avg = 0
         cnt = 0
-        if id == "A":
+        # Get the pump A or B data
+        if pump == "A":
             data = cda.pumpA_cycles
         else:
             data = cda.pumpB_cycles
+
         for d in data:
             if int(d[3]) > high:
                 high = int(d[3])
@@ -178,7 +188,7 @@ def setHLA(id):
         else:
             avg = 0
 
-        if id == "A":
+        if pump == "A":
             cda.pumpA_amp_high = high
             cda.pumpA_amp_low = low
             cda.pumpA_amp_avg = avg
@@ -187,7 +197,7 @@ def setHLA(id):
             cda.pumpB_amp_low = low
             cda.pumpB_amp_avg = avg
 
-        #logger.msg("I", id + " - High:" + str(high) + " Low:" + str(low) + " Avg:" + str(avg))
+        #logger.msg("I", pump + " - High:" + str(high) + " Low:" + str(low) + " Avg:" + str(avg))
 
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()

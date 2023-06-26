@@ -9,6 +9,8 @@ REVISION HISTORY
   2023/03/19  DaW             Initial creation 
   2023/06/21  DaW             Added messages at startup about number of sensors
                               and if the default values are in use.
+  2023/06/26  DaW             Removed three def's checkDiag, diagInfo, and 
+                              getRAMinfo and moved them to a new util.py file.
 
 OVERVIEW:
     <to be updated>
@@ -37,6 +39,7 @@ import requests
 
 import config
 import logger
+import util
 import commonDataArea as cda
 import pzemHandler
 import smsHandler
@@ -51,7 +54,6 @@ def getPorts():
     try:
         pzemHandler.find_usb_ports()
         cda.getPortsCnt = cda.getPortsCnt + 1
-
 
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
@@ -92,9 +94,22 @@ def resetCheck(nowDay):
 def mainLine():
     diagCnt = 0
     find_cnt = 0
+    """
+    Get the USB ports that are connected to the PZEM sensors.  At startup of the
+    Raspberry Pi there are messages that are accessable via the linux command
+    dmesg.  The pzemHandler will try and find these messages.  If the dmesg 
+    output is not located the system will retry 10 times then default to:
+        portA = "/dev/ttyUSB0"
+        portB = "/dev/ttyUSB1"
+        portC = "/dev/ttyUSB2"
+        portD = "/dev/ttyUSB3"
+
+    Once tttyUSB* ports are set the system will begin polling the sensors on 
+    each USB port.
+    """    
     try:
         current_hour = 99
-        while True:
+        while True:    
             find_cnt = find_cnt + 1
             getPorts()
             cnt = 0   
@@ -131,6 +146,8 @@ def mainLine():
                 break
             else:	    
                 time.sleep(int(config.get("Interval","wait_to_check_for_ports_seconds")))
+
+
 
         rtn = ""
         while True:
@@ -187,7 +204,7 @@ def mainLine():
             checkThresholds.checkUPSPercent(upsI[1])
 
             # get Raspberry Pi memory usage data
-            cda.cpu_ram.append(getRAMinfo())
+            cda.cpu_ram.append(util.getRAMinfo())
 
             # Return RAM information (unit=kb) in a list                                        
             if config.get("Debug","interval_count") == "true":
@@ -199,7 +216,7 @@ def mainLine():
             time.sleep(int(config.get("Interval","wait_to_check_sensors_seconds")))
 
             # if diagCnt == 5:
-            #     checkDiag()
+            #     util.checkDiag()
             #     diagCnt = 0
             # else:
             #     diagCnt = diagCnt + 1
@@ -213,66 +230,47 @@ def mainLine():
         time.sleep(5)
         mainLine()
 
-def checkDiag():
-    try:
-        diag = requests.get(config.get("AWSGateWay","requests_data"))
-        #print("Content: ", diag.content)
-        #print("Text: ", diag.text, " type: ", type(diag.text))
 
-        if ("payload" in diag.text):
-            result =  diagInfo()
-            #print("Result length: ", len(result))
-            record = {}
-            record['id'] = "1000"
-            record['p'] = result
-            awsHandler.putDiagData(record)
-            url = config.get("AWSGateWay","requests_data")
-            url = url + "/1000"
-            delete_request = requests.delete(url)
-            print(delete_request.text)
-
-    except Exception as e:
-        exception_type, exception_object, exception_traceback = sys.exc_info()
-        filename = exception_traceback.tb_frame.f_code.co_filename
-        line_number = exception_traceback.tb_lineno
-        logger.msg("E",f"checkDiag() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-        logger.msg("E",f"checkDiag() {e}")
-
-def diagInfo():
-    try:
-        result = getCmdInfo.getAllData()
-        return result
-
-    except Exception as e:
-        exception_type, exception_object, exception_traceback = sys.exc_info()
-        filename = exception_traceback.tb_frame.f_code.co_filename
-        line_number = exception_traceback.tb_lineno
-        logger.msg("E",f"getDiagInfo() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-        logger.msg("E",f"getDiagInfo() {e}")
-
-
-
-def getRAMinfo():
-    try:
-        # Index 0: total RAM                                                                
-        # Index 1: used RAM                                                                 
-        # Index 2: free RAM 
-        p = os.popen('free')
-        i = 0
-        while 1:
-            i = i + 1
-            line = p.readline()
-            if i==2:
-                return(line.split()[1:4])
-    except Exception as e:
-        exception_type, exception_object, exception_traceback = sys.exc_info()
-        filename = exception_traceback.tb_frame.f_code.co_filename
-        line_number = exception_traceback.tb_lineno
-        logger.msg("E",f"getRAMinfo() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-        logger.msg("E",f"getRAMinfo() {e}")
  
 
-# Main section 
+""" 
+===============================================================================
+Main section 
+
+This application may have been started as a system service.  If defined as a 
+service it will be in the directory:
+
+/lib/systemd/system/
+
+Default service name is monitor.service with the following.  Ensure the User 
+parameter is defined of the sensor_app files will not be located.
+
+-------- File contents --------
+[Unit]
+Description=MMPOAII Monitor
+
+[Service]
+User=bob
+WorkingDirectory=/home/bob
+ExecStart=/usr/bin/python /home/bob/sensor_app/monitor.py
+Restart=on-abort
+#Environment=PYTHONPATH=/home/bob/sensor_app
+
+[Install]
+WantedBy=multi-user.target
+
+-------- End of file --------
+
+Work with the service by using these commands:
+
+  -- What --         ---- command ----
+Check status    : systemctl status monitor
+Start service   : systemctl start monitor
+Stop service    : systemctl stop monitor
+Restart service : systemctl restart monitor
+
+===============================================================================
+"""
 if __name__ == "__main__":
     # reset_usb()
     try:
@@ -285,10 +283,13 @@ if __name__ == "__main__":
         cda.cmdI = ""
         cda.iCnt = 0
         cda.error_cnt = 0
+
+        # Check if old CLI command.txt file exists and delete if found
         if os.path.exists(config.get("CommandInterface","cmd_file")):
             os.remove(config.get("CommandInterface","cmd_file"))
 
         mainLine()
+
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
@@ -296,4 +297,6 @@ if __name__ == "__main__":
         logger.msg("E",f"__main__ Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
         logger.msg("E",f"__main__ {e}")
         time.sleep(5)
+
+        # Invoke mainLine even if an error occurs
         mainLine()

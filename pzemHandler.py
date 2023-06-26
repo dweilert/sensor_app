@@ -147,6 +147,8 @@ def monitor(usbPort, id):
         client = ModbusSerialClient(port=usbPort,timeout=int(config.get("Pzem","timeout")),baudrate=9600,bytesize=8,parity="N",stopbits=1)
         status = client.connect()
 
+        # If the connection to the sensor fails flag it as a connection error
+        # and return and build Failed return data array
         if status != True:
             client = None
             if id == "A":
@@ -163,13 +165,17 @@ def monitor(usbPort, id):
             rtn.append("connection failed")
             return rtn
 
+        # No connection error so continue and get the sensor register data
+        # and convert to a string
         request = client.read_input_registers(0,10,1)
-
         rType = type(request)
         rType = str(rType)
 
+        # Check if the sensor register data is located then process. Else
+        # check the data for erros and return the data as an error.
         if "pymodbus.register_read_message.ReadInputRegistersResponse" in rType:
-            # If either one of the pumps save the data to AWS
+            
+            # If either one of the pumps SAVE the data 
             if id == "A" or id == "B":
                 dataHandler.saveData(request.registers, id)
 
@@ -192,6 +198,9 @@ def monitor(usbPort, id):
             rtn.append(request.registers)
             client.close()
             return rtn
+
+        # Two specific errors are captured IO Error and Connection Error.  All
+        # other issues are treated as Other Errors
 
         elif "pymodbus.exceptions.ModbusIOException" in rType:
             if id == "A":
@@ -256,9 +265,7 @@ def monitor(usbPort, id):
                
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
-        line_number = exception_traceback.tb_lineno
-        
-        print(f"================ Type for e {type(e)}")
+        line_number = exception_traceback.tb_lineno    
 
         # eStr = e
         # if "Errno 71" in eStr:
@@ -267,7 +274,7 @@ def monitor(usbPort, id):
         # else:
 
         logger.msg("E",f"monitor() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
-        logger.msg("E",f"monitor() {e}")
+        logger.msg("E",f"monitor() PzemHandler.monitor() error type: {e}")
         logger.msg("E",f"monitor() usbPort: {usbPort} id: {id}")
 
         rtn = []
