@@ -43,9 +43,10 @@ def getDailyData():
         print(type(cda.daily_pump_A_cnt))
         value = str(cda.daily_pump_A_cnt)
         result = result + "  Used count: " + value + "\n"
-        print(type(cda.daily_pump_A_high_amp))
-        #value = str(cda.daily_pump_A_high_amp)
-        #result = result + "  High amps : " + value + "\n"
+        print(type(cda.daily_pump_A_amp_high))
+        value = str(cda.daily_pump_A_amp_high)
+        result = result + "  High amps : " + value + "\n"
+        print(result)
         # result = result + "Pump B -\n"
         # result = result + "  Used count: " + str(cda.daily_pump_B_cnt) + "\n"
         # result = result + "  High amps : " + str(cda.daily_pump_B_high_amp) + "\n"
