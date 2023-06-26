@@ -230,9 +230,9 @@ def getTempInfo():
             temp = float(parts[1])
             print(f"Temp at hour {parts[0]} is {temp}")
             if temp > high:
-                high = temp[1]
+                high = temp
             if temp < low:
-                low = temp[1]
+                low = temp
             total = total + temp
             cnt = cnt + 1
         
