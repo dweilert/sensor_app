@@ -37,9 +37,14 @@ import smsHandler
 
 def getDailyData():
     try:
-        dailyInfo = f" :: Pump A -  Used count: {cda.daily_pump_A_cnt} High amps: {cda.daily_pump_A_high_amp}"
-        dailyInfo = dailyInfo + f" Pump B - Used count: {cda.daily_pump_B_cnt} High amps: {cda.daily_pump_B_high_amp}"
-        return dailyInfo
+        result = "---- Daily stats ---- \n"
+        result = result + "Pump A -\n"
+        result = result + "  Used count: " + cda.daily_pump_A_cnt + "\n"
+        result = result + "  High amps : " + cda.daily_pump_A_high_amp + "\n"
+        result = result + "Pump B -\n"
+        result = result + "  Used count: " + cda.daily_pump_B_cnt + "\n"
+        result = result + "  High amps : " + cda.daily_pump_B_high_amp + "\n"
+        return result
 
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
