@@ -229,7 +229,6 @@ def getTempInfo():
         for t in cda.cpu_temps:
             parts = t.split(":")
             temp = float(parts[1])
-            print(f"Temp at hour {parts[0]} is {temp}")
             if temp > high:
                 high = temp
             if temp < low:
