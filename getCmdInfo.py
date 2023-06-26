@@ -56,12 +56,12 @@ def checkForCommandFile():
                 
                 elif "monitorStatus" in line:
                     results = callMonitorInterface("status")
-                elif "monitorStop" in line:
-                    results = callMonitorInterface("stop")
-                elif "monitorStart" in line:
-                    results = callMonitorInterface("start")
-                elif "monitorRestart" in line:
-                    results = callMonitorInterface("restart")
+                # elif "monitorStop" in line:
+                #     results = callMonitorInterface("stop")
+                # elif "monitorStart" in line:
+                #     results = callMonitorInterface("start")
+                # elif "monitorRestart" in line:
+                #     results = callMonitorInterface("restart")
                 elif "count" in line:
                     results = intervalCounts()
                 elif "pumps" in line:

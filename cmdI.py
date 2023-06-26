@@ -82,9 +82,9 @@ def show_help():
     print(" ")
     print("  Monitor service related commands")
     print("    m_status  - get monitor service status")
-    print("    m_start   - start monitor service")
-    print("    m_stop    - stop monitor service")
-    print("    m_restart - restart monitor service")
+    print(" ")
+    print("    For Monitor start, stop, or restart exit this CLI and issue command: ")
+    print("      systemclt <start | stop | restart> monitor (without < >)")
     print(" ")
     print("  SMS related commands")
     print("    sms_own   - send test SMS message to owners")
@@ -123,12 +123,12 @@ def getCommand():
                 writeCommand("logs")
             elif cmd == "m_status":
                 writeCommand("monitorStatus")
-            elif cmd == "m_stop":
-                writeCommand("monitorStop")
-            elif cmd == "m_start":
-                writeCommand("monitorStart")
-            elif cmd == "m_restart":
-                writeCommand("monitorRestart")
+            # elif cmd == "m_stop":
+            #     writeCommand("monitorStop")
+            # elif cmd == "m_start":
+            #     writeCommand("monitorStart")
+            # elif cmd == "m_restart":
+            #     writeCommand("monitorRestart")
             elif cmd == "p":
                 writeCommand("pumps")
             elif cmd == "u":
