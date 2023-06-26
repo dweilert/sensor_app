@@ -1,9 +1,11 @@
 import os
 import sys
 import time
+import subprocess
 
 import commonDataArea as cda
 import config
+import logger
 
  
 command_sent = False
@@ -122,7 +124,10 @@ def getCommand():
             elif cmd == "l":
                 writeCommand("logs")
             elif cmd == "m_status":
-                writeCommand("monitorStatus")
+                callMonitor("status")
+                # writeCommand("monitorStatus")
+
+
             # elif cmd == "m_stop":
             #     writeCommand("monitorStop")
             # elif cmd == "m_start":
@@ -175,6 +180,21 @@ def getCommand():
         line_number = exception_traceback.tb_lineno
         print(f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")             
         print(f"Input error: {e}")
+
+
+
+def callMonitor(cmd):
+    try:
+        info = subprocess.run(["systemctl",cmd,"monitor"], capture_output=True, text=True)
+        lines = info.stdout
+        return lines
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.msg("E",f"callMonitor() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"callMonitor() {e}")
+        return "Error getting monitor.service status"
 
 
 # Main section 
