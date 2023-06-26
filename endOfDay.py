@@ -40,16 +40,12 @@ def getDailyData():
     try:
         result = "---- Daily stats ---- \n"
         result = result + "Pump A -\n"
-        print(type(cda.daily_pump_A_cnt))
-        value = str(cda.daily_pump_A_cnt)
-        result = result + "  Used count: " + value + "\n"
-        print(type(cda.daily_pump_A_amp_high))
-        value = str(cda.daily_pump_A_amp_high)
-        result = result + "  High amps : " + value + "\n"
-        print(result)
-        # result = result + "Pump B -\n"
-        # result = result + "  Used count: " + str(cda.daily_pump_B_cnt) + "\n"
-        # result = result + "  High amps : " + str(cda.daily_pump_B_high_amp) + "\n"
+        result = result + "  Used count: " + str(cda.daily_pump_A_cnt) + "\n"
+        result = result + "  High amps : " + str(cda.daily_pump_A_amp_high) + "\n"
+
+        result = result + "Pump B -\n"
+        result = result + "  Used count: " + str(cda.daily_pump_B_cnt) + "\n"
+        result = result + "  High amps : " + str(cda.daily_pump_B_amp_high) + "\n"
         return result
 
     except Exception as e:
