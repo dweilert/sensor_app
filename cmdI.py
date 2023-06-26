@@ -187,7 +187,9 @@ def callMonitor(cmd):
     try:
         info = subprocess.run(["systemctl",cmd,"monitor"], capture_output=True, text=True)
         lines = info.stdout
-        return lines
+        for l in lines:
+            print(l)
+        # return lines
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
