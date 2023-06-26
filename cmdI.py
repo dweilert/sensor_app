@@ -71,6 +71,7 @@ def show_help():
     print(" Valid commands: ")
     print("   all   - get all data")
     print("    c    - count of intervals since today")
+    print("    d    - daily pump count and high amps")
     print("    f    - free and used memory information")
     print("    h    - show this help information")
     print("    l    - log data")
@@ -117,6 +118,8 @@ def getCommand():
                 writeCommand("all_clear")
             elif cmd == "c":
                 writeCommand("count")
+            elif cmd == "d":
+                writeCommand("daily")                
             elif cmd == "f":
                 writeCommand("memory")
             elif cmd == "h":

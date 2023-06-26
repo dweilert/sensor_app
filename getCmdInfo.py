@@ -41,6 +41,7 @@ import commonDataArea as cda
 import upsHandler
 import logger
 import smsHandler
+import endOfDay
 
 
 def checkForCommandFile():
@@ -64,8 +65,10 @@ def checkForCommandFile():
                 #     results = callMonitorInterface("restart")
                 elif "count" in line:
                     results = intervalCounts()
-                elif "pumps" in line:
-                    results = getPumpInfo()
+                elif "count" in line:
+                    results = intervalCounts()
+                elif "daily" in line:
+                    results = getDaily()
                 elif "sensor" in line:
                     results = getSensorInfo()
                 elif "ups" in line:
@@ -153,6 +156,8 @@ def checkForCommandFile():
 def getAllData():
     results = ""
     try:
+        results = results + getDaily()
+        results = results + "\n";        
         results = results + intervalCounts()
         results = results + "\n";        
         results = results + getRegisters("A")    
@@ -241,6 +246,18 @@ def getTempInfo():
         logger.msg("E",f"getTempInfo() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.msg("E",f"getTempInfo() Exception: {e}")
         return "Error getting temperature information"
+
+def getDaily():
+    try:
+        result = "  ---- Daily information ----\n" + endOfDay.getDailyData() + "\n"
+        return result
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.msg("E",f"getDaily() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"getDaily()  {e}")
+        return "Error getting daily information"
 
 
 def getPumpInfo():

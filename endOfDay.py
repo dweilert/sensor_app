@@ -35,12 +35,23 @@ import logger
 import commonDataArea as cda
 import smsHandler
 
-def sendDailyInfo():
+def getDailyData():
     try:
         dailyInfo = f" :: Pump A -  Used count: {cda.daily_pump_A_cnt} High amps: {cda.daily_pump_A_high_amp}"
         dailyInfo = dailyInfo + f" Pump B - Used count: {cda.daily_pump_B_cnt} High amps: {cda.daily_pump_B_high_amp}"
+        return dailyInfo
+
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.msg("E",f"sendInfo() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"sendInfo() {e}")
+
+def sendDailyInfo():
+    try:
         sms = []
-        sms.append(config.get("Messages","end_of_day_msg") + dailyInfo)
+        sms.append(config.get("Messages","end_of_day_msg") + getDailyData())
         sms.append(config.get("Messages","end_of_day_who"))
         cda.smsMsg.append(sms)
         smsHandler.sendSMS() 
