@@ -255,22 +255,18 @@ def getTempInfo():
         else:
             diff = 0
 
-        print(f"High: {high}")
-        print(f"Low : {low}")
-        print(f"Diff: {diff}")
-
         for t in cda.cpu_temps:
             parts = t.split(":")
             fT = float(parts[1])
             temp = math.floor(fT)
             dots = temp - diff
             prtD = ""
+            results = results + "  -- Hourly graph --\n"
             for x in range(dots):
                 prtD = prtD + "*"
 
             oT = "{:6.3f}".format(fT)
-            print(f"Hour: {parts[0]} Temp: {oT} : {prtD}")
-            results = results + f"Hour: {parts[0]} Temp: {oT} : {prtD}" + "\n"
+            results = results + f"At hour: {parts[0]} temp is: {oT} : {prtD}" + "\n"
 
         return results
     
