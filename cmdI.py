@@ -14,7 +14,6 @@ cmd_file = ""
 results_file = ""
 
 def writeCommand(cmd):
-    print(cmd)
     try: 
         global command_sent
         global results_check_cnt
@@ -197,10 +196,7 @@ def getCommand():
 
 def checkValue(v):
     try:
-        print(isinstance(v, int))
         nV = int(v)
-        print(isinstance(nV, int))
-        print("log value: " + str(nV))
         return nV
     except Exception as e:
         return 0
