@@ -403,22 +403,18 @@ def getSensorInfo():
 def callMonitorInterface():
     try:
         info = subprocess.run(["systemctl","status","monitor"], capture_output=True, text=True)
-        print("info:  ")
-        print(type(info.stdout))
         lines = info.stdout
-        print("lines: ")
-        print(type(lines))
         newLines = lines.splitlines()
-        print("newLines: ")
-        print(type(newLines))
         rtn = []
         i = 0
         for l in newLines:
-            print("l: ")
-            print(type(l))
-            # rtn.append("  " + l[i])
+            rtn.append("  " + l[i])
             i = i + 1
-        return rtn
+        nRtn = ""
+        for r in rtn:
+            nRtn = nRtn + "  " + r + "\n"
+        
+        return nRtn
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
