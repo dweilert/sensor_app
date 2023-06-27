@@ -160,7 +160,7 @@ def checkForCommandFile():
 
 def getLogInfo(qty):
     qty = int(qty)
-    results = "\n---- Log information ----"
+    results = "\n---- Log information ----\n"
     max = len(cda.log_messages)
     ptr = 0
     if qty == "all":
