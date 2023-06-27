@@ -126,7 +126,7 @@ def checkForCommandFile():
                         qty = int(parts[1])
                     else:
                         qty = 999999
-                    results = getLogInfo(qty) + "\n"
+                    results = getLogInfo(qty)
                 elif "stop" in line:
                     results = wrapLog() 
                 elif "start" in line:
@@ -178,6 +178,7 @@ def getLogInfo(qty):
             results = results + cda.log_messages[ptr] + "\n"
             ptr = ptr + 1
 
+        return results + "\n"
 
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
