@@ -207,6 +207,7 @@ def callMonitor(cmd):
         info = subprocess.run(["systemctl",cmd,"monitor"], capture_output=True, text=True)
         lines = info.stdout
         newLines = lines.splitlines()
+        print("\nMonitor service Information\n")
         for l in newLines:
             print("  " + l)
         # return lines
