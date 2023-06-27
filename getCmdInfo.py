@@ -403,15 +403,19 @@ def getSensorInfo():
 def callMonitorInterface():
     try:
         info = subprocess.run(["systemctl","status","monitor"], capture_output=True, text=True)
-        print("info:  "    + type(info.stdout))
+        print("info:  ")
+        print(type(info.stdout))
         lines = info.stdout
-        print("lines: "    + type(lines))
+        print("lines: ")
+        print(type(lines))
         newLines = lines.splitlines()
-        print("newLines: " + type(newLines))
+        print("newLines: ")
+        print(type(newLines))
         rtn = []
         i = 0
         for l in newLines:
-            print("l: " + type(l))
+            print("l: ")
+            print(type(l))
             # rtn.append("  " + l[i])
             i = i + 1
         return rtn
