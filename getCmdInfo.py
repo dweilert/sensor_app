@@ -403,11 +403,17 @@ def getSensorInfo():
 def callMonitorInterface():
     try:
         info = subprocess.run(["systemctl","status","monitor"], capture_output=True, text=True)
+        print(type(info.stdout))
         lines = info.stdout
+        print(type(lines))
         newLines = lines.splitlines()
+        print(type(newLines))
         rtn = []
+        i = 0
         for l in newLines:
-            rtn.append("  " + l)
+            print(type(l))
+            # rtn.append("  " + l[i])
+            i = i + 1
         return rtn
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
@@ -415,7 +421,7 @@ def callMonitorInterface():
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"getMonitorStatus() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.msg("E",f"getMonitorStatus() {e}")
-        return "Error getting monitor.service status\n"
+        return "Error getting monitor service information\n"
 
 
 def getMemory():
