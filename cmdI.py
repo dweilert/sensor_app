@@ -207,9 +207,10 @@ def callMonitor(cmd):
         info = subprocess.run(["systemctl",cmd,"monitor"], capture_output=True, text=True)
         lines = info.stdout
         newLines = lines.splitlines()
-        print("\nMonitor service Information\n")
+        print("\nMonitor service Information")
         for l in newLines:
             print("  " + l)
+        print("\n")
         # return lines
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()

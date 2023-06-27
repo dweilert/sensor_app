@@ -493,6 +493,8 @@ def getRegisters(id):
         else:
             d_start = 0
 
+        results = ""    
+
         if id == "A":
             if a_len > 0:
                 results = results + "  Sensor 1: \n"
