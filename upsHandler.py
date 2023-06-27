@@ -264,7 +264,7 @@ def getUPSInfo(returnData):
             result = result + ("  Load Voltage:  {:6.3f} V".format(bus_voltage)) + "\n"
             result = result + ("  Current:       {:9.6f} A".format(current/1000)) + "\n"
             result = result + ("  Power:         {:6.3f} W".format(power)) + "\n"
-            result = result + ("  Percent:       {:3.1f}%".format(p)) + "\n"
+            result = result + ("  Percent:        {:3.1f}%".format(p)) + "\n"
             result = result + (" ") + "\n"
             return result
         else:
