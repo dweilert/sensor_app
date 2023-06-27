@@ -405,11 +405,11 @@ def callMonitorInterface():
         info = subprocess.run(["systemctl","status","monitor"], capture_output=True, text=True)
         lines = info.stdout
         newLines = lines.splitlines()
+
         rtn = []
-        i = 0
         for l in newLines:
-            rtn.append("  " + l[i])
-            i = i + 1
+            rtn.append(l)
+
         nRtn = ""
         for r in rtn:
             nRtn = nRtn + "  " + r + "\n"
