@@ -44,6 +44,17 @@ import logger
 import smsHandler
 import endOfDay
 
+class color:
+   PURPLE = '\033[95m'
+   CYAN = '\033[96m'
+   DARKCYAN = '\033[36m'
+   BLUE = '\033[94m'
+   GREEN = '\033[92m'
+   YELLOW = '\033[93m'
+   RED = '\033[91m'
+   BOLD = '\033[1m'
+   UNDERLINE = '\033[4m'
+   END = '\033[0m'
 
 def checkForCommandFile():
     try:
@@ -163,7 +174,7 @@ def checkForCommandFile():
 
 def getLogInfo(qty):
     qty = int(qty)
-    results = "\nLog information\n"
+    results = color.GREEN + "\nLog information" + color.END + "\n"
     max = len(cda.log_messages)
     ptr = 0
     if qty == "all":
