@@ -187,11 +187,12 @@ def getLogInfo(qty):
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"getAllData() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.msg("E",f"getAllData() Exception: {e}")
-        return "Error getting all diag information"        
+        return "Error getting all diag information\n"        
 
 def getAllData():
     results = "\n"
     try:
+        results = results + "\n"
         results = results + getDaily()
         results = results + "\n"        
         results = results + intervalCounts()
@@ -203,7 +204,7 @@ def getAllData():
         results = results + getRegisters("C")    
         results = results + "\n"
         results = results + getRegisters("D") 
-        results = results + "---- Monitor status ----\n"
+        results = results + "Monitor service Information\n"
         results = results + callMonitorInterface("status")
         results = results + "\n"
         results = results + getPumpInfo()
@@ -223,7 +224,7 @@ def getAllData():
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"getAllData() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.msg("E",f"getAllData() Exception: {e}")
-        return "Error getting all diag information"
+        return "Error getting all diag information\n"
 
 
 def intervalCounts():
@@ -238,7 +239,7 @@ def intervalCounts():
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"intervalCounts() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.msg("E",f"intervalCounts() Exception: {e}")
-        return "Error getting interval counts information"
+        return "Error getting interval counts information\n"
 
 
 def wrapLog():
@@ -254,7 +255,7 @@ def wrapLog():
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"wrapLog() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.msg("E",f"wrapLog() Exception: {e}")
-        return "Error wrapping logs"
+        return "Error wrapping logs\n"
 
 def getTempInfo():
     try:
@@ -312,7 +313,7 @@ def getTempInfo():
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"getTempInfo() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.msg("E",f"getTempInfo() Exception: {e}")
-        return "Error getting temperature information"
+        return "Error getting temperature information\n"
 
 def getDaily():
     try:
@@ -325,7 +326,7 @@ def getDaily():
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"getDaily() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.msg("E",f"getDaily()  {e}")
-        return "Error getting daily information"
+        return "Error getting daily information\n"
 
 
 def getPumpInfo():
@@ -364,7 +365,7 @@ def getPumpInfo():
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"getPumpInfo() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.msg("E",f"getPumpInfo()  {e}")
-        return "Error getting pump information"
+        return "Error getting pump information\n"
 
 
 def getSensorInfo():
@@ -394,7 +395,7 @@ def getSensorInfo():
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"getSensorInfo() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.msg("E",f"getSensorInfo() {e}")
-        return "Error getting sensor information"
+        return "Error getting sensor information\n"
     
 
 def callMonitorInterface(cmd):
@@ -408,7 +409,7 @@ def callMonitorInterface(cmd):
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"getMonitorStatus() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.msg("E",f"getMonitorStatus() {e}")
-        return "Error getting monitor.service status"
+        return "Error getting monitor.service status\n"
 
 
 def getMemory():
@@ -453,7 +454,7 @@ def getMemory():
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"getMemory() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.msg("E",f"getMemory() Exception: {e}")
-        return "Error getting memory data"
+        return "Error getting memory data\n"
 
 
 def getRegisters(id):
@@ -496,7 +497,7 @@ def getRegisters(id):
                     p = p + 1
                 results = results + "\n"
             else:
-                results = "  Sensor 1: \n    No reqister data" + "\n"
+                results = results + "  Sensor 1: \n    No reqister data" + "\n"
 
         if id == "B":
             if b_len > 0:
@@ -507,7 +508,7 @@ def getRegisters(id):
                     p = p + 1
                 results = results + "\n"
             else:
-                results = "  Sensor 2: \n    No reqister data" + "\n"
+                results = results + "  Sensor 2: \n    No reqister data" + "\n"
 
         if id == "C":
             if c_len > 0:
@@ -518,7 +519,7 @@ def getRegisters(id):
                     p = p + 1
                 results = results + "\n"
             else:
-                results = "  Sensor 3: \n    No reqister data" + "\n"
+                results = results + "  Sensor 3: \n    No reqister data" + "\n"
 
         if id == "D":
             if d_len > 0:
@@ -529,7 +530,7 @@ def getRegisters(id):
                     p = p + 1
                 results = results + "\n"
             else:
-                results = "  Sensor 4: \n    No reqister data" + "\n"
+                results = results + "  Sensor 4: \n    No reqister data" + "\n"
 
         return results
 
@@ -539,7 +540,7 @@ def getRegisters(id):
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"getRegisters() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.msg("E",f"getRegisters() {e}")
-        return "Error getting sensor register information"
+        return "Error getting sensor register information\n"
 
 
 def formatRegisters(registers):
@@ -575,5 +576,5 @@ def formatRegisters(registers):
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"formatRegisters() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.msg("E",f"formatRegisters() {e}")
-        return "Error formatting register information"
+        return "Error formatting register information\n"
 
