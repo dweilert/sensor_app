@@ -36,6 +36,7 @@ from datetime import datetime
 from gpiozero import CPUTemperature
 import subprocess
 import math
+from termcolor import colored, cprint
 
 import config
 import commonDataArea as cda
