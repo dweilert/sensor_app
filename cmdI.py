@@ -208,7 +208,7 @@ def callMonitor(cmd):
         lines = info.stdout
         newLines = lines.splitlines()
         for l in newLines:
-            print(l)
+            print("  " + l)
         # return lines
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
