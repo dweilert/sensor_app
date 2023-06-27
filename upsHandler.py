@@ -32,6 +32,18 @@ import sys
 import commonDataArea as cda
 import logger
 
+class color:
+   PURPLE = '\033[95m'
+   CYAN = '\033[96m'
+   DARKCYAN = '\033[36m'
+   BLUE = '\033[94m'
+   GREEN = '\033[92m'
+   YELLOW = '\033[93m'
+   RED = '\033[91m'
+   BOLD = '\033[1m'
+   UNDERLINE = '\033[4m'
+   END = '\033[0m'
+
 # Config Register (R/W)
 _REG_CONFIG                 = 0x00
 # SHUNT VOLTAGE REGISTER (R)
@@ -246,7 +258,7 @@ def getUPSInfo(returnData):
         cda.upsData.append(entry)
         # check if formatted data is returned
         if (returnData == True):
-            result = "UPS information" + "\n"
+            result = color.GREEN + "UPS information" + color.END + "\n"
             result = result + ("  PSU Voltage:   {:6.3f} V".format(bus_voltage + shunt_voltage)) + "\n"
             result = result + ("  Shunt Voltage: {:9.6f} V".format(shunt_voltage)) + "\n"
             result = result + ("  Load Voltage:  {:6.3f} V".format(bus_voltage)) + "\n"

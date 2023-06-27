@@ -208,7 +208,7 @@ def getAllData():
         results = results + "\n"        
         results = results + intervalCounts()
         results = results + "\n"
-        results = results + "Register Information\n"        
+        results = results + color.GREEN + "Register Information" + color.END + "\n"        
         results = results + getRegisters("A")    
         results = results + "\n"
         results = results + getRegisters("B")    
@@ -216,7 +216,7 @@ def getAllData():
         results = results + getRegisters("C")    
         results = results + "\n"
         results = results + getRegisters("D") 
-        results = results + "Monitor service Information\n"
+        results = results + color.GREEN + "Monitor Service Information" + color.END + "\n"
         results = results + callMonitorInterface()
         results = results + "\n"
         results = results + getPumpInfo()
