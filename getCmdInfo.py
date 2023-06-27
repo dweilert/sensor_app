@@ -242,7 +242,8 @@ def getAllData():
 def intervalCounts():
     results = ""
     try:
-        results = "Interval count for the day: " + str(cda.iCnt) + "\n"
+        results = color.GREEN + "Interval Information" + color.END + "\n"
+        results = results + "  Count for the day: " + str(cda.iCnt) + "\n"
         return results
     
     except Exception as e:
@@ -258,9 +259,9 @@ def wrapLog():
     try:
         status = logger.wrapLogs()
         if status == True:
-            return "Logs wrapped"
+            return "\nLogs wrapped\n"
         else:
-            return "Status of log wrap unknown"
+            return "\nStatus of log wrap unknown\n"
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
@@ -291,7 +292,7 @@ def getTempInfo():
             avg = 0
         avg = "{:6.3f}".format(avg)
 
-        results = "Temperature information" + "\n"
+        results = color.GREEN + "Temperature information" + color.END + "\n"
         results = results + "  Average temp : " + str(avg) + "\n"
         results = results + "  High temp    : " + str(high) + "\n"
         results = results + "  Low temp     : " + str(low) + "\n"
@@ -329,7 +330,7 @@ def getTempInfo():
 
 def getDaily():
     try:
-        results = "Daily information\n"
+        results = color.GREEN + "Daily information" + color.END + "\n"
         results = results + endOfDay.getDailyData() + "\n"
         return results
     except Exception as e:
@@ -344,7 +345,7 @@ def getDaily():
 def getPumpInfo():
     try:
         # print(cda.pumpA_cycles)
-        results = "Pump Information\n"
+        results = color.GREEN + "Pump Information" + color.END + "\n"
         results = results + "  Pump 1: \n"
         results = results + "    On/Off status: " + cda.pumpA_status + "\n"
         results = results + "    ---- Latest information ----" + "\n"
@@ -383,7 +384,7 @@ def getPumpInfo():
 def getSensorInfo():
     try:
         results = ""
-        results = results + "Sensor Information\n"
+        results = results + color.GREEN + "Sensor Information" + color.END + "\n"
         results = results + "  Sensor 1: \n"
         results = results + "    USB port       : " + cda.portA + "\n"
         results = results + "    I/O Error      : " + str(cda.sensor_A_io_error) + "\n"
@@ -464,7 +465,7 @@ def getMemory():
         t_mem = t_mem / 1000
         t_mem = "{:5.3f}".format(t_mem)
 
-        results = "Memory information" + "\n"
+        results = color.GREEN + "Memory information" + color.END + "\n"
         results = results + "  Total (MB)    : " + str(t_mem) + "\n"
         results = results + "  High used (MB): " + str(u_high) + "\n"
         results = results + "  Low used (MB) : " + str(u_low) + "\n"
