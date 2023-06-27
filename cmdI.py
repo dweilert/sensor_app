@@ -116,7 +116,7 @@ def getCommand():
                 parts = cmd.split("_")
                 qty = checkValue(parts[1])
                 if qty == 0:
-                    print("Not a valid number in logs request, try again")
+                    print("Invalid number in logs request. Example: l_17 to get last 17 lines in log.")
                     print("\n" + "---")
                     command_sent = False
                 else:
