@@ -254,13 +254,14 @@ def getTempInfo():
         else:
             diff = 0
 
+        results = results + "  -- Hourly graph --\n"
         for t in cda.cpu_temps:
             parts = t.split(":")
             fT = float(parts[1])
             temp = math.floor(fT)
             dots = temp - diff
             prtD = ""
-            results = results + "  -- Hourly graph --\n"
+            # Create a string of *'s for the temperature graph
             for x in range(dots):
                 prtD = prtD + "*"
 
