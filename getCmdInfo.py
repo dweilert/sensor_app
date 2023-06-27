@@ -159,6 +159,8 @@ def checkForCommandFile():
         logger.msg("E",f"checkForCommandFile() {e}")
 
 def getLogInfo(qty):
+    print("getLofInfo(): ")
+    print(qty)
     results = ""
     max = len(cda.log_messages)
     ptr = 0

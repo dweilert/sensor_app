@@ -14,6 +14,7 @@ cmd_file = ""
 results_file = ""
 
 def writeCommand(cmd):
+    print(cmd)
     try: 
         global command_sent
         global results_check_cnt
