@@ -358,7 +358,7 @@ def getPumpInfo():
         results = results + "    Amps low        : " + str(cda.pumpB_amp_low) + "\n"
         results = results + ("    Amps avg        :{:6.3f}".format(cda.pumpB_amp_avg)) + "\n"
 
-        return result
+        return results
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
@@ -370,6 +370,7 @@ def getPumpInfo():
 
 def getSensorInfo():
     try:
+        results = ""
         results = results + "Sensor Information\n"
         results = results + "  Sensor 1: \n"
         results = results + "    USB port       : " + cda.portA + "\n"
@@ -388,7 +389,7 @@ def getSensorInfo():
         results = results + "    I/O Error      : " + str(cda.sensor_D_io_error) + "\n"
         results = results + "    Connect Error  : " + str(cda.sensor_D_connect_error) + "\n"
         results = results + "\n"
-        return result
+        return results
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
@@ -402,7 +403,10 @@ def callMonitorInterface(cmd):
     try:
         info = subprocess.run(["systemctl",cmd,"monitor"], capture_output=True, text=True)
         lines = info.stdout
-        return lines
+        rtn = []
+        for l in lines:
+            rtn.append("  " + l)
+        return rtn
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
