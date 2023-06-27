@@ -56,7 +56,7 @@ def checkForCommandFile():
                     results = "Failed to read command request, please retry"
                     break                
                 elif "monitorStatus" in line:
-                    results = callMonitorInterface("status")
+                    results = callMonitorInterface()
                 elif "count" in line:
                     results = intervalCounts()
                 elif "count" in line:
@@ -196,7 +196,8 @@ def getAllData():
         results = results + getDaily()
         results = results + "\n"        
         results = results + intervalCounts()
-        results = results + "\n"        
+        results = results + "\n"
+        results = results + "Register Information\n"        
         results = results + getRegisters("A")    
         results = results + "\n"
         results = results + getRegisters("B")    
@@ -205,7 +206,7 @@ def getAllData():
         results = results + "\n"
         results = results + getRegisters("D") 
         results = results + "Monitor service Information\n"
-        results = results + callMonitorInterface("status")
+        results = results + callMonitorInterface()
         results = results + "\n"
         results = results + getPumpInfo()
         results = results + "\n" 
@@ -399,10 +400,12 @@ def getSensorInfo():
         return "Error getting sensor information\n"
     
 
-def callMonitorInterface(cmd):
+def callMonitorInterface():
     try:
-        info = subprocess.run(["systemctl",cmd,"monitor"], capture_output=True, text=True)
+        info = subprocess.run(["systemctl","status","monitor"], capture_output=True, text=True)
+        print(type(info.stdout))
         lines = info.stdout
+        print(type(lines))
         rtn = []
         for l in lines:
             rtn.append("  " + l)
@@ -463,7 +466,6 @@ def getMemory():
 
 def getRegisters(id):
     try:
-        results = "Register Information\n"
         a_len = len(cda.sensor_A_registers)
         a_len = a_len - 1
         if a_len > 10:
