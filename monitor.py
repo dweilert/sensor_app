@@ -161,43 +161,50 @@ def mainLine():
             now = datetime.now()
             nowDay = now.strftime("%Y_%m_%d")
             nowHour = now.strftime("%H")
+            # Reset stats and counters if it is a new day
             resetCheck(nowDay, nowHour)
             
+            # Increment interval counter
             cda.iCnt = cda.iCnt + 1
 
-            rtn = []
-            rtn = pzemHandler.monitor(cda.portA,config.get("USBPortSignatures","mapAto"))
-            #print(f"A rtn {rtn}")
-            if rtn[0] == False:
-                rtn[1] = []
-            checkThresholds.checkData(rtn[1],config.get("USBPortSignatures","mapAto"))
-            cda.sensor_A_registers.append(rtn[1])
+            # Get sensor data for each located sensor
+            if cda.portA != "na":
+                rtn = []                
+                rtn = pzemHandler.readSensor(cda.portA,config.get("USBPortSignatures","mapAto"))
+                #print(f"A rtn {rtn}")
+                if rtn[0] == False:
+                    rtn[1] = []
+                checkThresholds.checkData(rtn[1],config.get("USBPortSignatures","mapAto"))
+                cda.sensor_A_registers.append(rtn[1])
             
-            rtn = []
-            rtn = pzemHandler.monitor(cda.portB,config.get("USBPortSignatures","mapBto"))
-            #print(f"B rtn {rtn}")
-            if rtn[0] == False:
-                rtn[1] = []
-            checkThresholds.checkData(rtn[1],config.get("USBPortSignatures","mapBto"))
-            cda.sensor_B_registers.append(rtn[1])
+            if cda.portB != "na":
+                rtn = []
+                rtn = pzemHandler.readSensor(cda.portB,config.get("USBPortSignatures","mapBto"))
+                #print(f"B rtn {rtn}")
+                if rtn[0] == False:
+                    rtn[1] = []
+                checkThresholds.checkData(rtn[1],config.get("USBPortSignatures","mapBto"))
+                cda.sensor_B_registers.append(rtn[1])
 
-            rtn = []
-            rtn = pzemHandler.monitor(cda.portC,config.get("USBPortSignatures","mapCto"))
-            #print(f"C rtn {rtn}")
-            if rtn[0] == False:
-                rtn[1] = []
-            checkThresholds.checkData(rtn[1],config.get("USBPortSignatures","mapCto"))
-            cda.sensor_C_registers.append(rtn[1])
-            
-            rtn = []
-            rtn = pzemHandler.monitor(cda.portD,config.get("USBPortSignatures","mapDto"))
-            #print(f"D rtn {rtn}")
-            if rtn[0] == False:
-                rtn[1] = []
-            checkThresholds.checkData(rtn[1],config.get("USBPortSignatures","mapDto"))
-            cda.sensor_D_registers.append(rtn[1])
+            if cda.portC != "na":
+                rtn = []
+                rtn = pzemHandler.readSensor(cda.portC,config.get("USBPortSignatures","mapCto"))
+                #print(f"C rtn {rtn}")
+                if rtn[0] == False:
+                    rtn[1] = []
+                checkThresholds.checkData(rtn[1],config.get("USBPortSignatures","mapCto"))
+                cda.sensor_C_registers.append(rtn[1])
 
-            # Check for io errors and connection errors
+            if cda.portD != "na":            
+                rtn = []
+                rtn = pzemHandler.readSensor(cda.portD,config.get("USBPortSignatures","mapDto"))
+                #print(f"D rtn {rtn}")
+                if rtn[0] == False:
+                    rtn[1] = []
+                checkThresholds.checkData(rtn[1],config.get("USBPortSignatures","mapDto"))
+                cda.sensor_D_registers.append(rtn[1])
+
+            # Check thresholds for any issues
             checkThresholds.checkSensors()
 
             # get Raspberry Pi temp and save if it is a new hour
@@ -205,7 +212,6 @@ def mainLine():
             if nowHour != cda.cpu_temp_hour:
                 cda.cpu_temps.append(nowHour + ":" + str(cpu.temperature))
                 cda.cpu_temp_hour = nowHour
-
             # check temperature for out of threshoold ranges
             checkThresholds.checkTemperature(cpu.temperature)
 
@@ -224,6 +230,7 @@ def mainLine():
             # check if the CLI interface has any requests
             getCmdInfo.checkForCommandFile()
 
+            # wait for the defined time and then do it all again
             time.sleep(int(config.get("Interval","wait_to_check_sensors_seconds")))
 
             # if diagCnt == 5:

@@ -28,11 +28,11 @@ LICENSE:
 """
 
 import os
-import time
+# import time
 import sys
 import math
 from datetime import datetime
-import json
+# import json
 from gpiozero import CPUTemperature
 import subprocess
 import math
@@ -54,16 +54,9 @@ def checkForCommandFile():
             for line in f:
                 if line.strip() == "":
                     results = "Failed to read command request, please retry"
-                    break
-                
+                    break                
                 elif "monitorStatus" in line:
                     results = callMonitorInterface("status")
-                # elif "monitorStop" in line:
-                #     results = callMonitorInterface("stop")
-                # elif "monitorStart" in line:
-                #     results = callMonitorInterface("start")
-                # elif "monitorRestart" in line:
-                #     results = callMonitorInterface("restart")
                 elif "count" in line:
                     results = intervalCounts()
                 elif "count" in line:
@@ -127,8 +120,13 @@ def checkForCommandFile():
                     smsHandler.checkSMS("other")
                     results = "All clear SMS sent to owners"     
                 elif "logs" in line:
-                    for m in cda.log_messages:
-                        results = results + m + "\n"
+                    parts = line.split("_")
+                    qty = 0
+                    if parts[1] != "all":
+                        qty = int(parts[1])
+                    else:
+                        qty = 999999
+                    results = getLogInfo(qty) + "\n"
                 elif "stop" in line:
                     results = wrapLog() 
                 elif "start" in line:
@@ -160,6 +158,31 @@ def checkForCommandFile():
         logger.msg("E",f"checkForCommandFile() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.msg("E",f"checkForCommandFile() {e}")
 
+def getLogInfo(qty):
+    results = ""
+    max = len(cda.log_messages)
+    ptr = 0
+    if qty == "all":
+        qty = max
+        ptr = 0
+    elif qty < max:
+        ptr = max - qty
+    elif qty > max:
+        qty = max
+        ptr = 0    
+    try:
+        for x in range(qty):
+            results = results + cda.log_messages[ptr] + "\n"
+            ptr = ptr + 1
+
+
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.msg("E",f"getAllData() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"getAllData() Exception: {e}")
+        return "Error getting all diag information"        
 
 def getAllData():
     results = ""
@@ -182,10 +205,8 @@ def getAllData():
         results = results + upsHandler.getUPSInfo(True)    
         results = results + getTempInfo()  
         results = results + getMemory() 
-
-        for m in cda.log_messages:
-            results = results + m + "\n"
-
+        results = results + getLogInfo(100)       # get last 100 lines of logs
+        results = results + "\n"
         return results
     
     except Exception as e:
@@ -213,12 +234,19 @@ def intervalCounts():
 
 
 def wrapLog():
-    status = logger.wrapLogs()
-    if status == True:
-        return "Logs wrapped"
-    else:
-        return "Status of log wrap unknown"
-
+    try:
+        status = logger.wrapLogs()
+        if status == True:
+            return "Logs wrapped"
+        else:
+            return "Status of log wrap unknown"
+    except Exception as e:
+        exception_type, exception_object, exception_traceback = sys.exc_info()
+        filename = exception_traceback.tb_frame.f_code.co_filename
+        line_number = exception_traceback.tb_lineno
+        logger.msg("E",f"wrapLog() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
+        logger.msg("E",f"wrapLog() Exception: {e}")
+        return "Error wrapping logs"
 
 def getTempInfo():
     try:
@@ -293,7 +321,7 @@ def getDaily():
 
 def getPumpInfo():
     try:
-        print(cda.pumpA_cycles)
+        # print(cda.pumpA_cycles)
         result = "Pump 1: \n"
         result = result + "  On/Off status: " + cda.pumpA_status + "\n"
         result = result + "  ---- Latest information ----" + "\n"

@@ -74,7 +74,9 @@ def show_help():
     print("    d    - daily pump count and high amps")
     print("    f    - free and used memory information")
     print("    h    - show this help information")
-    print("    l    - log data")
+    print("    l    - all log data")
+    print("    l_#  - request a specific number of log entries")
+    print("           Example: l_25 will retrieve the last 25 log entries")
     print("    p    - pump information, both pumps")
     print("    q    - quit command interface")
     print("    r    - register information for all sensors")
@@ -106,12 +108,26 @@ def getCommand():
         global results_check_cnt
         dots = ""
         while True:
+            qty = 0
             prompt = "Enter command: "
             cmd = input(prompt)
-            if cmd == "q" or cmd == "quit":
+            # determine if the cmd is a log request
+            if "l_" in cmd:
+                parts = cmd.split("_")
+                qty = checkValue(parts[1])
+                if qty == 0:
+                    print("Not a valid number in logs request, try again")
+                    print("\n" + "---")
+                    command_sent = False
+                else:
+                    writeCommand("logs_" + str(qty))
+            elif cmd == "l":
+                writeCommand("logs_999999")
+            elif cmd == "q":
                 print("Command interface closed")
                 print("\n"+"---")
                 break
+
             elif cmd == "all":
                 writeCommand("get_all")
             elif cmd == "all_clear":
@@ -125,18 +141,9 @@ def getCommand():
             elif cmd == "h":
                 show_help()
             elif cmd == "l":
-                writeCommand("logs")
+                writeCommand("logs_" + str(qty))
             elif cmd == "m_status":
                 callMonitor("status")
-                # writeCommand("monitorStatus")
-
-
-            # elif cmd == "m_stop":
-            #     writeCommand("monitorStop")
-            # elif cmd == "m_start":
-            #     writeCommand("monitorStart")
-            # elif cmd == "m_restart":
-            #     writeCommand("monitorRestart")
             elif cmd == "p":
                 writeCommand("pumps")
             elif cmd == "u":
@@ -186,6 +193,11 @@ def getCommand():
         print(f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")             
         print(f"Input error: {e}")
 
+def checkValue(v):
+    try:
+        return int(v)
+    except Exception as e:
+        return 0
 
 
 def callMonitor(cmd):

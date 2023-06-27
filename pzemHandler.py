@@ -118,7 +118,7 @@ def resetEnergy(usbPort):
         logger.msg("E",f"resetEnergy() {e}")
 
 
-def monitor(usbPort, id):
+def readSensor(usbPort, id):
     #Get register data
     try:
         rtn = []
@@ -267,15 +267,15 @@ def monitor(usbPort, id):
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno    
 
-        # eStr = e
-        # if "Errno 71" in eStr:
-        #     eStr = None
-        #     cda.Errno71_cnt = cda.errno71_cnt + 1
-        # else:
+        # If "Errno 71" is located increase the counter
+        eStr = f"type: {e}"
+        if "Errno 71" in eStr:
+            eStr = None
+            cda.Errno71_cnt = cda.errno71_cnt + 1 
 
-        logger.msg("E",f"monitor() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
-        logger.msg("E",f"monitor() PzemHandler.monitor() error type: {e}")
-        logger.msg("E",f"monitor() usbPort: {usbPort} id: {id}")
+        logger.msg("E",f"readSensor() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
+        logger.msg("E",f"readSensor() PzemHandler.monitor() error type: {e}")
+        logger.msg("E",f"readSensor() usbPort: {usbPort} id: {id}")
 
         rtn = []
         rtn.append(False)
