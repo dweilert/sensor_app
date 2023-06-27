@@ -39,13 +39,13 @@ import fractions
 def getDailyData():
     try:
         result = ""
-        result = result + "Pump A -\n"
-        result = result + "  Used count: " + str(cda.daily_pump_A_cnt) + "\n"
-        result = result + "  High amps : " + str(cda.daily_pump_A_amp_high) + "\n"
+        result = result + "  Pump A -\n"
+        result = result + "    Used count: " + str(cda.daily_pump_A_cnt) + "\n"
+        result = result + "    High amps : " + str(cda.daily_pump_A_amp_high) + "\n"
 
-        result = result + "Pump B -\n"
-        result = result + "  Used count: " + str(cda.daily_pump_B_cnt) + "\n"
-        result = result + "  High amps : " + str(cda.daily_pump_B_amp_high) + "\n"
+        result = result + "  Pump B -\n"
+        result = result + "    Used count: " + str(cda.daily_pump_B_cnt) + "\n"
+        result = result + "    High amps : " + str(cda.daily_pump_B_amp_high) + "\n"
         return result
 
     except Exception as e:

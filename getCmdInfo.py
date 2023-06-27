@@ -105,7 +105,10 @@ def checkForCommandFile():
                     results = "Test SMS sent to owners" 
                 elif "sms_daily" in line:
                     sms = []
-                    sms.append(config.get("Messages","end_of_day_msg") + endOfDay.getDailyData())
+                    tMsg = config.get("Messages","end_of_day_msg")
+                    tMsg = tMsg + endOfDay.getDailyData()
+                    print(tMsg)
+                    sms.append(tMsg)
                     sms.append(config.get("Messages","end_of_day_who"))
                     cda.smsMsg.append(sms)
                     smsHandler.checkSMS("other")
@@ -160,7 +163,7 @@ def checkForCommandFile():
 
 def getLogInfo(qty):
     qty = int(qty)
-    results = "\n---- Log information ----\n"
+    results = "\nLog information\n"
     max = len(cda.log_messages)
     ptr = 0
     if qty == "all":
@@ -173,7 +176,7 @@ def getLogInfo(qty):
         ptr = 0    
     try:
         for x in range(qty):
-            results = results + cda.log_messages[ptr] + "\n"
+            results = results + "  " + cda.log_messages[ptr] + "\n"
             ptr = ptr + 1
 
         return results + "\n"
@@ -187,25 +190,28 @@ def getLogInfo(qty):
         return "Error getting all diag information"        
 
 def getAllData():
-    results = ""
+    results = "\n"
     try:
         results = results + getDaily()
-        results = results + "\n";        
+        results = results + "\n"        
         results = results + intervalCounts()
-        results = results + "\n";        
+        results = results + "\n"        
         results = results + getRegisters("A")    
-        results = results + "\n";
+        results = results + "\n"
         results = results + getRegisters("B")    
-        results = results + "\n";
+        results = results + "\n"
         results = results + getRegisters("C")    
-        results = results + "\n";
+        results = results + "\n"
         results = results + getRegisters("D") 
-
+        results = results + "---- Monitor status ----\n"
         results = results + callMonitorInterface("status")
+        results = results + "\n"
         results = results + getPumpInfo()
+        results = results + "\n" 
         results = results + getSensorInfo()
         results = results + upsHandler.getUPSInfo(True)    
-        results = results + getTempInfo()  
+        results = results + getTempInfo()
+        results = results + "\n"          
         results = results + getMemory() 
         results = results + getLogInfo(100)       # get last 100 lines of logs
         results = results + "\n"
@@ -298,7 +304,7 @@ def getTempInfo():
             oT = "{:6.3f}".format(fT)
             results = results + f"  At hour: {parts[0]} temp is: {oT} : {prtD}" + "\n"
 
-        return results
+        return results + "\n"
     
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
@@ -310,8 +316,9 @@ def getTempInfo():
 
 def getDaily():
     try:
-        result = "  ---- Daily information ----\n" + endOfDay.getDailyData() + "\n"
-        return result
+        results = "Daily information\n"
+        results = results + endOfDay.getDailyData() + "\n"
+        return results
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
@@ -324,33 +331,31 @@ def getDaily():
 def getPumpInfo():
     try:
         # print(cda.pumpA_cycles)
-        result = "Pump 1: \n"
-        result = result + "  On/Off status: " + cda.pumpA_status + "\n"
-        result = result + "  ---- Latest information ----" + "\n"
-        result = result + "  Cycle count     : " + str(cda.pumpA_cycle_cnt) + "\n"
-        result = result + "  Start date/time : " + str(cda.pumpA_start) + "\n"
-        result = result + "  End date/time   : " + str(cda.pumpA_stop) + "\n"
-        result = result + "  Start energy    : " + str(cda.pumpA_energy_start) + "\n"
-        result = result + "  End energy      : " + str(cda.pumpA_energy_latest) + "\n"
-        result = result + "  Amps high       : " + str(cda.pumpA_amp_high) + "\n"
-        result = result + "  Amps low        : " + str(cda.pumpA_amp_low) + "\n"
-        result = result + ("  Amps avg        :{:6.3f}".format(cda.pumpA_amp_avg)) + "\n"
-        result = result + "  ---- Current cycle information ----" + "\n"
+        results = "Pump Information\n"
+        results = results + "  Pump 1: \n"
+        results = results + "    On/Off status: " + cda.pumpA_status + "\n"
+        results = results + "    ---- Latest information ----" + "\n"
+        results = results + "    Cycle count     : " + str(cda.pumpA_cycle_cnt) + "\n"
+        results = results + "    Start date/time : " + str(cda.pumpA_start) + "\n"
+        results = results + "    End date/time   : " + str(cda.pumpA_stop) + "\n"
+        results = results + "    Start energy    : " + str(cda.pumpA_energy_start) + "\n"
+        results = results + "    End energy      : " + str(cda.pumpA_energy_latest) + "\n"
+        results = results + "    Amps high       : " + str(cda.pumpA_amp_high) + "\n"
+        results = results + "    Amps low        : " + str(cda.pumpA_amp_low) + "\n"
+        results = results + ("    Amps avg        :{:6.3f}".format(cda.pumpA_amp_avg)) + "\n"
 
-
-        result = result + "\n"
-        result = result + "Pump 2: \n"
-        result = result + "  On/Off status: " + cda.pumpB_status + "\n"
-        result = result + "  ---- Latest information ----" + "\n"
-        result = result + "  Cycle count     : " + str(cda.pumpB_cycle_cnt) + "\n"
-        result = result + "  Start date/time : " + str(cda.pumpB_start) + "\n"
-        result = result + "  End date/time   : " + str(cda.pumpB_stop) + "\n"
-        result = result + "  Start energy    : " + str(cda.pumpB_energy_start) + "\n"
-        result = result + "  End energy      : " + str(cda.pumpB_energy_latest) + "\n"
-        result = result + "  Amps high       : " + str(cda.pumpB_amp_high) + "\n"
-        result = result + "  Amps low        : " + str(cda.pumpB_amp_low) + "\n"
-        result = result + ("  Amps avg        :{:6.3f}".format(cda.pumpB_amp_avg)) + "\n"
-        result = result + "  ---- Current cycle information ----" + "\n"
+        results = results + "\n"
+        results = results + "  Pump 2: \n"
+        results = results + "    On/Off status: " + cda.pumpB_status + "\n"
+        results = results + "    ---- Latest information ----" + "\n"
+        results = results + "    Cycle count     : " + str(cda.pumpB_cycle_cnt) + "\n"
+        results = results + "    Start date/time : " + str(cda.pumpB_start) + "\n"
+        results = results + "    End date/time   : " + str(cda.pumpB_stop) + "\n"
+        results = results + "    Start energy    : " + str(cda.pumpB_energy_start) + "\n"
+        results = results + "    End energy      : " + str(cda.pumpB_energy_latest) + "\n"
+        results = results + "    Amps high       : " + str(cda.pumpB_amp_high) + "\n"
+        results = results + "    Amps low        : " + str(cda.pumpB_amp_low) + "\n"
+        results = results + ("    Amps avg        :{:6.3f}".format(cda.pumpB_amp_avg)) + "\n"
 
         return result
     except Exception as e:
@@ -364,23 +369,24 @@ def getPumpInfo():
 
 def getSensorInfo():
     try:
-        result = "Sensor 1: \n"
-        result = result + "  USB port       : " + cda.portA + "\n"
-        result = result + "  I/O Error      : " + str(cda.sensor_A_io_error) + "\n"
-        result = result + "  Connect Error  : " + str(cda.sensor_A_connect_error) + "\n"
-        result = result + "Sensor 2: \n"
-        result = result + "  USB port       : " + cda.portB + "\n"
-        result = result + "  I/O Error      : " + str(cda.sensor_B_io_error) + "\n"
-        result = result + "  Connect Error  : " + str(cda.sensor_B_connect_error) + "\n"
-        result = result + "Sensor 3: \n"
-        result = result + "  USB port       : " + cda.portC + "\n"
-        result = result + "  I/O Error      : " + str(cda.sensor_C_io_error) + "\n"
-        result = result + "  Connect Error  : " + str(cda.sensor_C_connect_error) + "\n"
-        result = result + "Sensor 4: \n"
-        result = result + "  USB port       : " + cda.portD + "\n"
-        result = result + "  I/O Error      : " + str(cda.sensor_D_io_error) + "\n"
-        result = result + "  Connect Error  : " + str(cda.sensor_D_connect_error) + "\n"
-        result = result + "\n"
+        results = results + "Sensor Information\n"
+        results = results + "  Sensor 1: \n"
+        results = results + "    USB port       : " + cda.portA + "\n"
+        results = results + "    I/O Error      : " + str(cda.sensor_A_io_error) + "\n"
+        results = results + "    Connect Error  : " + str(cda.sensor_A_connect_error) + "\n"
+        results = results + "  Sensor 2: \n"
+        results = results + "    USB port       : " + cda.portB + "\n"
+        results = results + "    I/O Error      : " + str(cda.sensor_B_io_error) + "\n"
+        results = results + "    Connect Error  : " + str(cda.sensor_B_connect_error) + "\n"
+        results = results + "  Sensor 3: \n"
+        results = results + "    USB port       : " + cda.portC + "\n"
+        results = results + "    I/O Error      : " + str(cda.sensor_C_io_error) + "\n"
+        results = results + "    Connect Error  : " + str(cda.sensor_C_connect_error) + "\n"
+        results = results + "  Sensor 4: \n"
+        results = results + "    USB port       : " + cda.portD + "\n"
+        results = results + "    I/O Error      : " + str(cda.sensor_D_io_error) + "\n"
+        results = results + "    Connect Error  : " + str(cda.sensor_D_connect_error) + "\n"
+        results = results + "\n"
         return result
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
@@ -452,7 +458,7 @@ def getMemory():
 
 def getRegisters(id):
     try:
-        results = ""
+        results = "Register Information\n"
         a_len = len(cda.sensor_A_registers)
         a_len = a_len - 1
         if a_len > 10:
@@ -483,47 +489,47 @@ def getRegisters(id):
 
         if id == "A":
             if a_len > 0:
-                results = results + "Sensor 1: \n"
+                results = results + "  Sensor 1: \n"
                 p = a_start
                 while p <= a_len:
-                    results = results + "(" + str(p) + ") " + formatRegisters(cda.sensor_A_registers[p]) + "\n"
+                    results = results + "    (" + str(p) + ") " + formatRegisters(cda.sensor_A_registers[p]) + "\n"
                     p = p + 1
                 results = results + "\n"
             else:
-                results = "No data for reqister" + "\n"
+                results = "  Sensor 1: \n    No reqister data" + "\n"
 
         if id == "B":
             if b_len > 0:
-                results = results + "Sensor 2: \n"
+                results = results + "  Sensor 2: \n"
                 p = b_start
                 while p <= b_len:
-                    results = results + "(" + str(p) + ") " + formatRegisters(cda.sensor_B_registers[p]) + "\n"
+                    results = results + "    (" + str(p) + ") " + formatRegisters(cda.sensor_B_registers[p]) + "\n"
                     p = p + 1
                 results = results + "\n"
             else:
-                results = "No data for reqister" + "\n"
+                results = "  Sensor 2: \n    No reqister data" + "\n"
 
         if id == "C":
             if c_len > 0:
-                results = results + "Sensor 3: \n"
+                results = results + "  Sensor 3: \n"
                 p = c_start
                 while p <= c_len:
-                    results = results + "(" + str(p) + ") " + formatRegisters(cda.sensor_C_registers[p]) + "\n"
+                    results = results + "    (" + str(p) + ") " + formatRegisters(cda.sensor_C_registers[p]) + "\n"
                     p = p + 1
                 results = results + "\n"
             else:
-                results = "No data for reqister" + "\n"
+                results = "  Sensor 3: \n    No reqister data" + "\n"
 
         if id == "D":
             if d_len > 0:
-                results = results + "Sensor 4: \n"
+                results = results + "  Sensor 4: \n"
                 p = d_start
                 while p <= d_len:
-                    results = results + "(" + str(p) + ") " + formatRegisters(cda.sensor_D_registers[p]) + "\n"
+                    results = results + "    (" + str(p) + ") " + formatRegisters(cda.sensor_D_registers[p]) + "\n"
                     p = p + 1
                 results = results + "\n"
             else:
-                results = "No data for reqister" + "\n"
+                results = "  Sensor 4: \n    No reqister data" + "\n"
 
         return results
 
