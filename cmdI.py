@@ -120,7 +120,8 @@ def getCommand():
                     print("\n" + "---")
                     command_sent = False
                 else:
-                    writeCommand("logs_" + str(qty))
+                    data = "logs_" + str(qty)
+                    writeCommand(data)
             elif cmd == "l":
                 writeCommand("logs_999999")
             elif cmd == "q":
@@ -195,7 +196,11 @@ def getCommand():
 
 def checkValue(v):
     try:
-        return int(v)
+        print(isinstance(v, int))
+        nV = int(v)
+        print(isinstance(nV, int))
+        print("log value: " + str(nV))
+        return nV
     except Exception as e:
         return 0
 
