@@ -317,12 +317,11 @@ def getTempInfo():
                 prtD = prtD + "*"
             
             # degree symbol
-            ds = "\u00b0"
-            ds2 = chr(176) 
+            dS = "\u00b0"   # could also be shown as chr(176) 
             # formatted temp
             oT = "{:6.3f}".format(fT)
             
-            results = results + f"  At hour: {parts[0]} temp is: {oT}{ds}{ds2}C: {prtD}" + "\n"
+            results = results + f"  At hour: {parts[0]} temp is: {oT}{dS}C : {prtD}" + "\n"
 
         return results + "\n"
     
