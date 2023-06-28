@@ -25,16 +25,7 @@ LICENSE:
     GNU General Public License for more details.
 
 """
-
-
-# logger
-#log_dir = "~"
-#log_base = "monitor"
-#log_date = ""
-#log_file_name = ""
-#log_old_name = ""
-#log_sms = ""
-#log_first_time = True
+# all log messages 
 log_messages = []
 
 # monitor
@@ -44,8 +35,8 @@ portB = "na"
 portC = "na"
 portD = "na"
 
-wait_to_check_sensors = 15
-wait_to_check_for_ports = 15
+wait_to_check_sensors = 5
+wait_to_check_for_ports = 5
 
 # pzem
 sensor_A_io_error = False
@@ -72,7 +63,7 @@ pumpA_energy_latest = 0
 pumpA_cycle_cnt = 0
 pumpA_cycles = []
 pumpA_amp_high = 0
-pumpA_amp_low = 0
+pumpA_amp_low = 9999
 pumpA_amp_avg = 0
 
 # Pump B data
@@ -84,8 +75,9 @@ pumpB_energy_latest = 0
 pumpB_cycle_cnt = 0
 pumpB_cycles = []
 pumpB_amp_high = 0
-pumpB_amp_low = 0
+pumpB_amp_low = 9999
 pumpB_amp_avg = 0
+
 
 current_date = ""
 iCnt = 0
@@ -95,6 +87,7 @@ errno71_cnt = 0
 
 cpu_temps = []
 cpu_temp_hour = 99
+cpu_temp_high = 0
 cpu_ram = []
 upsData = []
 
@@ -132,6 +125,11 @@ error_stack = []
 from_sensor = ""
 
 daily_pump_A_cnt = 0
-daily_pump_B_cnt = 0
 daily_pump_A_amp_high = 0
+daily_pump_A_amp_low = 9999
+
+daily_pump_B_cnt = 0
 daily_pump_B_amp_high = 0
+daily_pump_B_amp_low = 9999
+
+

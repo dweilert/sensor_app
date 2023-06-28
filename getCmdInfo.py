@@ -36,7 +36,7 @@ from datetime import datetime
 from gpiozero import CPUTemperature
 import subprocess
 import math
-from termcolor import colored, cprint
+# from termcolor import colored, cprint
 
 import config
 import commonDataArea as cda
@@ -315,9 +315,14 @@ def getTempInfo():
             # Create a string of *'s for the temperature graph
             for x in range(dots):
                 prtD = prtD + "*"
-
+            
+            # degree symbol
+            ds = "\u00b0"
+            ds2 = chr(176) 
+            # formatted temp
             oT = "{:6.3f}".format(fT)
-            results = results + f"  At hour: {parts[0]} temp is: {oT} : {prtD}" + "\n"
+            
+            results = results + f"  At hour: {parts[0]} temp is: {oT}{ds}{ds2}C: {prtD}" + "\n"
 
         return results + "\n"
     

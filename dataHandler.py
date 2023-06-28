@@ -76,6 +76,7 @@ def saveData(row, pump):
                     cda.pumpA_cycles.append(row)
                     cda.pumpA_stop = ts
                     setHLA("A")
+
                     energy = int(cda.pumpA_energy_latest) - int(cda.pumpA_energy_start)
                     record['p'] = "A"                                          # pump
                     record['sd'] = cda.pumpA_start                             # start_date
@@ -130,6 +131,7 @@ def saveData(row, pump):
                     cda.pumpB_cycles.append(row)
                     cda.pumpB_stop = ts
                     setHLA("B")
+
                     energy = int(cda.pumpB_energy_latest) - int(cda.pumpB_energy_start)
                     record['p'] = "B"                                          # pump
                     record['sd'] = cda.pumpB_start                          # start_date
@@ -168,7 +170,7 @@ def saveData(row, pump):
         line_number = exception_traceback.tb_lineno
         logger.msg("E",f"saveData() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
         logger.msg("E",f"saveData() {e}")
-                           
+
 
 def setHLA(pump):
     # Calculate the High, Low, and Avgerage 

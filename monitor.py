@@ -83,12 +83,16 @@ def resetCheck(nowDay, nowHour):
             cda.ups_charge_cnt = 0
             cda.ups_percent_cnt = 0
             cda.errno71_cnt = 0
+
             # End of day message and stats
             endOfDay.sendDailyInfo()
             cda.daily_pump_A_cnt = 0
+            cda.daily_pump_A_amp_high = 0
+            cda.daily_pump_A_amp_low = 9999
+
             cda.daily_pump_B_cnt = 0
-            cda.daily_pump_A_high_amp = 0
-            cda.daily_pump_B_high_amp = 0
+            cda.daily_pump_B_amp_high = 0
+            cda.daily_pump_B_amp_low = 9999
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
@@ -212,6 +216,17 @@ def mainLine():
             if nowHour != cda.cpu_temp_hour:
                 cda.cpu_temps.append(nowHour + ":" + str(cpu.temperature))
                 cda.cpu_temp_hour = nowHour
+                cda.cpu_temp_high = cpu.temperature
+            # else:
+            #     # check and replace temp with higher value if found
+            #     if cpu.temperature > cda.cpu_temp_high:
+            #         for i in range(len(cda.cpu_temps)):
+            #             data = cda.cpu_temps[i]
+            #             if data.startswith(nowHour):
+                            
+            #                 cda.cpu_temps[i] = nowHour + ":" + str(cpu.temperature)
+                    
+                
             # check temperature for out of threshoold ranges
             checkThresholds.checkTemperature(cpu.temperature)
 
