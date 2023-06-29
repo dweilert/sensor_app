@@ -24,28 +24,28 @@
         }
     </style>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 </head>
 
 <body>
-    <div class="container">
+    <div>
         <header style="background-color: #99f; color: #fff; "
-            class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-1 border-bottom">
+            class="d-flex flex-wrap  justify-content-center justify-content-md-between py-1 mb-1 border-bottom">
+
             <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-                <span class="fs-5" style="color: #fff;">&nbsp;&nbsp;MMPOAII Sewage Monitor</span>
-                <span class="fs-6" style="color: #fff;">&nbsp;&nbsp;(Press button for data)</span>
+                <span class="fs-5" style="color: #fff; padding-left: 10px;">MMPOAII Sewage Monitor</span>
+                <span class="fs-6" style="color: #fff; padding-left: 10px;">(Press button for data)</span>
             </a>
 
-            <div class="col-md-3 text-end">
-                <button type="button" class="btn btn-sm btn-secondary me-2" onclick="getData('p')">Pump
-                    data</button>
-                <button type="button" class="btn btn-sm btn-secondary me-4" onclick="getData('m')">SMS
-                    data</button>
+            <div class="text-end">
+                <button type="button" class="btn btn-sm btn-secondary me-2" onclick="getData('p')">
+                    Pump data
+                </button>
+                <button type="button" class="btn btn-sm btn-secondary me-4" onclick="getData('m')">
+                    SMS data
+                </button>
             </div>
         </header>
-
-        <div id="outputTable">
-            <!-- Data is inserted here -->
-        </div>
 
         <!-- ==================================== -->
         <!-- Message Modal section                -->
@@ -73,25 +73,56 @@
         </div>
     </div>
 
+    <div id="get_msg" style="display: block; margin-left: 15px; margin-top: 5px; margin-bottom: 5px;font-size: 90%">
+        If no data is shown press above button to fetch data.
+    </div>
+
+    <div id="outputTable" style="margin-left: 15px; margin-right: 15px; margin-top: 5px; margin-bottom: 5px;">
+        <!-- Data is inserted here -->
+    </div>
+
     <!-- Google charts -->
-    <div id="gauges_div" style="display: none; margin: 45px; font-size: larger; font-weight: bold ;">
-        <span id="gaugeDate">Maximum Amps</span>
-        <div id="chart_div" style="width: 250px;  font-weight: normal"></div>
-        <div id="gaugeEntries" style="margin-top: 10px; font-size: 80%; font-weight: normal">
-            <span id="entryA">Pump A high amps at: </span>
-            <br>
-            <span id="entryB">Pump B high amps at: </span>
+    <div class="row">
+        <div class="col-md-5" style="background-color: lightgray">
+            <div id="gauges_div" style="display: none; margin: 15px; font-size: larger; font-weight: bold;">
+                <span id="gaugeDate">Maximum Amps</span>
+                <div id="chart_div" style="width: 250px;  font-weight: normal"></div>
+            </div>
+        </div>
+        <div class="col-md-1" style="background-color: lightgray;">
+        </div>
+
+        <div class="col-md-6" style="background-color: lightgray;">
+            <div id="gaugeEntries" style="margin: 15px; font-size: 120%; font-weight: normal; display: none;">
+                <div id="nameA" style="font-size: 100; font-weight: bold; margin-top: 20px;">Pump A</div>
+                <div id="countA" style="padding-left: 20px;"></div>
+                <div id="entryA" style="padding-left: 20px;"></div>
+                <div id="nameB" style="font-size: 100; font-weight: bold; margin-top: 20px;">Pump B</div>
+                <div id="countB" style="padding-left: 20px;"></div>
+                <div id="entryB" style="padding-left: 20px;"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-12" style="background-color: lightblue">
+            <div id="run_div" style="display: none; margin: 15px; font-size: larger; font-weight: bold;">
+                Pump run times by day&nbsp;&nbsp;
+                <span style="font-weight: normal; font-size: 60%;">(display area is scrollable)</span>
+                <div id="run_time" style="height: 450px;"></div>
+            </div>
         </div>
     </div>
-
-    <div id="infoData_div" style="display: none; margin: 45px; font-size: larger; font-weight: bold ;">Info Data
-        <div id="info_div" style="width: 100%;  font-weight: normal"></div>
-    </div>
-
-    <div id="run_div" style="display: none; margin: 45px; font-size: larger; font-weight: bold ;">
-        Pump run times by day&nbsp;&nbsp;
-        <span style="font-weight: normal; font-size: 60%;">(display area is scrollable)</span>
-        <div id="run_time" style="height: 450px;"></div>
+    <div class="row">
+        <div class="col-md-12" style="background-color: lightgoldenrodyellow;">
+            <div id="infoData_div"
+                style="display: none; margin-top: 15px; margin-left: 15px; margin-right: 15px; margin-bottom: 45px; font-size: larger; font-weight: bold ;">
+                Daily stats
+                <span style="font-weight: normal; font-size: 60%;">(display area is scrollable)</span>
+                <div id="info_div" style="width: 100%;  font-weight: normal"></div>
+            </div>
+        </div>
     </div>
 
     <!-- Scripts to populate the UI and retirieve data-->
@@ -105,22 +136,24 @@
         </script>
 
     <script>
-        let pumpUsed = {};
+        let pumpData = {};
         let ampsUsed = {};
         let energyUsed = {};
-        let timelineUsed = {};
-        let havePumpData = false;
+        //        let havePumpData = false;
         let pumpA_amps_high = 0;
         let pumpB_amps_high = 0;
         let pumpA_amps_entry = '';
         let pumpB_amps_entry = '';
+        let pumpA_cnt = 0;
+        let pumpB_cnt = 0;
         let infoData;
         let ampsData;
         let runTimeline;
-        let runData = [
+        let timelineData = [
             [{ label: 'Date', type: 'string' }, { label: 'Pump', type: 'string' },
             { label: 'Start', type: 'date' }, { label: 'End', type: 'date' }]
         ];
+        let statsTable = [];
 
         const sensor_url = 'https://isf1iqwwv2.execute-api.us-east-2.amazonaws.com/data';
         const sms_url = 'https://isf1iqwwv2.execute-api.us-east-2.amazonaws.com/sms';
@@ -131,14 +164,19 @@
 
         function getData(kind) {
 
-            pumpUsed = {};
-            ampsUsed = {};
-            energyUsed = {};
-            timelineUsed = {};
+            pumpData = {};
+
+            pumpA_amps_high = 0;
+            pumpB_amps_high = 0;
+            pumpA_amps_entry = '';
+            pumpB_amps_entry = '';
+            pumpA_cnt = 0;
+            pumpB_cnt = 0;
+
             infoData = "";
             ampsData = "";
-
-            runData = [
+            statsTable = [];
+            timelineData = [
                 [{ label: 'Date', type: 'string' }, { label: 'Pump', type: 'string' },
                 { label: 'Start', type: 'date' }, { label: 'End', type: 'date' }]
             ];
@@ -164,41 +202,40 @@
                 if (this.readyState == 4 && this.status == 200) {
                     if (kind === 'p') {
                         formatData(this.responseText)
-                        havePumpData = true;
+                        //havePumpData = true;
                         buildTimelineData();
                         showG();
                         showRT();
                         infoTable();
                         dx = document.getElementById("gauges_div");
-                        if (dx.style.display === "none") {
-                            dx.style.display = "block";
-                        }
+                        dx.style.display = "block";
                         dx = document.getElementById("run_div");
-                        if (dx.style.display === "none") {
-                            dx.style.display = "block";
-                        }
-                        document.getElementById("outputTable").innerHTML = "";
-
+                        dx.style.display = "block";
                         dx = document.getElementById("infoData_div");
-                        if (dx.style.display === "none") {
-                            dx.style.display = "block";
-                        }
+                        dx.style.display = "block";
+                        dx = document.getElementById("gaugeEntries");
+                        dx.style.display = "block";
 
                         dx = document.getElementById("outputTable");
                         dx.style.display === "none"
+                        document.getElementById("outputTable").innerHTML = "";
+
 
                     } else if (kind === 'm') {
-                        dx = document.getElementById("gauges_div");
-                        if (dx.style.display === "block") {
-                            dx.style.display = "none";
-                        }
-                        dx = document.getElementById("run_div");
-                        if (dx.style.display === "block") {
-                            dx.style.display = "none";
-                        }
-                        dx = document.getElementById("outputTable");
-                        dx.style.display === "block"
                         formatSMS(this.responseText)
+                        dx = document.getElementById("gauges_div");
+                        dx.style.display = "none";
+                        dx = document.getElementById("run_div");
+                        dx.style.display = "none";
+                        dx = document.getElementById("infoData_div");
+                        dx.style.display = "none";
+                        dx = document.getElementById("gaugeEntries");
+                        dx.style.display = "none";
+
+                        dx = document.getElementById("outputTable");
+                        dx.style.display === "block";
+
+
                     } else if (kind === 'a') {
                         formatAmps(this.responseText)
                     }
@@ -229,104 +266,135 @@
             let tkeys;
             let tkey;
             let firstDay = "";
+            let cnt_pumpA = 0
+            let cnt_pumpB = 0
+            let oldDay = "";
+            let sA_cnt = 0;
+            let sA_high = 0;
+            let sA_entry = "";
+            let sB_cnt = 0;
+            let sB_high = 0;
+            let sB_entry = "";
+            let sData;
 
-            tkeys = Object.keys(timelineUsed);
+            tkeys = Object.keys(pumpData);
             tkeys = tkeys.sort();
             tkeys.reverse();
+            statsTable = [];
 
             for (let i = 0; i < tkeys.length; i++) {
-                dt = timelineUsed[tkeys[i]].start_date.split("-")
+                dt = pumpData[tkeys[i]].start_date.split("-")
+
                 if (i === 0) {
                     firstDay = dt[0];
-                    document.getElementById("gaugeDate").innerHTML = "High amps for " + firstDay;
+                    oldDay = firstDay;
+                    document.getElementById("gaugeDate").innerHTML = firstDay + " - High amp usage ";
                 }
-                // If the entry is for the first day get the high and low amps
-                if (dt[0] === firstDay) {
-                    if (timelineUsed[tkeys[i]].pump === "A") {
-                        if (timelineUsed[tkeys[i]].amps_high > pumpA_amps_high) {
-                            pumpA_amps_high = timelineUsed[tkeys[i]].amps_high;
-                            pumpA_amps_entry = "Pump A high amps at: " + timelineUsed[tkeys[i]].start_date;
-                        }
+
+                if (oldDay !== dt[0]) {
+                    sData = [];
+                    aHigh = 0;
+                    bHigh = 0
+                    sData.push("Daily stats for: " + oldDay)
+                    if (sA_high > 0) {
+                        aHigh = sA_high / 1000;
                     }
-                    if (timelineUsed[tkeys[i]].pump === "B") {
-                        if (timelineUsed[tkeys[i]].amps_high > pumpB_amps_high) {
-                            pumpB_amps_high = timelineUsed[tkeys[i]].amps_high;
-                            pumpB_amps_entry = "Pump B high amps at: " + timelineUsed[tkeys[i]].start_date;
-                        }
+                    if (sB_high > 0) {
+                        bHigh = sB_high / 1000;
+                    }
+                    sData.push("Pump(A) - Ran: " + sA_cnt + " times, HighAmps: " + aHigh + " | and | Pump(B) - Ran: " + sB_cnt + " times, HighAmps: " + bHigh);
+                    statsTable.push(sData)
+
+                    if (oldDay === firstDay) {
+                        pumpA_amps_high = sA_high;
+                        pumpA_amps_entry = sA_entry;
+                        pumpA_cnt = sA_cnt;
+                        pumpB_amps_high = sB_high;
+                        pumpB_amps_entry = sB_entry;
+                        pumpB_cnt = sA_cnt;
+                    }
+
+                    sA_cnt = 0;
+                    sA_high = 0;
+                    sB_cnt = 0;
+                    sB_high = 0;
+                    sA_entry = "";
+                    sB_entry = "";
+                    oldDay = dt[0]
+                }
+
+                // Get stats data for day
+                if (pumpData[tkeys[i]].pump === "A") {
+                    cnt_pumpA++;
+                    sA_cnt++;
+                    if (pumpData[tkeys[i]].amps_high > sA_high) {
+                        sA_high = pumpData[tkeys[i]].amps_high;
+                        sA_entry = pumpData[tkeys[i]].start_date;
                     }
                 }
+                if (pumpData[tkeys[i]].pump === "B") {
+                    cnt_pumpB++;
+                    sB_cnt++;
+                    if (pumpData[tkeys[i]].amps_high > sB_high) {
+                        sB_high = pumpData[tkeys[i]].amps_high;
+                        sB_entry = pumpData[tkeys[i]].start_date;
+                    }
+                }
+
+
 
                 // Start date info
-                //dt = timelineUsed[tkeys[i]].start_date.split("-")
                 g_sDate = dt[0];
-                g_sMM = dt[0].substring(0, 2)
-                g_sDD = dt[0].substring(3, 5)
-                g_sYY = dt[0].substring(6)
-
-                g_sHr = dt[1].substring(0, 2)
-                g_sMin = dt[1].substring(3, 5)
-                g_sSec = dt[1].substring(6)
+                g_sHr = dt[1].substring(0, 2);
+                g_sMin = dt[1].substring(3, 5);
+                g_sSec = dt[1].substring(6);
 
                 // End data info
-                dt = timelineUsed[tkeys[i]].end_date.split("-")
+                dt = pumpData[tkeys[i]].end_date.split("-")
                 g_eDate = dt[0];
 
                 if (g_sDate !== g_eDate) {
-                    console.log("================")
-                    console.log(JSON.stringify(timelineUsed[tkeys[i]], null, 2))
-                    continue;
+                    console.log("================ Clipped data ================")
+                    console.log(JSON.stringify(pumpData[tkeys[i]], null, 2))
+                    g_eHr = "23";
+                    g_eMin = "59";
+                    g_eSec = "59";
+                } else {
+                    g_eHr = dt[1].substring(0, 2);
+                    g_eMin = dt[1].substring(3, 5);
+                    g_eSec = dt[1].substring(6);
                 }
-
-
-                g_eMM = dt[0].substring(0, 2)
-                g_eDD = dt[0].substring(3, 5)
-                g_eYY = dt[0].substring(6)
-
-                g_eHr = dt[1].substring(0, 2)
-                g_eMin = dt[1].substring(3, 5)
-                g_eSec = dt[1].substring(6)
 
                 // Build the data for timeline chart
                 g_line = [];
                 g_line.push(g_sDate);
-                g_line.push(timelineUsed[tkeys[i]].pump);
-                // g_line.push(new Date(g_sYY, g_sMM, g_sDD, g_sHr, g_sMin, g_sSec))
-                // g_line.push(new Date(g_eYY, g_eMM, g_eDD, g_eHr, g_eMin, g_eSec))
+                g_line.push(pumpData[tkeys[i]].pump);
                 g_line.push(new Date(0, 0, 0, g_sHr, g_sMin, g_sSec))
                 g_line.push(new Date(0, 0, 0, g_eHr, g_eMin, g_eSec))
-                // console.log(JSON.stringify(g_line, null, 2))
-                runData.push(g_line)
-
+                timelineData.push(g_line)
             }
-            //console.log(JSON.stringify(runData, null, 4))
-            console.log("Timeline data created with " + runData.length + " entries")
-            console.log("Pump A high amps " + pumpA_amps_high)
-            console.log("Pump B high amps " + pumpB_amps_high)
 
-            document.getElementById("entryA").innerHTML = pumpA_amps_entry;
-            document.getElementById("entryB").innerHTML = pumpB_amps_entry;
+            console.log(JSON.stringify(statsTable, null, 4))
 
+            document.getElementById("entryA").innerHTML = "High amps at: " + pumpA_amps_entry;
+            document.getElementById("entryB").innerHTML = "High amps at: " + pumpB_amps_entry;
+            document.getElementById("countA").innerHTML = "Ran " + pumpA_cnt + " time(s) today";
+            document.getElementById("countB").innerHTML = "Ran " + pumpB_cnt + " time(s) today";
 
-
-
-            // ['06/27/23', 'A', new Date(0, 0, 0, 4, 7, 33), new Date(0, 0, 0, 4, 29, 0)],
+            console.log("Timeline data created with " + timelineData.length + " entries")
         }
 
 
         function formatData(data) {
             let items = {};
-            let days = "";
-            let ampsHigh = "";
-            let energy = "";
             let dt = [];
             let duration = 0;
-            let highAmps = 0;
-            let highEnergy = 0;
             let line;
             let day;
             let tKey;
             let dropNegCnt = 0;
             let dropInitialCnt = 0;
+            let keptCnt = 0;
             let deleteArray = [];
 
             // convert data to JSON
@@ -334,206 +402,73 @@
 
             // Loop through the returned rows of data    
             for (let i = 0; i < data.length; i++) {
+
                 // Check for valid format of data
                 if (typeof data[i].pump !== 'undefined') {
 
                     // Drop entries that are negative values or have initial value of 9999999
                     if (data[i].used_energy.startsWith("-")) {
-                        //console.log('Dropped: ' + JSON.stringify(data[i], null, 4))
                         dropNegCnt++;
                         deleteArray.push('curl -X "DELETE" https://isf1iqwwv2.execute-api.us-east-2.amazonaws.com/data/' + data[i].id)
                         continue;
                     }
                     if (data[i].amps_low === "9999999" || data[i].amps_low === 9999999) {
-                        //console.log('Dropped: ' + JSON.stringify(data[i], null, 4))
                         dropInitialCnt++;
                         deleteArray.push('curl -X "DELETE" https://isf1iqwwv2.execute-api.us-east-2.amazonaws.com/data/' + data[i].id)
                         continue;
                     }
 
-                    // Get pump start_date and determine which period of the hour the pump started
+                    // Get pump start_date and split by date and time
                     dt = data[i].start_date.split("-")
-                    if (typeof items[dt[0]] === 'undefined') {
-                        items[dt[0]] = {}
-                    }
-                    // Add date to the days string if not already found
-                    if (days.indexOf(dt[0]) === -1) {
-                        days = days + dt[0] + "@"
-                    }
                     // Get hour and minutes the pump started
                     hr = dt[1].substring(0, 2)
                     min = dt[1].substring(3, 5)
 
-                    period = 1
-                    if (min > 15 && min < 31) {
-                        period = 2
-                    } else if (min > 30 && min < 46) {
-                        period = 3
-                    } else if (min > 45 && min < 60) {
-                        period = 4
+                    // Calculate duration
+                    if (typeof data[i] === 'undefined') {
+                        data[i].duration = calcInformation(data[i]);
                     }
 
-                    // Save the pump data for use in other portions of the UI
-                    key = hr + "." + period
-                    items[dt[0]][key] = data[i].pump
-                    key = dt[0] + "." + key
-                    pumpUsed[key] = data[i]
+
+
+                    // // Save the pump data for showing detail in UI
+                    // period = 1
+                    // if (min > 15 && min < 31) {
+                    //     period = 2
+                    // } else if (min > 30 && min < 46) {
+                    //     period = 3
+                    // } else if (min > 45 && min < 60) {
+                    //     period = 4
+                    // }
+                    // key = dt[0] + "." + hr + "." + period
+                    // //items[dt[0]][key] = data[i].pump
+                    // // key = dt[0] + "." + key
+
+                    key = data[i].start_date
+                    pumpData[key] = data[i]
 
                     // Save data for timeline chart/graph
                     tKey = data[i].start_date;
-                    timelineUsed[tKey] = data[i]
+                    pumpData[tKey] = data[i]
 
-                    // Save energy used
-                    energy = energy + data[i].used_energy + "#" + key + "@"
-                    if (data[i].used_energy > highEnergy) {
-                        highEnergy = data[i].used_energy;
-                    }
-
-                    // Save amps high
-                    ampsHigh = ampsHigh + padZ(data[i].amps_high) + "#" + key + "@"
-                    if (data[i].amps_high > highAmps) {
-                        highAmps = data[i].amps_high;
-                    }
-
+                    // count of accepted records
+                    keptCnt++
                 } else {
                     // Output the curl command to delete the item that contains improperly formatted data
-                    console.log('curl -X "DELETE" https://isf1iqwwv2.execute-api.us-east-2.amazonaws.com/data/' + data[i].id)
+                    console.log('curl -X DELETE https://isf1iqwwv2.execute-api.us-east-2.amazonaws.com/data/' + data[i].id)
                 }
             }
 
+            console.log("Records accepted to process      : " + keptCnt)
             console.log("Dropped because of negative value: " + dropNegCnt)
-            console.log("Dropped because of initial value: " + dropInitialCnt)
+            console.log("Dropped because of initial value : " + dropInitialCnt)
             console.log(JSON.stringify(deleteArray, null, 2))
 
         }
 
 
-        // function buildEnergyUsed(data, high, energyKeys) {
-        //     let keys = energyKeys.split("@");
-        //     let h = "<div style='margin-top: 15px;'> <hr></div> <div style='margin-top: 15px; margin-bottom: 5px;'>" +
-        //         '<h5>Duration and energy usage for each time a pump was active</h5>' +
-        //         '<div style="margin: 15px;"><p>Each bar has the pump "A" or "B" with the date and time along with ' +
-        //         'energy "E:" and duration "D:". Click any of the color bars to view detail information.</p></div>';
-        //     let pct = 0;
-        //     let parts;
-        //     let factor = 5;
-        //     let color;
-        //     let textColor;
-        //     let info;
-        //     let energy;
-        //     let dur;
-        //     let sDate;
-
-        //     keys = keys.sort();
-        //     let hl = keys.length - 1;
-
-        //     for (let k = hl; k > 0; k--) {
-        //         if (typeof keys[k] !== 'undefined') {
-        //             if (keys[k].indexOf("#") !== -1) {
-        //                 parts = keys[k].split("#");
-        //                 energy = parts[0];
-        //                 pct = Math.round(energy / factor)
-        //                 info = pumpUsed[parts[1]];
-        //                 color = "black";
-        //                 textColor = "white"
-        //                 if (info.pump === "A") {
-        //                     color = "blue";
-        //                 } else if (info.pump === "B") {
-        //                     color = "green";
-        //                 }
-        //                 if (energy < 1) {
-        //                     color = "yellow";
-        //                     textColor = "black";
-        //                     pct = 20;
-        //                     dur = ''
-        //                 } else {
-        //                     dur = ', D: ' + calcInformation(info)
-        //                 }
-        //                 sDate = info.start_date.substring(0, 5) + "-" + info.start_date.substring(11, 16)
-        //                 h = h + '<div style="margin: 2px; border: 0px solid #ccc;">' +
-        //                     '<div style="background-color: ' + color + ';' +
-        //                     ' height:15px; ' +
-        //                     ' width:' + pct + '%; ' +
-        //                     ' text-align: right; ' +
-        //                     ' font-size: 10px;' +
-        //                     ' color: ' + textColor + ';' +
-        //                     ' pad-right: 5px;' +
-        //                     ' "' +
-        //                     'onclick="pumpUsage(\'' + parts[1] + '\')">' +
-        //                     '(' + info.pump + ') ' + sDate +
-        //                     ', E: ' + energy +
-        //                     dur +
-        //                     '&nbsp;</div></div>';
-        //             }
-        //         }
-        //     }
-        //     h = h + "<div style='margin-top: 15px;'> <hr></div>";
-        //     return h;
-        // }
-
-        // function buildAmpsUsed(data, high, ampKeys) {
-        //     let keys = ampKeys.split("@");
-        //     let factor = Math.round(high / 100);
-        //     let h = "<div style='margin-top: 15px;'> <hr></div> <div style='margin-top: 15px; margin-bottom: 5px;'>" +
-        //         '<h5>High level amps for each time a pump was active.</h5> ' +
-        //         '<div style="margin: 15px;"><p>Each bar has the pump "A" or "B" with the date and time along with ' +
-        //         'amps. Click any of the color bars to view detail information.</p></div>';
-        //     let pct = 0;
-        //     let parts;
-        //     let color;
-        //     let textColor;
-        //     let info;
-        //     let amps;
-        //     let sDate;
-
-        //     keys = keys.sort();
-        //     let hl = keys.length - 1;
-
-        //     for (let k = hl; k > 0; k--) {
-        //         if (typeof keys[k] !== 'undefined') {
-        //             if (keys[k].indexOf("#") !== -1) {
-        //                 parts = keys[k].split("#");
-        //                 amps = parts[0];
-        //                 pct = Math.round(amps / factor)
-        //                 info = pumpUsed[parts[1]];
-        //                 color = "black";
-        //                 textColor = "white";
-        //                 if (info.pump === "A") {
-        //                     color = "blue";
-        //                 } else if (info.pump === "B") {
-        //                     color = "green";
-        //                 }
-        //                 let pAmps = roundTo(amps / 1000, 2);
-        //                 if (pAmps < 1) {
-        //                     pct = 20;
-        //                     color = "yellow";
-        //                     textColor = "black";
-        //                 }
-        //                 sDate = info.start_date.substring(0, 5) + "-" + info.start_date.substring(11, 16)
-
-        //                 h = h + '<div style="margin: 2px; border: 0px solid #ccc;">' +
-        //                     '<div style="background-color: ' + color + ';' +
-        //                     ' height: 15px; ' +
-        //                     ' width:' + pct + '%; ' +
-        //                     ' text-align: right; ' +
-        //                     ' font-size: 10px;' +
-        //                     ' color: ' + textColor + ';' +
-        //                     ' pad-right: 5px;' +
-        //                     ' "' +
-        //                     ' onclick="pumpUsage(\'' + parts[1] + '\')" >' +
-        //                     '(' + info.pump + ') ' + sDate +
-        //                     ', Amps: ' + pAmps +
-        //                     '&nbsp;</div></div>';
-
-        //             }
-        //         }
-        //     }
-        //     return h;
-        // }
-
         function pumpUsage(key) {
-            let kp = key.split('.')
-            let data = pumpUsed[key]
+            let data = pumpData[key]
             if (typeof data.start_date === 'undefined') {
                 alert('Did not find data for key: ' + key)
                 return;
@@ -587,10 +522,12 @@
             data = null;
             // Sort data
             sData.sort();
+            sData.reverse();
+
             // build the new outputTable
             cnt = 0;
             h = '<h5>SMS messages sent</h5>' +
-                '<table class="table table-striped"><thead><tr>' +
+                '<table class="table table-striped"><thead><tr style="background-color: lightgray;">' +
                 '<th scope="col">Date/Time</th>' +
                 '<th scope="col">Message</th>' +
                 '<th scope="col">Sent To</th>' +
@@ -600,7 +537,7 @@
                 r = "";
                 parts = sData[i].split("#");
                 if (parts.length === 4) {
-                    r = '<tr>' +
+                    r = '<tr style="font-size: 80%">' +
                         '<td>' + parts[1] + '</td>' +
                         '<td>' + parts[2] + '</td>' +
                         '<td>' + parts[3] + '</td>'
@@ -712,24 +649,10 @@
         }
 
         function showRT() {
-            if (havePumpData === false) {
-                getData('p');
-            }
-            // RUN TIMES
             google.charts.load("current", { packages: ["timeline"] });
             google.charts.setOnLoadCallback(drawRunTimeline);
         }
 
-
-
-        // Exammple data
-        // var runData = [
-        //     [{ label: 'Date', type: 'string' }, { label: 'Pump', type: 'string' },
-        //     { label: 'Start', type: 'date' }, { label: 'End', type: 'date' }],
-        //     ['06/27/23', 'A', new Date(0, 0, 0, 4, 7, 33), new Date(0, 0, 0, 4, 29, 0)],
-        // ];
-
-        //=====================================
         function drawAmpsGauges() {
             var options = {
                 width: 400, height: 120,
@@ -752,82 +675,52 @@
             chart.draw(ampsGauge, options);
         }
 
-
         function drawRunTimeline() {
             var container = document.getElementById('run_time');
             var options = {
                 colors: ['#f99', '#f99'],
                 tooltip: { trigger: 'none' }
             };
-
-            // tooltip: { trigger: 'none' }
-
             tline = new google.visualization.Timeline(container);
             // Add our selection handler.
             google.visualization.events.addListener(tline, 'select', tlineHandler);
 
-            dataTable = google.visualization.arrayToDataTable(runData);
+            dataTable = google.visualization.arrayToDataTable(timelineData);
             tline.draw(dataTable, options);
         }
 
-
-        // Selection handler for time line chart
-        // Loop through all items in the selection and concatenate
-        // a single message from all of them.
         function tlineHandler() {
-            var selection = tline.getSelection();
-            var message = '';
-            var period;
-            var item;
-            var p;
-            var data;
-            var sTime;
-            var strTime;
-            var hh;
-            var mm;
-            var i;
-            var key;
+            // Selection handler for time line chart
+            let selection = tline.getSelection();
+            let item;
+            let data;
+            let p;
+            let sTime;
+            let strTime;
+            let i;
+            let key;
 
             //alert('You clicked something')
             for (i = 0; i < selection.length; i++) {
                 item = selection[i];
                 p = item.row;
-                console.log("p: " + p)
                 p = p + 1;
-                data = runData[p];
+                data = timelineData[p];
                 sTime = data[2];
-
                 strTime = sTime.toTimeString()
-                hh = strTime.substring(0, 2);
-                mm = strTime.substring(3, 5);
-
-                period = 1;
-                if (mm > 15 && mm < 31) {
-                    period = 2
-                }
-                if (mm > 30 && mm < 46) {
-                    period = 3
-                }
-                if (mm > 45) {
-                    period = 4
-                }
-                key = data[0] + "." + hh + "." + period
-
+                key = data[0] + "-" + strTime.substring(0, 8)
+                // show the pump data modal
                 pumpUsage(key)
-
             }
         }
 
         function infoTable() {
-
-            infoData = [
-                ['Name', 'Amount'],
-                ['Mike', { v: 10000, f: '$10,000' }],
-                ['Jim', { v: 8000, f: '$8,000' }],
-                ['Alice', { v: 12500, f: '$12,500' }],
-                ['Bob', { v: 7000, f: '$7,000' }]
-            ];
-
+            infoData = [];
+            infoData.push(['Category', 'Value'])
+            // Get stats data from table
+            for (let i = 0; i < statsTable.length; i++) {
+                infoData.push(statsTable[i]);
+            }
 
             google.charts.load('current', { 'packages': ['table'] });
             google.charts.setOnLoadCallback(drawInfoTable);
@@ -837,7 +730,7 @@
             data = new google.visualization.arrayToDataTable(infoData);
             var table = new google.visualization.Table(document.getElementById('info_div'));
 
-            table.draw(data, { showRowNumber: true, width: '100%', height: '100%' });
+            table.draw(data, { showRowNumber: true, width: '100%', height: '300px' });
         }
 
     </script>
