@@ -23,30 +23,27 @@
             border-top: 1px solid #555;
         }
     </style>
-
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
 </head>
 
 <body>
     <div class="container">
-        <header
-            class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+        <header style="background-color: #99f; color: #fff; "
+            class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-1 border-bottom">
             <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-                <span class="fs-4">MMPOA-II</span>
+                <span class="fs-5" style="color: #fff;">&nbsp;&nbsp;MMPOAII Sewage Monitor</span>
+                <span class="fs-6" style="color: #fff;">&nbsp;&nbsp;(Press button for data)</span>
             </a>
 
             <div class="col-md-3 text-end">
-                <button type="button" class="btn btn-outline-primary me-2" onclick="getData('p')">Pump
-                    Energy</button>
-                <button type="button" class="btn btn-outline-primary" onclick="getData('m')">SMS Messages</button>
+                <button type="button" class="btn btn-sm btn-secondary me-2" onclick="getData('p')">Pump
+                    data</button>
+                <button type="button" class="btn btn-sm btn-secondary me-4" onclick="getData('m')">SMS
+                    data</button>
             </div>
         </header>
 
         <div id="outputTable">
-            <div style="margin: 20px;">
-                <h5>Press one of the above buttons to populate available information.</h5>
-            </div>
             <!-- Data is inserted here -->
         </div>
 
@@ -54,18 +51,20 @@
         <!-- Message Modal section                -->
         <!-- ==================================== -->
         <div class="modal fade" id="messageModal" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-dialog modal-sm" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Detail pump information for selected entry</h5>
+                    <div class="modal-header" style="background-color: #99f; ">
+                        <h6 class="modal-title" style="font-size: 100%; color: #fff;">Pump Run
+                            Information</h6>
                     </div>
                     <div class="modal-body docBackground">
-                        <div id="messageBody">
+                        <div id="messageBody" style="font-size: 80%;">
                             <!-- Data is inserted here -->
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button onclick="closeModal()" type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <div class="modal-footer" style="font-size: 80%;">
+                        <button onclick="closeModal()" type="button" class="btn btn-sm btn-outline-secondary"
+                            data-dismiss="modal">
                             Close
                         </button>
                     </div>
@@ -74,16 +73,25 @@
         </div>
     </div>
 
-    <div style="margin: 45px; font-size: larger; font-weight: bold ;">Maximum Amps
-        <div id="chart_div" style="width: 250px; height: 120px; font-weight: normal"></div>
+    <!-- Google charts -->
+    <div id="gauges_div" style="display: none; margin: 45px; font-size: larger; font-weight: bold ;">
+        <span id="gaugeDate">Maximum Amps</span>
+        <div id="chart_div" style="width: 250px;  font-weight: normal"></div>
+        <div id="gaugeEntries" style="margin-top: 10px; font-size: 80%; font-weight: normal">
+            <span id="entryA">Pump A high amps at: </span>
+            <br>
+            <span id="entryB">Pump B high amps at: </span>
+        </div>
     </div>
 
-    <div style="padding-top: 45px; margin: 45px; font-size: larger; font-weight: bold ;">Pump run times
-        <div id="run_time" style="height: 150px;"></div>
+    <div id="infoData_div" style="display: none; margin: 45px; font-size: larger; font-weight: bold ;">Info Data
+        <div id="info_div" style="width: 100%;  font-weight: normal"></div>
     </div>
 
-    <div style="padding-top: 45px; margin: 45px; font-size: larger; font-weight: bold ;">Pump run times
-        <div id="amps_chart" style="width: 900px; height: 500px"></div>
+    <div id="run_div" style="display: none; margin: 45px; font-size: larger; font-weight: bold ;">
+        Pump run times by day&nbsp;&nbsp;
+        <span style="font-weight: normal; font-size: 60%;">(display area is scrollable)</span>
+        <div id="run_time" style="height: 450px;"></div>
     </div>
 
     <!-- Scripts to populate the UI and retirieve data-->
@@ -100,6 +108,19 @@
         let pumpUsed = {};
         let ampsUsed = {};
         let energyUsed = {};
+        let timelineUsed = {};
+        let havePumpData = false;
+        let pumpA_amps_high = 0;
+        let pumpB_amps_high = 0;
+        let pumpA_amps_entry = '';
+        let pumpB_amps_entry = '';
+        let infoData;
+        let ampsData;
+        let runTimeline;
+        let runData = [
+            [{ label: 'Date', type: 'string' }, { label: 'Pump', type: 'string' },
+            { label: 'Start', type: 'date' }, { label: 'End', type: 'date' }]
+        ];
 
         const sensor_url = 'https://isf1iqwwv2.execute-api.us-east-2.amazonaws.com/data';
         const sms_url = 'https://isf1iqwwv2.execute-api.us-east-2.amazonaws.com/sms';
@@ -109,10 +130,23 @@
         let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('messageModal'))
 
         function getData(kind) {
+
+            pumpUsed = {};
+            ampsUsed = {};
+            energyUsed = {};
+            timelineUsed = {};
+            infoData = "";
+            ampsData = "";
+
+            runData = [
+                [{ label: 'Date', type: 'string' }, { label: 'Pump', type: 'string' },
+                { label: 'Start', type: 'date' }, { label: 'End', type: 'date' }]
+            ];
+
             // Creating Our XMLHttpRequest object
             let xhr = new XMLHttpRequest();
             let url;
-
+            let dx;
             // Set url based on kind of data to retrieve
             if (kind === 'p') {
                 url = sensor_url;
@@ -130,7 +164,40 @@
                 if (this.readyState == 4 && this.status == 200) {
                     if (kind === 'p') {
                         formatData(this.responseText)
+                        havePumpData = true;
+                        buildTimelineData();
+                        showG();
+                        showRT();
+                        infoTable();
+                        dx = document.getElementById("gauges_div");
+                        if (dx.style.display === "none") {
+                            dx.style.display = "block";
+                        }
+                        dx = document.getElementById("run_div");
+                        if (dx.style.display === "none") {
+                            dx.style.display = "block";
+                        }
+                        document.getElementById("outputTable").innerHTML = "";
+
+                        dx = document.getElementById("infoData_div");
+                        if (dx.style.display === "none") {
+                            dx.style.display = "block";
+                        }
+
+                        dx = document.getElementById("outputTable");
+                        dx.style.display === "none"
+
                     } else if (kind === 'm') {
+                        dx = document.getElementById("gauges_div");
+                        if (dx.style.display === "block") {
+                            dx.style.display = "none";
+                        }
+                        dx = document.getElementById("run_div");
+                        if (dx.style.display === "block") {
+                            dx.style.display = "none";
+                        }
+                        dx = document.getElementById("outputTable");
+                        dx.style.display === "block"
                         formatSMS(this.responseText)
                     } else if (kind === 'a') {
                         formatAmps(this.responseText)
@@ -140,6 +207,111 @@
             // Sending our request
             xhr.send();
         }
+
+        function buildTimelineData() {
+            // console.log(JSON.stringify(data[i], null, 2))
+            let g_sDate;
+            let g_eDate
+            let g_sHr;
+            let g_eHr;
+            let g_sMin;
+            let g_eMin;
+            let g_sSec;
+            let g_eSec;
+            let g_line;
+            let g_sMM;
+            let g_sDD;
+            let g_sYY;
+            let g_eMM;
+            let g_eDD;
+            let g_eYY;
+            let dt;
+            let tkeys;
+            let tkey;
+            let firstDay = "";
+
+            tkeys = Object.keys(timelineUsed);
+            tkeys = tkeys.sort();
+            tkeys.reverse();
+
+            for (let i = 0; i < tkeys.length; i++) {
+                dt = timelineUsed[tkeys[i]].start_date.split("-")
+                if (i === 0) {
+                    firstDay = dt[0];
+                    document.getElementById("gaugeDate").innerHTML = "High amps for " + firstDay;
+                }
+                // If the entry is for the first day get the high and low amps
+                if (dt[0] === firstDay) {
+                    if (timelineUsed[tkeys[i]].pump === "A") {
+                        if (timelineUsed[tkeys[i]].amps_high > pumpA_amps_high) {
+                            pumpA_amps_high = timelineUsed[tkeys[i]].amps_high;
+                            pumpA_amps_entry = "Pump A high amps at: " + timelineUsed[tkeys[i]].start_date;
+                        }
+                    }
+                    if (timelineUsed[tkeys[i]].pump === "B") {
+                        if (timelineUsed[tkeys[i]].amps_high > pumpB_amps_high) {
+                            pumpB_amps_high = timelineUsed[tkeys[i]].amps_high;
+                            pumpB_amps_entry = "Pump B high amps at: " + timelineUsed[tkeys[i]].start_date;
+                        }
+                    }
+                }
+
+                // Start date info
+                //dt = timelineUsed[tkeys[i]].start_date.split("-")
+                g_sDate = dt[0];
+                g_sMM = dt[0].substring(0, 2)
+                g_sDD = dt[0].substring(3, 5)
+                g_sYY = dt[0].substring(6)
+
+                g_sHr = dt[1].substring(0, 2)
+                g_sMin = dt[1].substring(3, 5)
+                g_sSec = dt[1].substring(6)
+
+                // End data info
+                dt = timelineUsed[tkeys[i]].end_date.split("-")
+                g_eDate = dt[0];
+
+                if (g_sDate !== g_eDate) {
+                    console.log("================")
+                    console.log(JSON.stringify(timelineUsed[tkeys[i]], null, 2))
+                    continue;
+                }
+
+
+                g_eMM = dt[0].substring(0, 2)
+                g_eDD = dt[0].substring(3, 5)
+                g_eYY = dt[0].substring(6)
+
+                g_eHr = dt[1].substring(0, 2)
+                g_eMin = dt[1].substring(3, 5)
+                g_eSec = dt[1].substring(6)
+
+                // Build the data for timeline chart
+                g_line = [];
+                g_line.push(g_sDate);
+                g_line.push(timelineUsed[tkeys[i]].pump);
+                // g_line.push(new Date(g_sYY, g_sMM, g_sDD, g_sHr, g_sMin, g_sSec))
+                // g_line.push(new Date(g_eYY, g_eMM, g_eDD, g_eHr, g_eMin, g_eSec))
+                g_line.push(new Date(0, 0, 0, g_sHr, g_sMin, g_sSec))
+                g_line.push(new Date(0, 0, 0, g_eHr, g_eMin, g_eSec))
+                // console.log(JSON.stringify(g_line, null, 2))
+                runData.push(g_line)
+
+            }
+            //console.log(JSON.stringify(runData, null, 4))
+            console.log("Timeline data created with " + runData.length + " entries")
+            console.log("Pump A high amps " + pumpA_amps_high)
+            console.log("Pump B high amps " + pumpB_amps_high)
+
+            document.getElementById("entryA").innerHTML = pumpA_amps_entry;
+            document.getElementById("entryB").innerHTML = pumpB_amps_entry;
+
+
+
+
+            // ['06/27/23', 'A', new Date(0, 0, 0, 4, 7, 33), new Date(0, 0, 0, 4, 29, 0)],
+        }
+
 
         function formatData(data) {
             let items = {};
@@ -152,24 +324,30 @@
             let highEnergy = 0;
             let line;
             let day;
+            let tKey;
+            let dropNegCnt = 0;
+            let dropInitialCnt = 0;
+            let deleteArray = [];
 
             // convert data to JSON
             data = JSON.parse(data);
 
-            //console.log(JSON.stringify(data, null, 4))
-
-            // Rows of requested data    
+            // Loop through the returned rows of data    
             for (let i = 0; i < data.length; i++) {
                 // Check for valid format of data
                 if (typeof data[i].pump !== 'undefined') {
 
-                    // Drop entries that are negative values or have initial value
+                    // Drop entries that are negative values or have initial value of 9999999
                     if (data[i].used_energy.startsWith("-")) {
-                        console.log('Dropped: ' + JSON.stringify(data[i], null, 4))
+                        //console.log('Dropped: ' + JSON.stringify(data[i], null, 4))
+                        dropNegCnt++;
+                        deleteArray.push('curl -X "DELETE" https://isf1iqwwv2.execute-api.us-east-2.amazonaws.com/data/' + data[i].id)
                         continue;
                     }
                     if (data[i].amps_low === "9999999" || data[i].amps_low === 9999999) {
-                        console.log('Dropped: ' + JSON.stringify(data[i], null, 4))
+                        //console.log('Dropped: ' + JSON.stringify(data[i], null, 4))
+                        dropInitialCnt++;
+                        deleteArray.push('curl -X "DELETE" https://isf1iqwwv2.execute-api.us-east-2.amazonaws.com/data/' + data[i].id)
                         continue;
                     }
 
@@ -185,6 +363,7 @@
                     // Get hour and minutes the pump started
                     hr = dt[1].substring(0, 2)
                     min = dt[1].substring(3, 5)
+
                     period = 1
                     if (min > 15 && min < 31) {
                         period = 2
@@ -199,6 +378,10 @@
                     items[dt[0]][key] = data[i].pump
                     key = dt[0] + "." + key
                     pumpUsed[key] = data[i]
+
+                    // Save data for timeline chart/graph
+                    tKey = data[i].start_date;
+                    timelineUsed[tKey] = data[i]
 
                     // Save energy used
                     energy = energy + data[i].used_energy + "#" + key + "@"
@@ -218,226 +401,143 @@
                 }
             }
 
-            // Split and sort the days that information has been reported
-            da = days.split("@");
-            da = da.sort();
+            console.log("Dropped because of negative value: " + dropNegCnt)
+            console.log("Dropped because of initial value: " + dropInitialCnt)
+            console.log(JSON.stringify(deleteArray, null, 2))
 
-            // build the new outputTable with the pump information
-            h = '<h5>Pump activity by day and hour segements </h5>' +
-                '<div style="margin: 15px;"><p>' +
-                'The table below displays dates along with hourly intervals based on a 24 hour clock with midnight being 00. ' +
-                'Each hour is reported with four 15 minute periods. ' +
-                'The pump start time is used to place the pump activity in the respective 15 minute period. ' +
-                'The pump id "A" (pump 1) or id "B" (pump 2) is shown in the reported period. ' +
-                'Click on the colored pump id to view the detail for that pump cycle period. ' +
-                '</p></div>' +
-                '<table cellpadding="0" cellspacing="0" width="100%" border="0"><thead><tr>' +
-                '<th style="text-align: center">Date & Hr</th>' +
-                '<th style="text-align: center" colspan="4" bgcolor="#eee">00</th>' +
-                '<th style="text-align: center" colspan="4" >01</th>' +
-                '<th style="text-align: center" colspan="4" bgcolor="#eee">02</th>' +
-                '<th style="text-align: center" colspan="4" >03</th>' +
-                '<th style="text-align: center" colspan="4" bgcolor="#eee">04</th>' +
-                '<th style="text-align: center" colspan="4" >05</th>' +
-                '<th style="text-align: center" colspan="4" bgcolor="#eee">06</th>' +
-                '<th style="text-align: center" colspan="4" >07</th>' +
-                '<th style="text-align: center" colspan="4" bgcolor="#eee">08</th>' +
-                '<th style="text-align: center" colspan="4" >09</th>' +
-                '<th style="text-align: center" colspan="4" bgcolor="#eee">10</th>' +
-                '<th style="text-align: center" colspan="4" >11</th>' +
-                '<th style="text-align: center" colspan="4" bgcolor="#eee">12</th>' +
-                '<th style="text-align: center" colspan="4" >13</th>' +
-                '<th style="text-align: center" colspan="4" bgcolor="#eee">14</th>' +
-                '<th style="text-align: center" colspan="4" >15</th>' +
-                '<th style="text-align: center" colspan="4" bgcolor="#eee">16</th>' +
-                '<th style="text-align: center" colspan="4" >17</th>' +
-                '<th style="text-align: center" colspan="4" bgcolor="#eee">18</th>' +
-                '<th style="text-align: center" colspan="4" >19</th>' +
-                '<th style="text-align: center" colspan="4" bgcolor="#eee">20</th>' +
-                '<th style="text-align: center" colspan="4" >21</th>' +
-                '<th style="text-align: center" colspan="4" bgcolor="#eee">22</th>' +
-                '<th style="text-align: center" colspan="4" >23</th>' +
-                '</tr></thead><tbody>';
-
-            // Output data for each day of information  
-            for (let i = 1; i < da.length; i++) {
-                line = "<tr><td>&nbsp;" + da[i] + "&nbsp;</td>";
-                day = items[da[i]]
-                let hkey;
-                // Check for each hour of the day 
-                for (let hr = 0; hr < 24; hr++) {
-                    // Check for each period of the hour
-                    for (let p = 1; p < 5; p++) {
-                        if (hr < 10) {
-                            hkey = "0" + hr
-                        } else {
-                            hkey = hr
-                        }
-                        key = hkey + "." + p
-                        // If pump ran in this hour-period show letter of Pump
-                        if (typeof day[key] !== 'undefined') {
-                            if (day[key] === "A") {
-                                style = "text-align: center"
-                                line = line + "<td onclick='pumpUsage(\"" + da[i] + "." + key + "\")' style='text-align: center; color: white' bgcolor='blue' width='1%'>" + day[key] + "</td>"
-                            } else {
-                                line = line + "<td onclick='pumpUsage(\"" + da[i] + "." + key + "\")' style='text-align: center; color: white' bgcolor='green' width='1%'>" + day[key] + "</td>"
-                            }
-                        } else {
-                            if (hr === 0 || hr === 2 || hr === 4 || hr === 6 || hr === 8 || hr === 10 || hr === 12 || hr === 14 || hr === 16 || hr === 18 || hr === 20 || hr === 22) {
-                                line = line + "<td bgcolor='#eee' width='1%'></td>"
-                            } else {
-                                line = line + "<td width='1%'></td>"
-                            }
-                        }
-                    }
-                }
-                // Close the row and append to the html
-                line = line + "</tr>"
-                h = h + line
-            }
-
-            // Close the table
-            h = h + '</tbody></table>'
-
-            let aH = buildAmpsUsed(data, highAmps, ampsHigh)
-            h = h + aH;
-
-            let eH = buildEnergyUsed(data, highEnergy, energy)
-            h = h + eH;
-
-            // Clear any existing data in the UI
-            document.getElementById("outputTable").innerHTML = ""
-            // Add new html to page
-            document.getElementById("outputTable").innerHTML = h;
         }
 
 
-        function buildEnergyUsed(data, high, energyKeys) {
-            let keys = energyKeys.split("@");
-            let h = "<div style='margin-top: 15px;'> <hr></div> <div style='margin-top: 15px; margin-bottom: 5px;'>" +
-                '<h5>Duration and energy usage for each time a pump was active</h5>' +
-                '<div style="margin: 15px;"><p>Each bar has the pump "A" or "B" with the date and time along with ' +
-                'energy "E:" and duration "D:". Click any of the color bars to view detail information.</p></div>';
-            let pct = 0;
-            let parts;
-            let factor = 5;
-            let color;
-            let textColor;
-            let info;
-            let energy;
-            let dur;
-            let sDate;
+        // function buildEnergyUsed(data, high, energyKeys) {
+        //     let keys = energyKeys.split("@");
+        //     let h = "<div style='margin-top: 15px;'> <hr></div> <div style='margin-top: 15px; margin-bottom: 5px;'>" +
+        //         '<h5>Duration and energy usage for each time a pump was active</h5>' +
+        //         '<div style="margin: 15px;"><p>Each bar has the pump "A" or "B" with the date and time along with ' +
+        //         'energy "E:" and duration "D:". Click any of the color bars to view detail information.</p></div>';
+        //     let pct = 0;
+        //     let parts;
+        //     let factor = 5;
+        //     let color;
+        //     let textColor;
+        //     let info;
+        //     let energy;
+        //     let dur;
+        //     let sDate;
 
-            keys = keys.sort();
-            let hl = keys.length - 1;
+        //     keys = keys.sort();
+        //     let hl = keys.length - 1;
 
-            for (let k = hl; k > 0; k--) {
-                if (typeof keys[k] !== 'undefined') {
-                    if (keys[k].indexOf("#") !== -1) {
-                        parts = keys[k].split("#");
-                        energy = parts[0];
-                        pct = Math.round(energy / factor)
-                        info = pumpUsed[parts[1]];
-                        color = "black";
-                        textColor = "white"
-                        if (info.pump === "A") {
-                            color = "blue";
-                        } else if (info.pump === "B") {
-                            color = "green";
-                        }
-                        if (energy < 1) {
-                            color = "yellow";
-                            textColor = "black";
-                            pct = 20;
-                            dur = ''
-                        } else {
-                            dur = ', D: ' + calcInformation(info)
-                        }
-                        sDate = info.start_date.substring(0, 5) + "-" + info.start_date.substring(11, 16)
-                        h = h + '<div style="margin: 2px; border: 0px solid #ccc;">' +
-                            '<div style="background-color: ' + color + ';' +
-                            ' height:15px; ' +
-                            ' width:' + pct + '%; ' +
-                            ' text-align: right; ' +
-                            ' font-size: 10px;' +
-                            ' color: ' + textColor + ';' +
-                            ' pad-right: 5px;' +
-                            ' "' +
-                            'onclick="pumpUsage(\'' + parts[1] + '\')">' +
-                            '(' + info.pump + ') ' + sDate +
-                            ', E: ' + energy +
-                            dur +
-                            '&nbsp;</div></div>';
-                    }
-                }
-            }
-            h = h + "<div style='margin-top: 15px;'> <hr></div>";
-            return h;
-        }
+        //     for (let k = hl; k > 0; k--) {
+        //         if (typeof keys[k] !== 'undefined') {
+        //             if (keys[k].indexOf("#") !== -1) {
+        //                 parts = keys[k].split("#");
+        //                 energy = parts[0];
+        //                 pct = Math.round(energy / factor)
+        //                 info = pumpUsed[parts[1]];
+        //                 color = "black";
+        //                 textColor = "white"
+        //                 if (info.pump === "A") {
+        //                     color = "blue";
+        //                 } else if (info.pump === "B") {
+        //                     color = "green";
+        //                 }
+        //                 if (energy < 1) {
+        //                     color = "yellow";
+        //                     textColor = "black";
+        //                     pct = 20;
+        //                     dur = ''
+        //                 } else {
+        //                     dur = ', D: ' + calcInformation(info)
+        //                 }
+        //                 sDate = info.start_date.substring(0, 5) + "-" + info.start_date.substring(11, 16)
+        //                 h = h + '<div style="margin: 2px; border: 0px solid #ccc;">' +
+        //                     '<div style="background-color: ' + color + ';' +
+        //                     ' height:15px; ' +
+        //                     ' width:' + pct + '%; ' +
+        //                     ' text-align: right; ' +
+        //                     ' font-size: 10px;' +
+        //                     ' color: ' + textColor + ';' +
+        //                     ' pad-right: 5px;' +
+        //                     ' "' +
+        //                     'onclick="pumpUsage(\'' + parts[1] + '\')">' +
+        //                     '(' + info.pump + ') ' + sDate +
+        //                     ', E: ' + energy +
+        //                     dur +
+        //                     '&nbsp;</div></div>';
+        //             }
+        //         }
+        //     }
+        //     h = h + "<div style='margin-top: 15px;'> <hr></div>";
+        //     return h;
+        // }
 
-        function buildAmpsUsed(data, high, ampKeys) {
-            let keys = ampKeys.split("@");
-            let factor = Math.round(high / 100);
-            let h = "<div style='margin-top: 15px;'> <hr></div> <div style='margin-top: 15px; margin-bottom: 5px;'>" +
-                '<h5>High level amps for each time a pump was active.</h5> ' +
-                '<div style="margin: 15px;"><p>Each bar has the pump "A" or "B" with the date and time along with ' +
-                'amps. Click any of the color bars to view detail information.</p></div>';
-            let pct = 0;
-            let parts;
-            let color;
-            let textColor;
-            let info;
-            let amps;
-            let sDate;
+        // function buildAmpsUsed(data, high, ampKeys) {
+        //     let keys = ampKeys.split("@");
+        //     let factor = Math.round(high / 100);
+        //     let h = "<div style='margin-top: 15px;'> <hr></div> <div style='margin-top: 15px; margin-bottom: 5px;'>" +
+        //         '<h5>High level amps for each time a pump was active.</h5> ' +
+        //         '<div style="margin: 15px;"><p>Each bar has the pump "A" or "B" with the date and time along with ' +
+        //         'amps. Click any of the color bars to view detail information.</p></div>';
+        //     let pct = 0;
+        //     let parts;
+        //     let color;
+        //     let textColor;
+        //     let info;
+        //     let amps;
+        //     let sDate;
 
-            keys = keys.sort();
-            let hl = keys.length - 1;
+        //     keys = keys.sort();
+        //     let hl = keys.length - 1;
 
-            for (let k = hl; k > 0; k--) {
-                if (typeof keys[k] !== 'undefined') {
-                    if (keys[k].indexOf("#") !== -1) {
-                        parts = keys[k].split("#");
-                        amps = parts[0];
-                        pct = Math.round(amps / factor)
-                        info = pumpUsed[parts[1]];
-                        color = "black";
-                        textColor = "white";
-                        if (info.pump === "A") {
-                            color = "blue";
-                        } else if (info.pump === "B") {
-                            color = "green";
-                        }
-                        let pAmps = roundTo(amps / 1000, 2);
-                        if (pAmps < 1) {
-                            pct = 20;
-                            color = "yellow";
-                            textColor = "black";
-                        }
-                        sDate = info.start_date.substring(0, 5) + "-" + info.start_date.substring(11, 16)
+        //     for (let k = hl; k > 0; k--) {
+        //         if (typeof keys[k] !== 'undefined') {
+        //             if (keys[k].indexOf("#") !== -1) {
+        //                 parts = keys[k].split("#");
+        //                 amps = parts[0];
+        //                 pct = Math.round(amps / factor)
+        //                 info = pumpUsed[parts[1]];
+        //                 color = "black";
+        //                 textColor = "white";
+        //                 if (info.pump === "A") {
+        //                     color = "blue";
+        //                 } else if (info.pump === "B") {
+        //                     color = "green";
+        //                 }
+        //                 let pAmps = roundTo(amps / 1000, 2);
+        //                 if (pAmps < 1) {
+        //                     pct = 20;
+        //                     color = "yellow";
+        //                     textColor = "black";
+        //                 }
+        //                 sDate = info.start_date.substring(0, 5) + "-" + info.start_date.substring(11, 16)
 
-                        h = h + '<div style="margin: 2px; border: 0px solid #ccc;">' +
-                            '<div style="background-color: ' + color + ';' +
-                            ' height: 15px; ' +
-                            ' width:' + pct + '%; ' +
-                            ' text-align: right; ' +
-                            ' font-size: 10px;' +
-                            ' color: ' + textColor + ';' +
-                            ' pad-right: 5px;' +
-                            ' "' +
-                            ' onclick="pumpUsage(\'' + parts[1] + '\')" >' +
-                            '(' + info.pump + ') ' + sDate +
-                            ', Amps: ' + pAmps +
-                            '&nbsp;</div></div>';
+        //                 h = h + '<div style="margin: 2px; border: 0px solid #ccc;">' +
+        //                     '<div style="background-color: ' + color + ';' +
+        //                     ' height: 15px; ' +
+        //                     ' width:' + pct + '%; ' +
+        //                     ' text-align: right; ' +
+        //                     ' font-size: 10px;' +
+        //                     ' color: ' + textColor + ';' +
+        //                     ' pad-right: 5px;' +
+        //                     ' "' +
+        //                     ' onclick="pumpUsage(\'' + parts[1] + '\')" >' +
+        //                     '(' + info.pump + ') ' + sDate +
+        //                     ', Amps: ' + pAmps +
+        //                     '&nbsp;</div></div>';
 
-                    }
-                }
-            }
-            return h;
-        }
+        //             }
+        //         }
+        //     }
+        //     return h;
+        // }
 
         function pumpUsage(key) {
             let kp = key.split('.')
             let data = pumpUsed[key]
+            if (typeof data.start_date === 'undefined') {
+                alert('Did not find data for key: ' + key)
+                return;
+            }
             //alert(JSON.stringify(data, null, 2))
             let duration = calcInformation(data)
             let low = data.amps_low / 1000
@@ -447,22 +547,21 @@
             let avg = data.amps_avg / 1000
             avg = roundTo(avg, 3)
 
-            let h = '<h6>Entry - &nbsp;&nbsp;Day: ' + kp[0] + '&nbsp;&nbsp;&nbsp;Hour: ' + kp[1] + '&nbsp;&nbsp;&nbsp;Period: ' + kp[2] + '</h6>' +
-                '<table cellpadding="2" cellspacing="0" width="100%" border="0" >' +
+            let h = '<table cellpadding="2" cellspacing="0" width="100%" border="0" >' +
                 '<thead><tr>' +
                 '<th style="text-align: center" bgcolor="#eee">Data</th>' +
                 '<th style="text-align: center" bgcolor="#eee">Value</th>' +
                 '</tr></thead><tbody>' +
-                '<tr><td>Pump</td><td>' + data.pump +
-                '</tr><tr><td>Start date & time</td><td>' + data.start_date +
-                '</tr><tr><td>End date & time</td><td>' + data.end_date +
-                '</tr><tr><td>Run duration (MM:SS)</td><td>' + duration +
-                '</tr><tr><td>Start energy</td><td>' + data.start_energy +
-                '</tr><tr><td>End energy</td><td>' + data.end_energy +
-                '</tr><tr><td>Used energy</td><td>' + data.used_energy +
-                '</tr><tr><td>Amps low</td><td>' + low +
-                '</tr><tr><td>Amps average</td><td>' + avg +
-                '</tr><tr><td>Amps high</td><td>' + high +
+                '<tr><td style="font-size: 80%;">Pump</td><td>' + data.pump +
+                '</tr><tr><td style="font-size: 80%;">Start date & time</td><td>' + data.start_date +
+                '</tr><tr><td style="font-size: 80%;">End date & time</td><td>' + data.end_date +
+                '</tr><tr><td style="font-size: 80%;">Run duration (MM:SS)</td><td>' + duration +
+                '</tr><tr><td style="font-size: 80%;">Start energy</td><td>' + data.start_energy +
+                '</tr><tr><td style="font-size: 80%;">End energy</td><td>' + data.end_energy +
+                '</tr><tr><td style="font-size: 80%;">Used energy</td><td>' + data.used_energy +
+                '</tr><tr><td style="font-size: 80%;">Amps low</td><td>' + low +
+                '</tr><tr><td style="font-size: 80%;">Amps average</td><td>' + avg +
+                '</tr><tr><td style="font-size: 80%;">Amps high</td><td>' + high +
                 '</tr></table>'
             document.getElementById("messageBody").innerHTML = h;
             modal.show();
@@ -592,26 +691,51 @@
             }
         }
 
-    </script>
-
-    <script type="text/javascript">
-        google.charts.load('current', { 'packages': ['gauge'] });
-        google.charts.setOnLoadCallback(drawGauges);
-
-        function drawGauges() {
-            var data = google.visualization.arrayToDataTable([
+        function showG() {
+            // GAUGES
+            var ampsGauge;
+            var aH = 0;
+            var bH = 0;
+            if (pumpA_amps_high > 0) {
+                aH = pumpA_amps_high / 1000;
+            }
+            if (pumpB_amps_high > 0) {
+                bH = pumpB_amps_high / 1000;
+            }
+            ampsData = [
                 ['Label', 'Value'],
-                ['Pump A', 24.44],
-                ['Pump B', 22.39]
+                ['Pump A', aH],
+                ['Pump B', bH]
+            ];
+            google.charts.load('current', { 'packages': ['gauge'] });
+            google.charts.setOnLoadCallback(drawAmpsGauges);
+        }
 
-            ]);
+        function showRT() {
+            if (havePumpData === false) {
+                getData('p');
+            }
+            // RUN TIMES
+            google.charts.load("current", { packages: ["timeline"] });
+            google.charts.setOnLoadCallback(drawRunTimeline);
+        }
 
+
+
+        // Exammple data
+        // var runData = [
+        //     [{ label: 'Date', type: 'string' }, { label: 'Pump', type: 'string' },
+        //     { label: 'Start', type: 'date' }, { label: 'End', type: 'date' }],
+        //     ['06/27/23', 'A', new Date(0, 0, 0, 4, 7, 33), new Date(0, 0, 0, 4, 29, 0)],
+        // ];
+
+        //=====================================
+        function drawAmpsGauges() {
             var options = {
                 width: 400, height: 120,
                 greenFrom: 10, greenTo: 28,
                 yellowFrom: 28, yellowTo: 35,
                 redFrom: 35, redTo: 40,
-
                 minorTicks: 10,
                 majorTicks: [0, 10, 20, 30, 40],
                 min: 0,
@@ -624,122 +748,97 @@
             };
 
             var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
-
-            chart.draw(data, options);
+            ampsGauge = google.visualization.arrayToDataTable(ampsData);
+            chart.draw(ampsGauge, options);
         }
 
-        google.charts.load("current", { packages: ["timeline"] });
-        google.charts.setOnLoadCallback(drawTimeline);
 
-        var tline;
-        var dataTable;
-
-        function drawTimeline() {
+        function drawRunTimeline() {
             var container = document.getElementById('run_time');
-            tline = new google.visualization.Timeline(container);
-            // Add our selection handler.
-            google.visualization.events.addListener(tline, 'select', selectHandler);
-
-
-            dataTable = new google.visualization.DataTable();
-
-            dataTable.addColumn({ type: 'string', id: 'Date' });
-            dataTable.addColumn({ type: 'string', id: 'Pump' });
-            dataTable.addColumn({ type: 'date', id: 'Start' });
-            dataTable.addColumn({ type: 'date', id: 'End' });
-
-            dataTable.addRows([
-                ['06/27/23', 'A', new Date(0, 0, 0, 3, 7, 33), new Date(0, 0, 0, 3, 19, 0)],
-                ['06/27/23', 'B', new Date(0, 0, 0, 12, 30, 0), new Date(0, 0, 0, 12, 45, 0)],
-                ['06/27/23', 'A', new Date(0, 0, 0, 14, 30, 0), new Date(0, 0, 0, 14, 43, 0)],
-                ['06/27/23', 'B', new Date(0, 0, 0, 16, 10, 0), new Date(0, 0, 0, 16, 30, 0)],
-                ['06/27/23', 'A', new Date(0, 0, 0, 18, 20, 0), new Date(0, 0, 0, 18, 30, 0)],
-                ['06/27/23', 'B', new Date(0, 0, 0, 19, 19, 0), new Date(0, 0, 0, 19, 30, 0)],
-
-                ['06/28/23', 'A', new Date(0, 0, 0, 3, 7, 33), new Date(0, 0, 0, 3, 19, 0)],
-                ['06/28/23', 'B', new Date(0, 0, 0, 12, 30, 0), new Date(0, 0, 0, 12, 45, 0)],
-                ['06/28/23', 'A', new Date(0, 0, 0, 14, 30, 0), new Date(0, 0, 0, 14, 43, 0)],
-                ['06/28/23', 'B', new Date(0, 0, 0, 16, 10, 0), new Date(0, 0, 0, 16, 30, 0)],
-                ['06/28/23', 'A', new Date(0, 0, 0, 18, 20, 0), new Date(0, 0, 0, 18, 30, 0)],
-                ['06/28/23', 'B', new Date(0, 0, 0, 19, 19, 0), new Date(0, 0, 0, 19, 30, 0)]
-            ]);
-
-            // var options = {
-            //     colors: ['#f00', '#00f', '#f00', '#00f', '#f00', '#00f',],
-            //     timeline: { colorByRowLabel: true },
-            //     alternatingRowStyle: false
-            // };
-
             var options = {
-                colors: ['#f00', '#00f']
+                colors: ['#f99', '#f99'],
+                tooltip: { trigger: 'none' }
             };
 
-            // colors: ['#f00', '#00f', '#f00', '#00f', '#f00', '#00f']
+            // tooltip: { trigger: 'none' }
 
+            tline = new google.visualization.Timeline(container);
+            // Add our selection handler.
+            google.visualization.events.addListener(tline, 'select', tlineHandler);
+
+            dataTable = google.visualization.arrayToDataTable(runData);
             tline.draw(dataTable, options);
         }
 
-        // The selection handler.
+
+        // Selection handler for time line chart
         // Loop through all items in the selection and concatenate
         // a single message from all of them.
-        function selectHandler() {
+        function tlineHandler() {
             var selection = tline.getSelection();
             var message = '';
+            var period;
+            var item;
+            var p;
+            var data;
+            var sTime;
+            var strTime;
+            var hh;
+            var mm;
+            var i;
+            var key;
+
             //alert('You clicked something')
-            for (var i = 0; i < selection.length; i++) {
-                var item = selection[i];
-                if (item.row != null && item.column != null) {
-                    var str = dataTable.getFormattedValue(item.row, item.column);
-                    message += '{row:' + item.row + '} = ' + str + '\n';
-                } else if (item.row != null) {
-                    var str = dataTable.getFormattedValue(item.row, 0);
-                    message += '{row:' + item.row + '} = ' + str + '\n';
-                } else if (item.column != null) {
-                    var str = dataTable.getFormattedValue(0, item.column);
-                    message += '{row:none' + '} = ' + str + '\n';
+            for (i = 0; i < selection.length; i++) {
+                item = selection[i];
+                p = item.row;
+                console.log("p: " + p)
+                p = p + 1;
+                data = runData[p];
+                sTime = data[2];
+
+                strTime = sTime.toTimeString()
+                hh = strTime.substring(0, 2);
+                mm = strTime.substring(3, 5);
+
+                period = 1;
+                if (mm > 15 && mm < 31) {
+                    period = 2
                 }
+                if (mm > 30 && mm < 46) {
+                    period = 3
+                }
+                if (mm > 45) {
+                    period = 4
+                }
+                key = data[0] + "." + hh + "." + period
+
+                pumpUsage(key)
+
             }
-            if (message == '') {
-                message = 'nothing';
-            }
-            alert('You selected ' + message);
         }
 
-        google.charts.load('current', { 'packages': ['line'] });
-        google.charts.setOnLoadCallback(drawLineChart);
+        function infoTable() {
+
+            infoData = [
+                ['Name', 'Amount'],
+                ['Mike', { v: 10000, f: '$10,000' }],
+                ['Jim', { v: 8000, f: '$8,000' }],
+                ['Alice', { v: 12500, f: '$12,500' }],
+                ['Bob', { v: 7000, f: '$7,000' }]
+            ];
 
 
-        function drawLineChart() {
-
-            var data = new google.visualization.DataTable();
-            data.addColumn('string', 'Time');
-            data.addColumn('number', 'A');
-            data.addColumn('number', 'B');
-
-            data.addRows([
-                ['14.19', 0, 0],
-                ['14.20', 23, 0],
-                ['14.45', 27, 0],
-                ['14.46', 0, 0],
-                ['16.23', 0, 27],
-                ['16.56', 0, 27],
-                ['16.57', 0, 0]
-            ]);
-
-            var options = {
-                chart: {
-                    title: 'Amperage',
-                    subtitle: 'while pump ran'
-                },
-                width: 950,
-                height: 500
-            };
-
-            var chart = new google.charts.Line(document.getElementById('amps_chart'));
-            chart.draw(data, google.charts.Line.convertOptions(options));
+            google.charts.load('current', { 'packages': ['table'] });
+            google.charts.setOnLoadCallback(drawInfoTable);
         }
 
+        function drawInfoTable() {
+            data = new google.visualization.arrayToDataTable(infoData);
+            var table = new google.visualization.Table(document.getElementById('info_div'));
 
+            table.draw(data, { showRowNumber: true, width: '100%', height: '100%' });
+        }
 
     </script>
 
