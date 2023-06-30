@@ -25,8 +25,9 @@ LICENSE:
     GNU General Public License for more details.
 
 """
-# all log messages 
+# all log messages
 log_messages = []
+log_console = True
 
 # monitor
 getPortsCnt = 0
@@ -131,5 +132,3 @@ daily_pump_A_amp_low = 9999
 daily_pump_B_cnt = 0
 daily_pump_B_amp_high = 0
 daily_pump_B_amp_low = 9999
-
-

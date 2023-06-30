@@ -70,8 +70,6 @@ def get(k1, k2):
         data = configI[k1][k2]
         return data
     except Exception as e:
-        if k2 == "log_console":
-            return True
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
@@ -88,6 +86,7 @@ def setValues():
         resend_delay = int(get("Interval", "wait_to_resend_sms_hours"))
         resend_delay = resend_delay * 3600   # multiple hours times seconds in hours
         cda.resend_wait = round(resend_delay / wait_secs)
+        cda.log_console = get("Log", "log_console")
         # logger.msg("I",f"Resend hours: {resend_delay} Resend seconds: {cda.resend_wait}")
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
