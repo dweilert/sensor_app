@@ -191,6 +191,8 @@ def mainLine():
         if (cda.usb_port4 != "na"):
             portsfound = portsfound + 1
 
+        print(portsFound)
+        
         # SMS related message, who
         foundMsg = ""
         who = ""
