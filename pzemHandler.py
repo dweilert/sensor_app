@@ -142,22 +142,7 @@ def readSensor(usbPort, id):
         if client.connect():
             regs = client.read_input_registers(0, 10, 1)
 
-            print("===============" + str(type(regs)))
-
-            dump(regs)
-
-            
-            if regs.string:
-                print("Found regs.string")
-
-            if "Error" in regs.string:
-                rtn = []
-                rtn.append(False)
-                rtn.append("no register data")
-                client.close()
-                client = None
-                return rtn
-            else:
+            if getattr(regs, "registers"):
                 if id == "A" or id == "B":
                     dataHandler.saveData(regs.registers, id)
                 rtn = []
@@ -166,41 +151,19 @@ def readSensor(usbPort, id):
                 client.close()
                 client = None
                 return rtn
-
-            # dump(regs)
-
-            # print("REGS.STRING: " + regs.string)
-
-            # rType = type(regs)
-            # print(f"REGISTER TYPE: {rType}")
-            # rType = str(rType)
-            # print(f"str : {rType}")
-
-            
-            # if "pymodbus.register_read_message.ReadInputRegistersResponse" in rType:
-            #     # If either one of the pumps SAVE the data
-            #     if id == "A" or id == "B":
-            #         dataHandler.saveData(regs.registers, id)
-            #     rtn = []
-            #     rtn.append(True)
-            #     rtn.append(regs.registers)
-            #     client.close()
-            #     return rtn
-            # else:
-            #     rtn = []
-            #     rtn.append(False)
-            #     rtn.append("no register data")
-            #     client.close()
-            #     return rtn
+            else:
+                rtn = []
+                rtn.append(False)
+                rtn.append("no register data")
+                client.close()
+                client = None
+                return rtn
         
         else:
-            # If the connection to the sensor fails flag it as a connection error
-            # and return and build Failed return data array
-            # print("client did not connect")
-            client = None
             rtn = []
             rtn.append(False)
             rtn.append("connection failed")
+            client = None
             return rtn
 
 
