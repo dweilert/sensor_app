@@ -126,22 +126,22 @@ def readSensor(usbPort, id):
     try:
         rtn = []
         # Check if sensor was found, if not skip
-        if cda.portA == "na" and id == "A":
+        if cda.usb_port1 == "na" and id == "A":
             rtn = []
             rtn.append(False)
             rtn.append("na")
             return rtn
-        if cda.portB == "na" and id == "B":
+        if cda.usb_port2 == "na" and id == "B":
             rtn = []
             rtn.append(False)
             rtn.append("na")
             return rtn
-        if cda.portC == "na" and id == "C":
+        if cda.usb_port3 == "na" and id == "C":
             rtn = []
             rtn.append(False)
             rtn.append("na")
             return rtn
-        if cda.portD == "na" and id == "D":
+        if cda.usb_port4 == "na" and id == "D":
             rtn = []
             rtn.append(False)
             rtn.append("na")
@@ -318,16 +318,16 @@ def find_usb_ports():
         ln = 1
 
         # Initial values for USB ports
-        cda.portA = "na"
-        cda.portB = "na"
-        cda.portC = "na"
-        cda.portD = "na"
+        cda.usb_port1 = "na"
+        cda.usb_port2 = "na"
+        cda.usb_port3 = "na"
+        cda.usb_port4 = "na"
 
         # Get port signature values to search for in the dmesg data
-        portA_sig = config.get("USBPortSignatures", "portA")
-        portB_sig = config.get("USBPortSignatures", "portB")
-        portC_sig = config.get("USBPortSignatures", "portC")
-        portD_sig = config.get("USBPortSignatures", "portD")
+        usb_port1_sig = config.get("USBPortSignatures", "usb_port1")
+        usb_port2_sig = config.get("USBPortSignatures", "usb_port2")
+        usb_port3_sig = config.get("USBPortSignatures", "usb_port3")
+        usb_port4_sig = config.get("USBPortSignatures", "usb_port4")
         disconn = config.get("USBPortSignatures", "disconn")
 
         while True:
@@ -337,62 +337,62 @@ def find_usb_ports():
             if disconn in line:
                 chkUSB = '/dev/ttyUSB' + line[-1]
 
-                if cda.portA == chkUSB:
+                if cda.usb_port1 == chkUSB:
                     if config.get("Debug", "show_dmesg") == "true":
                         logger.msg(
                             "I", f"Sensor 1 disconned from USB port: {chkUSB}")
-                    cda.portA = "na"
-                elif cda.portB == chkUSB:
+                    cda.usb_port1 = "na"
+                elif cda.usb_port2 == chkUSB:
                     if config.get("Debug", "show_dmesg") == "true":
                         logger.msg(
                             "I", f"Sensor 2 disconned from USB port: {chkUSB}")
-                    cda.portB = "na"
-                elif cda.portC == chkUSB:
+                    cda.usb_port2 = "na"
+                elif cda.usb_port3 == chkUSB:
                     if config.get("Debug", "show_dmesg") == "true":
                         logger.msg(
                             "I", f"Sensor 3 disconned from USB port: {chkUSB}")
-                    cda.portC = "na"
-                elif cda.portD == chkUSB:
+                    cda.usb_port3 = "na"
+                elif cda.usb_port4 == chkUSB:
                     if config.get("Debug", "show_dmesg") == "true":
                         logger.msg(
                             "I", f"Sensor 4 disconned from USB port: {chkUSB}")
-                    cda.portD = "na"
+                    cda.usb_port4 = "na"
 
-            if portA_sig in line:
-                if cda.portA == "na":
+            if usb_port1_sig in line:
+                if cda.usb_port1 == "na":
                     if len(line) > 65:
                         pid = line[65:72]
-                        cda.portA = "/dev/" + pid
+                        cda.usb_port1 = "/dev/" + pid
                         if config.get("Debug", "show_dmesg") == "true":
                             logger.msg(
-                                "I", f"Sensor 1 set to USB port: {cda.portA}")
+                                "I", f"Sensor 1 set to USB port: {cda.usb_port1}")
 
-            if portB_sig in line:
-                if cda.portB == "na":
+            if usb_port2_sig in line:
+                if cda.usb_port2 == "na":
                     if len(line) > 65:
                         pid = line[65:72]
-                        cda.portB = "/dev/" + pid
+                        cda.usb_port2 = "/dev/" + pid
                         if config.get("Debug", "show_dmesg") == "true":
                             logger.msg(
-                                "I", f"Sensor 2 set to USB port: {cda.portB}")
+                                "I", f"Sensor 2 set to USB port: {cda.usb_port2}")
 
-            if portC_sig in line:
-                if cda.portC == "na":
+            if usb_port3_sig in line:
+                if cda.usb_port3 == "na":
                     if len(line) > 65:
                         pid = line[65:72]
-                        cda.portC = "/dev/" + pid
+                        cda.usb_port3 = "/dev/" + pid
                         if config.get("Debug", "show_dmesg") == "true":
                             logger.msg(
-                                "I", f"Sensor 3 set to USB port: {cda.portC}")
+                                "I", f"Sensor 3 set to USB port: {cda.usb_port3}")
 
-            if portD_sig in line:
-                if cda.portD == "na":
+            if usb_port4_sig in line:
+                if cda.usb_port4 == "na":
                     if len(line) > 65:
                         pid = line[65:72]
-                        cda.portD = "/dev/" + pid
+                        cda.usb_port4 = "/dev/" + pid
                         if config.get("Debug", "show_dmesg") == "true":
                             logger.msg(
-                                "I", f"Sensor 4 set to USB port: {cda.portD}")
+                                "I", f"Sensor 4 set to USB port: {cda.usb_port4}")
 
             # Increase line in the dmesg data to get
             ln = ln + 1
@@ -400,10 +400,10 @@ def find_usb_ports():
             # No more lines to process
             if ln >= hl:
                 # logger.msg("I", "------------")
-                # logger.msg("I", f"Sensor 1 usb port: {cda.portA}")
-                # logger.msg("I", f"Sensor 2 usb port: {cda.portB}")
-                # logger.msg("I", f"Sensor 3 usb port: {cda.portC}")
-                # logger.msg("I", f"Sensor 4 usb port: {cda.portD}")
+                # logger.msg("I", f"Sensor 1 usb port: {cda.usb_port1}")
+                # logger.msg("I", f"Sensor 2 usb port: {cda.usb_port2}")
+                # logger.msg("I", f"Sensor 3 usb port: {cda.usb_port3}")
+                # logger.msg("I", f"Sensor 4 usb port: {cda.usb_port4}")
                 # logger.msg("I", "------------")
                 break
 

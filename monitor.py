@@ -130,13 +130,13 @@ def mainLine():
             getPorts()
 
             # Check for if any ports were found is so break out of while
-            if (cda.portA != "na"):
+            if (cda.usb_port1 != "na"):
                 portsfound = portsfound + 1
-            if (cda.portB != "na"):
+            if (cda.usb_port2 != "na"):
                 portsfound = portsfound + 1
-            if (cda.portC != "na"):
+            if (cda.usb_port3 != "na"):
                 portsfound = portsfound + 1
-            if (cda.portD != "na"):
+            if (cda.usb_port4 != "na"):
                 portsfound = portsfound + 1
 
             # If at least one port is found check if any ports were located
@@ -148,10 +148,10 @@ def mainLine():
 
           # Circut breaker to stop looking for USB definitions
             if find_cnt > 5:
-                cda.portA = "/dev/ttyUSB0"
-                cda.portB = "/dev/ttyUSB1"
-                cda.portC = "/dev/ttyUSB2"
-                cda.portD = "/dev/ttyUSB3"
+                cda.usb_port1 = "/dev/ttyUSB0"
+                cda.usb_port2 = "/dev/ttyUSB1"
+                cda.usb_port3 = "/dev/ttyUSB2"
+                cda.usb_port4 = "/dev/ttyUSB3"
                 logger.msg(
                     "I", f"Attempted to read USB ports 5 times, forced use of default USB ports")
                 break
@@ -162,11 +162,14 @@ def mainLine():
 
         # Log the sensors located and send SMS about what is found
         logger.msg("I", "------------")
-        logger.msg("I", f"Sensor 1 usb port: {cda.portA}")
-        logger.msg("I", f"Sensor 2 usb port: {cda.portB}")
-        logger.msg("I", f"Sensor 3 usb port: {cda.portC}")
-        logger.msg("I", f"Sensor 4 usb port: {cda.portD}")
+        logger.msg("I", f"Sensor 1 usb port: {cda.usb_port1}")
+        logger.msg("I", f"Sensor 2 usb port: {cda.usb_port2}")
+        logger.msg("I", f"Sensor 3 usb port: {cda.usb_port3}")
+        logger.msg("I", f"Sensor 4 usb port: {cda.usb_port4}")
         logger.msg("I", "------------")
+
+        logger.msg("I",config.get("USBPortSignatures", "mapAto"))
+
 
         # SMS related message, who
         foundMsg = ""
@@ -197,48 +200,40 @@ def mainLine():
             cda.iCnt = cda.iCnt + 1
 
             # Get sensor data for each located sensor
-            if cda.portA != "na":
+            if cda.usb_port1 != "na":
                 rtn = []
-                rtn = pzemHandler.readSensor(
-                    cda.portA, config.get("USBPortSignatures", "mapAto"))
+                rtn = pzemHandler.readSensor(cda.usb_port1, config.get("USBPortSignatures", "map_usb_port1_to_sensor"))
                 # print(f"A rtn {rtn}")
                 if rtn[0] == False:
                     rtn[1] = []
-                checkThresholds.checkData(
-                    rtn[1], config.get("USBPortSignatures", "mapAto"))
+                checkThresholds.checkData(rtn[1], config.get("USBPortSignatures", "map_usb_port1_to_sensor"))
                 cda.sensor_A_registers.append(rtn[1])
 
-            if cda.portB != "na":
+            if cda.usb_port2 != "na":
                 rtn = []
-                rtn = pzemHandler.readSensor(
-                    cda.portB, config.get("USBPortSignatures", "mapBto"))
+                rtn = pzemHandler.readSensor(cda.usb_port2, config.get("USBPortSignatures", "map_usb_port2_to_sensor"))
                 # print(f"B rtn {rtn}")
                 if rtn[0] == False:
                     rtn[1] = []
-                checkThresholds.checkData(
-                    rtn[1], config.get("USBPortSignatures", "mapBto"))
+                checkThresholds.checkData(rtn[1], config.get("USBPortSignatures", "map_usb_port2_to_sensor"))
                 cda.sensor_B_registers.append(rtn[1])
 
-            if cda.portC != "na":
+            if cda.usb_port3 != "na":
                 rtn = []
-                rtn = pzemHandler.readSensor(
-                    cda.portC, config.get("USBPortSignatures", "mapCto"))
+                rtn = pzemHandler.readSensor(cda.usb_port3, config.get("USBPortSignatures", "map_usb_port3_to_sensor"))
                 # print(f"C rtn {rtn}")
                 if rtn[0] == False:
                     rtn[1] = []
-                checkThresholds.checkData(
-                    rtn[1], config.get("USBPortSignatures", "mapCto"))
+                checkThresholds.checkData(rtn[1], config.get("USBPortSignatures", "map_usb_port3_to_sensor"))
                 cda.sensor_C_registers.append(rtn[1])
 
-            if cda.portD != "na":
+            if cda.usb_port4 != "na":
                 rtn = []
-                rtn = pzemHandler.readSensor(
-                    cda.portD, config.get("USBPortSignatures", "mapDto"))
+                rtn = pzemHandler.readSensor(cda.usb_port4, config.get("USBPortSignatures", "map_usb_port4_to_sensor"))
                 # print(f"D rtn {rtn}")
                 if rtn[0] == False:
                     rtn[1] = []
-                checkThresholds.checkData(
-                    rtn[1], config.get("USBPortSignatures", "mapDto"))
+                checkThresholds.checkData(rtn[1], config.get("USBPortSignatures", "map_usb_port4_to_sensor"))
                 cda.sensor_D_registers.append(rtn[1])
 
             # Check thresholds for any issues

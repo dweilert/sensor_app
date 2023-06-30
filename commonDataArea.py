@@ -35,10 +35,10 @@ debug = False
 
 # monitor
 getPortsCnt = 0
-portA = "na"
-portB = "na"
-portC = "na"
-portD = "na"
+usb_port1 = "na"
+usb_port2 = "na"
+usb_port3 = "na"
+usb_port4 = "na"
 
 wait_to_check_sensors = 5
 wait_to_check_for_ports = 5
