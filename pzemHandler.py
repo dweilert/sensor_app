@@ -144,7 +144,9 @@ def readSensor(usbPort, id):
             regs = client.read_input_registers(0, 10, 1)
 
             dump(regs)
-            
+
+            print("REGS.STRING: " + regs.string)
+
             rType = type(regs)
             print(f"type: {rType}")
             rType = str(rType)
