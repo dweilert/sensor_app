@@ -124,7 +124,7 @@ def mainLine():
     diagCnt = 0
     find_cnt = 0
     rtn = ""
-    critical_count = config.get("Limits","critical_error_skip_count")
+    critical_count = int(config.get("Limits","critical_error_skip_count"))
 
     try:
         portsFound = 0
