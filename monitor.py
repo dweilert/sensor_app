@@ -162,14 +162,16 @@ def mainLine():
 
         # Log the sensors located and send SMS about what is found
         logger.msg("I", "------------")
-        logger.msg("I", f"Sensor 1 usb port: {cda.usb_port1}")
-        logger.msg("I", f"Sensor 2 usb port: {cda.usb_port2}")
-        logger.msg("I", f"Sensor 3 usb port: {cda.usb_port3}")
-        logger.msg("I", f"Sensor 4 usb port: {cda.usb_port4}")
+        logger.msg("I", f"USB port 1: {cda.usb_port1} mapped to Sensor: {config.get('USBPortSignatures', 'map_usb_port1_to_sensor')}")
+        logger.msg("I", f"USB port 2: {cda.usb_port2} mapped to Sensor: {config.get('USBPortSignatures', 'map_usb_port2_to_sensor')}")
+        logger.msg("I", f"USB port 3: {cda.usb_port3} mapped to Sensor: {config.get('USBPortSignatures', 'map_usb_port3_to_sensor')}")
+        logger.msg("I", f"USB port 4: {cda.usb_port4} mapped to Sensor: {config.get('USBPortSignatures', 'map_usb_port4_to_sensor')}")
         logger.msg("I", "------------")
-
-        logger.msg("I",config.get("USBPortSignatures", "mapAto"))
-
+        logger.msg("I","Logic checking is:")
+        logger.msg("I","  (A) - pump 1")
+        logger.msg("I","  (B) - pump 2")
+        logger.msg("I","  (C) - high-level alarm")
+        logger.msg("I","  (D) - overall power")
 
         # SMS related message, who
         foundMsg = ""
