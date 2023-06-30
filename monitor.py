@@ -59,13 +59,14 @@ def getPorts():
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg("E",f"getPorts() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-        logger.msg("E",f"getPorts() {e}")
+        logger.msg(
+            "E", f"getPorts() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        logger.msg("E", f"getPorts() {e}")
 
 
 def resetCheck(nowDay, nowHour):
     try:
-        # Check if it is a new day, if so reset memory 
+        # Check if it is a new day, if so reset memory
         if cda.current_date != nowDay:
             cda.current_date = nowDay
             cda.iCnt = 0
@@ -97,115 +98,146 @@ def resetCheck(nowDay, nowHour):
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg("E",f"resetCheck() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-        logger.msg("E",f"resetCheck() {e}")
+        logger.msg(
+            "E", f"resetCheck() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        logger.msg("E", f"resetCheck() {e}")
 
 
 def mainLine():
-    diagCnt = 0
-    find_cnt = 0
     """
     Get the USB ports that are connected to the PZEM sensors.  At startup of the
     Raspberry Pi there are messages that are accessable via the linux command
     dmesg.  The pzemHandler will try and find these messages.  If the dmesg 
-    output is not located the system will retry 10 times then default to:
-        portA = "/dev/ttyUSB0"
-        portB = "/dev/ttyUSB1"
-        portC = "/dev/ttyUSB2"
-        portD = "/dev/ttyUSB3"
+    output is not located the system will retry 5 times then default to default
+    values. 
 
     Once tttyUSB* ports are set the system will begin polling the sensors on 
     each USB port.
-    """    
+    """
+
+    diagCnt = 0
+    find_cnt = 0
+    rtn = ""
+
     try:
         current_hour = 99
-        while True:    
+        usingDefault = False
+        portsFound = 0
+        waitSeconds = config.get("Interval", "wait_to_check_for_ports_seconds")
+        while True:
+            portsfound = 0
             find_cnt = find_cnt + 1
-            getPorts()
-            cnt = 0   
-            if (cda.portA != "na"):
-                cnt = cnt + 1
-            if (cda.portB != "na"):
-                cnt = cnt + 1
-            if (cda.portC != "na"):
-                cnt = cnt + 1
-            if (cda.portD != "na"):
-                cnt = cnt + 1    
 
-            # Circut breaker to stop looking for USB definitions
-            if find_cnt > 10:
+           # Circut breaker to stop looking for USB definitions
+            if find_cnt > 5:
+                usingDefault = True
                 cda.portA = "/dev/ttyUSB0"
                 cda.portB = "/dev/ttyUSB1"
                 cda.portC = "/dev/ttyUSB2"
                 cda.portD = "/dev/ttyUSB3"
-                logger.msg("I",f"Attempted to read USB ports 10 times, forced use of default USB ports")
-                sms = []
-                sms.append(config.get("Messages","sensors_default_msg"))
-                sms.append(config.get("Messages","sensors_default_who"))
-                cda.smsMsg.append(sms)
-                smsHandler.sendSMS()    
+                logger.msg(
+                    "I", f"Attempted to read USB ports 5 times, forced use of default USB ports")
                 break
 
-            # check if any ports were located
-            if cnt > 0:
-                sms = []
-                sms.append(config.get("Messages","sensors_at_startup_msg")+" "+str(cnt))
-                sms.append(config.get("Messages","sensors_at_startup_who"))
-                cda.smsMsg.append(sms)
-                smsHandler.sendSMS() 
+            # Get PZEM port data
+            getPorts()
+
+            # Check for if any ports were found is so break out of while
+            if (cda.portA != "na"):
+                portsfound = portsfound + 1
+            if (cda.portB != "na"):
+                portsfound = portsfound + 1
+            if (cda.portC != "na"):
+                portsfound = portsfound + 1
+            if (cda.portD != "na"):
+                portsfound = portsfound + 1
+
+            # If at least one port is found check if any ports were located
+            if portsfound > 0:
                 break
-            else:	    
-                time.sleep(int(config.get("Interval","wait_to_check_for_ports_seconds")))
 
+            time.sleep(int(waitSeconds))
+        # ----------------------------------------------------------------------
 
+        # Log the sensors located and send SMS about what is found
+        logger.msg("I", "------------")
+        logger.msg("I", f"Sensor 1 usb port: {cda.portA}")
+        logger.msg("I", f"Sensor 2 usb port: {cda.portB}")
+        logger.msg("I", f"Sensor 3 usb port: {cda.portC}")
+        logger.msg("I", f"Sensor 4 usb port: {cda.portD}")
+        logger.msg("I", "------------")
 
-        rtn = ""
+        # SMS related message, who
+        foundMsg = ""
+        who = ""
+        if portsFound > 0:
+            foundMsg = config.get("Messages", "sensors_at_startup_msg"
+                                  + " " + str(portsfound))
+            who = config.get("Messages", "sensors_at_startup_who")
+        else:
+            foundMsg = config.get("Messages", "sensors_default_msg")
+            who = config.get("Messages", "sensors_default_who")
+
+        # Send SMS
+        sms = []
+        sms.append()
+        sms.append(foundMsg, who)
+        cda.smsMsg.append(sms)
+        smsHandler.sendSMS()
+
+        # Now loop forever
         while True:
-
             now = datetime.now()
             nowDay = now.strftime("%Y_%m_%d")
             nowHour = now.strftime("%H")
             # Reset stats and counters if it is a new day
             resetCheck(nowDay, nowHour)
-            
-            # Increment interval counter
+            # Increment daily interval counter
             cda.iCnt = cda.iCnt + 1
 
             # Get sensor data for each located sensor
             if cda.portA != "na":
-                rtn = []                
-                rtn = pzemHandler.readSensor(cda.portA,config.get("USBPortSignatures","mapAto"))
-                #print(f"A rtn {rtn}")
+                rtn = []
+                rtn = pzemHandler.readSensor(
+                    cda.portA, config.get("USBPortSignatures", "mapAto"))
+                # print(f"A rtn {rtn}")
                 if rtn[0] == False:
                     rtn[1] = []
-                checkThresholds.checkData(rtn[1],config.get("USBPortSignatures","mapAto"))
+                checkThresholds.checkData(
+                    rtn[1], config.get("USBPortSignatures", "mapAto"))
                 cda.sensor_A_registers.append(rtn[1])
-            
+
             if cda.portB != "na":
                 rtn = []
-                rtn = pzemHandler.readSensor(cda.portB,config.get("USBPortSignatures","mapBto"))
-                #print(f"B rtn {rtn}")
+                rtn = pzemHandler.readSensor(
+                    cda.portB, config.get("USBPortSignatures", "mapBto"))
+                # print(f"B rtn {rtn}")
                 if rtn[0] == False:
                     rtn[1] = []
-                checkThresholds.checkData(rtn[1],config.get("USBPortSignatures","mapBto"))
+                checkThresholds.checkData(
+                    rtn[1], config.get("USBPortSignatures", "mapBto"))
                 cda.sensor_B_registers.append(rtn[1])
 
             if cda.portC != "na":
                 rtn = []
-                rtn = pzemHandler.readSensor(cda.portC,config.get("USBPortSignatures","mapCto"))
-                #print(f"C rtn {rtn}")
+                rtn = pzemHandler.readSensor(
+                    cda.portC, config.get("USBPortSignatures", "mapCto"))
+                # print(f"C rtn {rtn}")
                 if rtn[0] == False:
                     rtn[1] = []
-                checkThresholds.checkData(rtn[1],config.get("USBPortSignatures","mapCto"))
+                checkThresholds.checkData(
+                    rtn[1], config.get("USBPortSignatures", "mapCto"))
                 cda.sensor_C_registers.append(rtn[1])
 
-            if cda.portD != "na":            
+            if cda.portD != "na":
                 rtn = []
-                rtn = pzemHandler.readSensor(cda.portD,config.get("USBPortSignatures","mapDto"))
-                #print(f"D rtn {rtn}")
+                rtn = pzemHandler.readSensor(
+                    cda.portD, config.get("USBPortSignatures", "mapDto"))
+                # print(f"D rtn {rtn}")
                 if rtn[0] == False:
                     rtn[1] = []
-                checkThresholds.checkData(rtn[1],config.get("USBPortSignatures","mapDto"))
+                checkThresholds.checkData(
+                    rtn[1], config.get("USBPortSignatures", "mapDto"))
                 cda.sensor_D_registers.append(rtn[1])
 
             # Check thresholds for any issues
@@ -217,16 +249,7 @@ def mainLine():
                 cda.cpu_temps.append(nowHour + ":" + str(cpu.temperature))
                 cda.cpu_temp_hour = nowHour
                 cda.cpu_temp_high = cpu.temperature
-            # else:
-            #     # check and replace temp with higher value if found
-            #     if cpu.temperature > cda.cpu_temp_high:
-            #         for i in range(len(cda.cpu_temps)):
-            #             data = cda.cpu_temps[i]
-            #             if data.startswith(nowHour):
-                            
-            #                 cda.cpu_temps[i] = nowHour + ":" + str(cpu.temperature)
-                    
-                
+
             # check temperature for out of threshoold ranges
             checkThresholds.checkTemperature(cpu.temperature)
 
@@ -238,33 +261,33 @@ def mainLine():
             # get Raspberry Pi memory usage data
             cda.cpu_ram.append(util.getRAMinfo())
 
-            # Return RAM information (unit=kb) in a list                                        
-            if config.get("Debug","interval_count") == "true":
-                logger.msg("I",f"Interval count({cda.iCnt})")
+            # Return RAM information (unit=kb) in a list
+            if config.get("Debug", "interval_count") == "true":
+                logger.msg("I", f"Interval count({cda.iCnt})")
 
             # check if the CLI interface has any requests
             getCmdInfo.checkForCommandFile()
 
             # wait for the defined time and then do it all again
-            time.sleep(int(config.get("Interval","wait_to_check_sensors_seconds")))
+            time.sleep(
+                int(config.get("Interval", "wait_to_check_sensors_seconds")))
 
             # if diagCnt == 5:
             #     util.checkDiag()
             #     diagCnt = 0
             # else:
             #     diagCnt = diagCnt + 1
-            
+
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg("E",f"mainLine() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-        logger.msg("E",f"mainLine() {e}")
+        logger.msg(
+            "E", f"mainLine() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        logger.msg("E", f"mainLine() {e}")
         time.sleep(5)
         mainLine()
 
-
- 
 
 """ 
 ===============================================================================
@@ -309,7 +332,7 @@ if __name__ == "__main__":
     try:
         # Read config.ini file for parameters
         config.readConfig()
-        # set current date
+        # get current date
         now = datetime.now()
         cda.current_date = now.strftime("%Y_%m_%d")
         # initialize values
@@ -318,8 +341,8 @@ if __name__ == "__main__":
         cda.error_cnt = 0
 
         # Check if old CLI command.txt file exists and delete if found
-        if os.path.exists(config.get("CommandInterface","cmd_file")):
-            os.remove(config.get("CommandInterface","cmd_file"))
+        if os.path.exists(config.get("CommandInterface", "cmd_file")):
+            os.remove(config.get("CommandInterface", "cmd_file"))
 
         mainLine()
 
@@ -327,8 +350,9 @@ if __name__ == "__main__":
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg("E",f"__main__ Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
-        logger.msg("E",f"__main__ {e}")
+        logger.msg(
+            "E", f"__main__ Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        logger.msg("E", f"__main__ {e}")
         time.sleep(5)
 
         # Invoke mainLine even if an error occurs

@@ -103,33 +103,36 @@ import commonDataArea as cda
 import dataHandler
 import logger
 
+
 def resetEnergy(usbPort):
-# Not currently working
+    # Not currently working
     try:
-        client = ModbusSerialClient(port=usbPort,timeout=int(config.get("Pzem","timeout")),baudrate=9600,bytesize=8,parity="N",stopbits=1)
+        client = ModbusSerialClient(port=usbPort, timeout=int(config.get(
+            "Pzem", "timeout")), baudrate=9600, bytesize=8, parity="N", stopbits=1)
         client.connect()
-        result = client.write_register(1,0x42)
+        result = client.write_register(1, 0x42)
         print(result)
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg("E",f"resetEnergy() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
-        logger.msg("E",f"resetEnergy() {e}")
+        logger.msg(
+            "E", f"resetEnergy() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        logger.msg("E", f"resetEnergy() {e}")
 
 
 def readSensor(usbPort, id):
-    #Get register data
+    # Get register data
     try:
         rtn = []
         # Check if sensor was found, if not skip
-        if cda.portA == "na" and id == "A": 
+        if cda.portA == "na" and id == "A":
             rtn = []
             rtn.append(False)
             rtn.append("na")
             return rtn
         if cda.portB == "na" and id == "B":
-            rtn = [] 
+            rtn = []
             rtn.append(False)
             rtn.append("na")
             return rtn
@@ -142,9 +145,10 @@ def readSensor(usbPort, id):
             rtn = []
             rtn.append(False)
             rtn.append("na")
-            return rtn   
-             
-        client = ModbusSerialClient(port=usbPort,timeout=int(config.get("Pzem","timeout")),baudrate=9600,bytesize=8,parity="N",stopbits=1)
+            return rtn
+
+        client = ModbusSerialClient(port=usbPort, timeout=int(config.get(
+            "Pzem", "timeout")), baudrate=9600, bytesize=8, parity="N", stopbits=1)
         status = client.connect()
 
         # If the connection to the sensor fails flag it as a connection error
@@ -167,15 +171,15 @@ def readSensor(usbPort, id):
 
         # No connection error so continue and get the sensor register data
         # and convert to a string
-        request = client.read_input_registers(0,10,1)
+        request = client.read_input_registers(0, 10, 1)
         rType = type(request)
         rType = str(rType)
 
         # Check if the sensor register data is located then process. Else
         # check the data for erros and return the data as an error.
         if "pymodbus.register_read_message.ReadInputRegistersResponse" in rType:
-            
-            # If either one of the pumps SAVE the data 
+
+            # If either one of the pumps SAVE the data
             if id == "A" or id == "B":
                 dataHandler.saveData(request.registers, id)
 
@@ -217,7 +221,7 @@ def readSensor(usbPort, id):
             rtn.append("IOException")
             client.close()
             return rtn
-        
+
         elif "pymodbus.exceptions.ConnectionException" in rType:
             if id == "A":
                 cda.sensor_A_connect_error = True
@@ -232,7 +236,7 @@ def readSensor(usbPort, id):
             rtn.append(False)
             rtn.append("ConnectionError")
             client.close()
-            return rtn        
+            return rtn
 
         else:
             rtn = []
@@ -243,7 +247,7 @@ def readSensor(usbPort, id):
 
     except Exception as e:
         errorLine = f"Exception: {e}"
-        if config.get("Pzem","ioException") in errorLine:
+        if config.get("Pzem", "ioException") in errorLine:
             if id == "A":
                 cda.sensor_A_io_error = True
             elif id == "B":
@@ -253,7 +257,7 @@ def readSensor(usbPort, id):
             elif id == "D":
                 cda.sensor_D_io_error = True
 
-        if config.get("Pzem","connectionError") in errorLine:
+        if config.get("Pzem", "connectionError") in errorLine:
             if id == "A":
                 cda.sensor_A_connect_error = True
             elif id == "B":
@@ -262,25 +266,27 @@ def readSensor(usbPort, id):
                 cda.sensor_C_connect_error = True
             elif id == "D":
                 cda.sensor_D_connect_error = True
-               
+
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
-        line_number = exception_traceback.tb_lineno    
+        line_number = exception_traceback.tb_lineno
 
         # If "Errno 71" is located increase the counter
         eStr = f"type: {e}"
         if "Errno 71" in eStr:
             eStr = None
-            cda.Errno71_cnt = cda.errno71_cnt + 1 
+            cda.Errno71_cnt = cda.errno71_cnt + 1
 
-        logger.msg("E",f"readSensor() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
-        logger.msg("E",f"readSensor() PzemHandler.monitor() error type: {e}")
-        logger.msg("E",f"readSensor() usbPort: {usbPort} id: {id}")
+        logger.msg(
+            "E", f"readSensor() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        logger.msg("E", f"readSensor() PzemHandler.monitor() error type: {e}")
+        logger.msg("E", f"readSensor() usbPort: {usbPort} id: {id}")
 
         rtn = []
         rtn.append(False)
         rtn.append(exception_type)
         return rtn
+
 
 """
 Determine which ttyUSB* ports are supporting the connected PZEM modules.
@@ -298,6 +304,8 @@ Signatures:
    PZEM D  - usb 1-1.2.4: ch341-uart converter now attached to
    
 """
+
+
 def find_usb_ports():
     try:
         # run command on OS to get info for devices
@@ -309,39 +317,45 @@ def find_usb_ports():
         hl = len(lines)
         ln = 1
 
+        # Initial values for USB ports
         cda.portA = "na"
         cda.portB = "na"
         cda.portC = "na"
-        cda.portD = "na"  
-        
-        portA_sig = config.get("USBPortSignatures","portA")
-        portB_sig = config.get("USBPortSignatures","portB")
-        portC_sig = config.get("USBPortSignatures","portC")
-        portD_sig = config.get("USBPortSignatures","portD")
-        disconn = config.get("USBPortSignatures","disconn")
-            
+        cda.portD = "na"
+
+        # Get port signature values to search for in the dmesg data
+        portA_sig = config.get("USBPortSignatures", "portA")
+        portB_sig = config.get("USBPortSignatures", "portB")
+        portC_sig = config.get("USBPortSignatures", "portC")
+        portD_sig = config.get("USBPortSignatures", "portD")
+        disconn = config.get("USBPortSignatures", "disconn")
+
         while True:
             line = lines[ln]
-            if config.get("Debug","show_dmesg") == "true":
+            if config.get("Debug", "show_dmesg") == "true":
                 print(line)
             if disconn in line:
                 chkUSB = '/dev/ttyUSB' + line[-1]
 
                 if cda.portA == chkUSB:
-                    if config.get("Debug","show_dmesg") == "true":
-                        logger.msg("I",f"Sensor 1 disconned from USB port: {chkUSB}")
+                    if config.get("Debug", "show_dmesg") == "true":
+                        logger.msg(
+                            "I", f"Sensor 1 disconned from USB port: {chkUSB}")
                     cda.portA = "na"
                 elif cda.portB == chkUSB:
-                    if config.get("Debug","show_dmesg") == "true":
-                        logger.msg("I",f"Sensor 2 disconned from USB port: {chkUSB}")
+                    if config.get("Debug", "show_dmesg") == "true":
+                        logger.msg(
+                            "I", f"Sensor 2 disconned from USB port: {chkUSB}")
                     cda.portB = "na"
                 elif cda.portC == chkUSB:
-                    if config.get("Debug","show_dmesg") == "true":    
-                        logger.msg("I",f"Sensor 3 disconned from USB port: {chkUSB}")
+                    if config.get("Debug", "show_dmesg") == "true":
+                        logger.msg(
+                            "I", f"Sensor 3 disconned from USB port: {chkUSB}")
                     cda.portC = "na"
                 elif cda.portD == chkUSB:
-                    if config.get("Debug","show_dmesg") == "true":
-                        logger.msg("I",f"Sensor 4 disconned from USB port: {chkUSB}")
+                    if config.get("Debug", "show_dmesg") == "true":
+                        logger.msg(
+                            "I", f"Sensor 4 disconned from USB port: {chkUSB}")
                     cda.portD = "na"
 
             if portA_sig in line:
@@ -349,50 +363,55 @@ def find_usb_ports():
                     if len(line) > 65:
                         pid = line[65:72]
                         cda.portA = "/dev/" + pid
-                        if config.get("Debug","show_dmesg") == "true":
-                            logger.msg("I",f"Sensor 1 set to USB port: {cda.portA}")
-        
+                        if config.get("Debug", "show_dmesg") == "true":
+                            logger.msg(
+                                "I", f"Sensor 1 set to USB port: {cda.portA}")
+
             if portB_sig in line:
                 if cda.portB == "na":
                     if len(line) > 65:
                         pid = line[65:72]
                         cda.portB = "/dev/" + pid
-                        if config.get("Debug","show_dmesg") == "true":
-                            logger.msg("I",f"Sensor 2 set to USB port: {cda.portB}")
+                        if config.get("Debug", "show_dmesg") == "true":
+                            logger.msg(
+                                "I", f"Sensor 2 set to USB port: {cda.portB}")
 
             if portC_sig in line:
                 if cda.portC == "na":
                     if len(line) > 65:
                         pid = line[65:72]
                         cda.portC = "/dev/" + pid
-                        if config.get("Debug","show_dmesg") == "true":
-                            logger.msg("I",f"Sensor 3 set to USB port: {cda.portC}")
+                        if config.get("Debug", "show_dmesg") == "true":
+                            logger.msg(
+                                "I", f"Sensor 3 set to USB port: {cda.portC}")
 
             if portD_sig in line:
                 if cda.portD == "na":
                     if len(line) > 65:
                         pid = line[65:72]
                         cda.portD = "/dev/" + pid
-                        if config.get("Debug","show_dmesg") == "true":
-                            logger.msg("I",f"Sensor 4 set to USB port: {cda.portD}")
-            
-            # Decrease line to get
+                        if config.get("Debug", "show_dmesg") == "true":
+                            logger.msg(
+                                "I", f"Sensor 4 set to USB port: {cda.portD}")
+
+            # Increase line in the dmesg data to get
             ln = ln + 1
 
             # No more lines to process
             if ln >= hl:
-                logger.msg("I","------------")
-                logger.msg("I",f"Sensor 1 usb port: {cda.portA}")
-                logger.msg("I",f"Sensor 2 usb port: {cda.portB}")
-                logger.msg("I",f"Sensor 3 usb port: {cda.portC}")
-                logger.msg("I",f"Sensor 4 usb port: {cda.portD}")
-                logger.msg("I","------------")
+                # logger.msg("I", "------------")
+                # logger.msg("I", f"Sensor 1 usb port: {cda.portA}")
+                # logger.msg("I", f"Sensor 2 usb port: {cda.portB}")
+                # logger.msg("I", f"Sensor 3 usb port: {cda.portC}")
+                # logger.msg("I", f"Sensor 4 usb port: {cda.portD}")
+                # logger.msg("I", "------------")
                 break
-                        
+
         return
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg("E",f"find_usb_ports() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
-        logger.msg("E",f"find_usb_ports() {e}")
+        logger.msg(
+            "E", f"find_usb_ports() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        logger.msg("E", f"find_usb_ports() {e}")
