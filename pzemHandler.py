@@ -181,10 +181,12 @@ def readSensor(usbPort, id):
         rtn.append(exception_type)
         client = None
 
-        if str(type(exception_type)) == "TimeoutError":
+        errStr = str(type(exception_type))
+
+        if "TimeoutError" in errStr:
             cda.timeout_error = cda.timeout_error + 1
 
-        if str(type(exception_type)) == "AttributeError":
+        if "AttributeError" in errStr:
             cda.critical_error = cda.critical_error + 1
             if id == "A":
                 cda.critical_error_A = cda.critical_error_A + 1
