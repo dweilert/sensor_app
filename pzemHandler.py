@@ -97,6 +97,7 @@ import sys
 from datetime import datetime
 from pymodbus.client import ModbusSerialClient
 from pymodbus.constants import Defaults
+from pprint import pprint
 
 import config
 import commonDataArea as cda
@@ -122,46 +123,56 @@ def resetEnergy(usbPort):
 
 
 def dump(obj):
-  for attr in dir(obj):
-    print("obj.%s = %r" % (attr, getattr(obj, attr)))
+    print(type(obj))
+    for attr in dir(obj):
+        print("obj.%s = %r" % (attr, getattr(obj, attr)))
+    pprint(vars(obj))
+
+
 
 def readSensor(usbPort, id):
     # Get register data
     try:
         rtn = []
-        # Check if sensor was found, if not skip
-        if cda.usb_port1 == "na":
-            rtn = []
-            rtn.append(False)
-            rtn.append("na")
-            return rtn
-        if cda.usb_port2 == "na":
-            rtn = []
-            rtn.append(False)
-            rtn.append("na")
-            return rtn
-        if cda.usb_port3 == "na":
-            rtn = []
-            rtn.append(False)
-            rtn.append("na")
-            return rtn
-        if cda.usb_port4 == "na":
-            rtn = []
-            rtn.append(False)
-            rtn.append("na")
-            return rtn
+        # # Check if sensor was found, if not skip
+        # if cda.usb_port1 == "na":
+        #     rtn = []
+        #     rtn.append(False)
+        #     rtn.append("na")
+        #     return rtn
+        # if cda.usb_port2 == "na":
+        #     rtn = []
+        #     rtn.append(False)
+        #     rtn.append("na")
+        #     return rtn
+        # if cda.usb_port3 == "na":
+        #     rtn = []
+        #     rtn.append(False)
+        #     rtn.append("na")
+        #     return rtn
+        # if cda.usb_port4 == "na":
+        #     rtn = []
+        #     rtn.append(False)
+        #     rtn.append("na")
+        #     return rtn
 
         client = ModbusSerialClient(port=usbPort, timeout=int(config.get(
             "Pzem", "timeout")), baudrate=9600, bytesize=8, parity="N", stopbits=1)
-        status = client.connect()
 
         print("---- client start ----")
         dump(client)
         print("---- client end ----")
 
+        status = client.connect()
+
+        print("---- status start ----")
+        dump(status)
+        print("---- status end ----")
+
         # If the connection to the sensor fails flag it as a connection error
         # and return and build Failed return data array
         if status != True:
+            print("status not equal True")
             client = None
             if id == "A":
                 cda.sensor_A_connect_error = True
