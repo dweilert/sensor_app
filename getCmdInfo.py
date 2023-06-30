@@ -70,9 +70,7 @@ def checkForCommandFile():
                 elif "monitorStatus" in line:
                     results = callMonitorInterface()
                 elif "count" in line:
-                    results = intervalCounts()
-                elif "count" in line:
-                    results = intervalCounts()
+                    results = getIntervalCounts()
                 elif "daily" in line:
                     results = getDaily()
                 elif "sensor" in line: 
