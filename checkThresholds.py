@@ -113,21 +113,15 @@ def checkTemperature(temp):
 def checkUPSPercent(pct):
     # Check if Raspberry Pi UPS percent is below level
     try:
-        print("UPS % " + str(pct))
-
         cda.smsMsg = []
         if pct < int(config.get("Limits", "ups_percent")):
-            cda.ups_percent_cnt = cda.ups_percent_cnt + 1
-            if cda.ups_percent_cnt > int(config.get("Limits", "ups_percent_cnt")):
-                sms = []
-                msg = config.get("Messages", "ups_percent_msg") + " " + config.get("Limits", "ups_percent") + " percent"
-                sms.append(msg)
-                sms.append(config.get("Messages", "ups_percent_who"))
-                cda.smsMsg.append(sms)
-                cda.ups_percent_cnt = 0
-                smsHandler.checkSMS("ups_percent")
-        else:
+            sms = []
+            msg = config.get("Messages", "ups_percent_msg") + " " + config.get("Limits", "ups_percent") + " percent"
+            sms.append(msg)
+            sms.append(config.get("Messages", "ups_percent_who"))
+            cda.smsMsg.append(sms)
             cda.ups_percent_cnt = 0
+            smsHandler.checkSMS("ups_percent")
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
