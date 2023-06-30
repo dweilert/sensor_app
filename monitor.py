@@ -126,16 +126,6 @@ def mainLine():
             portsfound = 0
             find_cnt = find_cnt + 1
 
-           # Circut breaker to stop looking for USB definitions
-            if find_cnt > 5:
-                cda.portA = "/dev/ttyUSB0"
-                cda.portB = "/dev/ttyUSB1"
-                cda.portC = "/dev/ttyUSB2"
-                cda.portD = "/dev/ttyUSB3"
-                logger.msg(
-                    "I", f"Attempted to read USB ports 5 times, forced use of default USB ports")
-                break
-
             # Get PZEM port data
             getPorts()
 
@@ -155,7 +145,19 @@ def mainLine():
 
             logger.msg(
                 "I", f"Get sensor attempt {find_cnt} of 5 completed, next attempt in {waitSeconds} seconds")
+
+          # Circut breaker to stop looking for USB definitions
+            if find_cnt > 5:
+                cda.portA = "/dev/ttyUSB0"
+                cda.portB = "/dev/ttyUSB1"
+                cda.portC = "/dev/ttyUSB2"
+                cda.portD = "/dev/ttyUSB3"
+                logger.msg(
+                    "I", f"Attempted to read USB ports 5 times, forced use of default USB ports")
+                break
+
             time.sleep(int(waitSeconds))
+
         # ----------------------------------------------------------------------
 
         # Log the sensors located and send SMS about what is found

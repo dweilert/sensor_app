@@ -75,7 +75,7 @@ def checkForCommandFile():
                     results = intervalCounts()
                 elif "daily" in line:
                     results = getDaily()
-                elif "sensor" in line:
+                elif "sensor" in line: 
                     results = getSensorInfo()
                 elif "ups" in line:
                     results = upsHandler.getUPSInfo(True)    
