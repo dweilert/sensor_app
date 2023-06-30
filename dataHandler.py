@@ -95,9 +95,9 @@ def saveData(row, pump):
                     if energy > 0:
                         awsHandler.putSensorData(record)
                         # Set daily info
-                        daily_pump_A_cnt = daily_pump_A_cnt + 1
-                        if cda.pumpA_amp_high > daily_pump_A_amp_high:
-                            daily_pump_A_amp_high = cda.pumpA_amp_high 
+                        cda.daily_pump_A_cnt = cda.daily_pump_A_cnt + 1
+                        if cda.pumpA_amp_high > cda.daily_pump_A_amp_high:
+                            cda.daily_pump_A_amp_high = cda.pumpA_amp_high 
                         # Check thresholds                         		    		
                         checkThresholds.checkAmps("A")
 
@@ -150,9 +150,9 @@ def saveData(row, pump):
                     if energy > 0:
                         awsHandler.putSensorData(record)
                         # Set daily info
-                        daily_pump_B_cnt = daily_pump_B_cnt + 1
-                        if cda.pumpB_amp_high > daily_pump_B_amp_high:
-                            daily_pump_B_amp_high = cda.pumpB_amp_high 
+                        cda.daily_pump_B_cnt = cda.daily_pump_B_cnt + 1
+                        if cda.pumpB_amp_high > cda.daily_pump_B_amp_high:
+                            cda.daily_pump_B_amp_high = cda.pumpB_amp_high 
                         # Check thresholds   		
                         checkThresholds.checkAmps("B")	    		
 
