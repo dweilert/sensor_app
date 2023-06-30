@@ -185,6 +185,7 @@ def readSensor(usbPort, id):
             cda.timeout_error = cda.timeout_error + 1
 
         if str(type(exception_type)) == "AttributeError":
+            cda.critical_error = cda.critical_error + 1
             if id == "A":
                 cda.critical_error_A = cda.critical_error_A + 1
             elif id == "B":

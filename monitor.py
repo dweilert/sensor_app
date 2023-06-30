@@ -83,7 +83,7 @@ def resetCheck(nowDay, nowHour):
             cda.high_temp_cnt = 0
             cda.ups_charge_cnt = 0
             cda.ups_percent_cnt = 0
-            
+
             cda.critical_error = 0
             cda.critical_error_A = 0
             cda.critical_error_B = 0
@@ -124,6 +124,7 @@ def mainLine():
     diagCnt = 0
     find_cnt = 0
     rtn = ""
+    critical_count = config.get("Limits","critical_error_skip_count")
 
     try:
         portsFound = 0
@@ -207,47 +208,52 @@ def mainLine():
             # Increment daily interval counter
             cda.iCnt = cda.iCnt + 1
 
-            # Get sensor data for each located sensor
+            """ 
+            Get data for each USB port sensor.  If the critical error count
+            is more than the defined critical count then skip checking the 
+            associated sensor for the remainder of the day.
+            """
             if cda.usb_port1 != "na":
-                rtn = []
-                rtn = pzemHandler.readSensor(cda.usb_port1, config.get("USBPortSignatures", "map_usb_port1_to_sensor"))
-                # print(f"A rtn {rtn}")
-                print(f"usb_port1 regisiters: {rtn}")
-                if rtn[0] == False:
-                    rtn[1] = []
-                checkThresholds.checkData(rtn[1], config.get("USBPortSignatures", "map_usb_port1_to_sensor"))
-                cda.sensor_A_registers.append(rtn[1])
+                if cda.critical_error_A < critical_count: 
+                    rtn = []
+                    rtn = pzemHandler.readSensor(cda.usb_port1, config.get("USBPortSignatures", "map_usb_port1_to_sensor"))
+                    # print(f"A rtn {rtn}")
+                    #print(f"usb_port1 regisiters: {rtn}")
+                    if rtn[0] == False:
+                        rtn[1] = []
+                    checkThresholds.checkData(rtn[1], config.get("USBPortSignatures", "map_usb_port1_to_sensor"))
+                    cda.sensor_A_registers.append(rtn[1])
 
             if cda.usb_port2 != "na":
-                rtn = []
-                rtn = pzemHandler.readSensor(cda.usb_port2, config.get("USBPortSignatures", "map_usb_port2_to_sensor"))
-                print(f"usb_port2 regisiters: {rtn}")
-                if rtn[0] == False:
-                    rtn[1] = []
-                checkThresholds.checkData(rtn[1], config.get("USBPortSignatures", "map_usb_port2_to_sensor"))
-                cda.sensor_B_registers.append(rtn[1])
+                if cda.critical_error_B < critical_count:
+                    rtn = []
+                    rtn = pzemHandler.readSensor(cda.usb_port2, config.get("USBPortSignatures", "map_usb_port2_to_sensor"))
+                    #print(f"usb_port2 regisiters: {rtn}")
+                    if rtn[0] == False:
+                        rtn[1] = []
+                    checkThresholds.checkData(rtn[1], config.get("USBPortSignatures", "map_usb_port2_to_sensor"))
+                    cda.sensor_B_registers.append(rtn[1])
 
             if cda.usb_port3 != "na":
-                rtn = []
-                rtn = pzemHandler.readSensor(cda.usb_port3, config.get("USBPortSignatures", "map_usb_port3_to_sensor"))
-                # print(f"C registers: {rtn}")
-                print(f"usb_port3 regisiters: {rtn}")
-                if rtn[0] == False:
-                    rtn[1] = []
-                checkThresholds.checkData(rtn[1], config.get("USBPortSignatures", "map_usb_port3_to_sensor"))
-                cda.sensor_C_registers.append(rtn[1])
+                if cda.critical_error_C < critical_count:
+                    rtn = []
+                    rtn = pzemHandler.readSensor(cda.usb_port3, config.get("USBPortSignatures", "map_usb_port3_to_sensor"))
+                    # print(f"C registers: {rtn}")
+                    #print(f"usb_port3 regisiters: {rtn}")
+                    if rtn[0] == False:
+                        rtn[1] = []
+                    checkThresholds.checkData(rtn[1], config.get("USBPortSignatures", "map_usb_port3_to_sensor"))
+                    cda.sensor_C_registers.append(rtn[1])
 
             if cda.usb_port4 != "na":
-                rtn = []
-                rtn = pzemHandler.readSensor(cda.usb_port4, config.get("USBPortSignatures", "map_usb_port4_to_sensor"))
-                print(f"usb_port4 regisiters: {rtn}")
-                if rtn[0] == False:
-                    rtn[1] = []
-                checkThresholds.checkData(rtn[1], config.get("USBPortSignatures", "map_usb_port4_to_sensor"))
-                cda.sensor_D_registers.append(rtn[1])
-
-            # Check thresholds for any issues
-            # checkThresholds.checkSensors()
+                if cda.critical_error_D < critical_count:
+                    rtn = []
+                    rtn = pzemHandler.readSensor(cda.usb_port4, config.get("USBPortSignatures", "map_usb_port4_to_sensor"))
+                    #print(f"usb_port4 regisiters: {rtn}")
+                    if rtn[0] == False:
+                        rtn[1] = []
+                    checkThresholds.checkData(rtn[1], config.get("USBPortSignatures", "map_usb_port4_to_sensor"))
+                    cda.sensor_D_registers.append(rtn[1])
 
             # get Raspberry Pi temp and save if it is a new hour
             cpu = CPUTemperature()
@@ -286,8 +292,7 @@ def mainLine():
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg(
-            "E", f"mainLine() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        logger.msg("E", f"mainLine() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
         logger.msg("E", f"mainLine() {e}")
         time.sleep(5)
         mainLine()
@@ -363,8 +368,7 @@ if __name__ == "__main__":
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg(
-            "E", f"__main__ Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        logger.msg("E", f"__main__ Exception type: {exception_type} File name: {filename} Line number: {line_number}")
         logger.msg("E", f"__main__ {e}")
         time.sleep(5)
 
