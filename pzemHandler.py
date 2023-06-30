@@ -146,15 +146,6 @@ def readSensor(usbPort, id):
         if status != True:
             print("status not equal True")
             client = None
-            # if id == "A":
-            #     cda.sensor_A_connect_error = True
-            # elif id == "B":
-            #     cda.sensor_B_connect_error = True
-            # elif id == "C":
-            #     cda.sensor_C_connect_error = True
-            # elif id == "D":
-            #     cda.sensor_D_connect_error = True
-
             rtn = []
             rtn.append(False)
             rtn.append("connection failed")
@@ -163,157 +154,28 @@ def readSensor(usbPort, id):
         # No connection error so continue and get the sensor register data
         # and convert to a string
         request = client.read_input_registers(0, 10, 1)
-
-        # print("---- request start ----")
-        # dump(client)
-        # print("---- request end ----")
-
         rType = type(request)
         rType = str(rType)
+        print(rType)
 
-
-        # Pymodbus Exceptions.
-        # Custom exceptions to be used in the Modbus code.
-
-        # exceptionpymodbus.exceptions.ConnectionException(string='')
-        #     Bases: ModbusException
-        #     Error resulting from a bad connection.
-
-        # exceptionpymodbus.exceptions.InvalidMessageReceivedException(string='')
-        #     Bases: ModbusException
-        #     Error resulting from invalid response received or decoded.
-
-        # exceptionpymodbus.exceptions.MessageRegisterException(string='')
-        #     Bases: ModbusException
-        #     Error resulting from failing to register a custom message request/response.
-
-        # exceptionpymodbus.exceptions.ModbusException(string)
-        #     Bases: Exception
-        #     Base modbus exception.
-
-        # isError()
-        # Error
-
-        # exceptionpymodbus.exceptions.ModbusIOException(string='', function_code=None)
-        #     Bases: ModbusException
-        #     Error resulting from data i/o.
-
-        # exceptionpymodbus.exceptions.NoSuchSlaveException(string='')
-        # Bases: ModbusException
-
-        # Error resulting from making a request to a slave that does not exist.
-
-        # exceptionpymodbus.exceptions.NotImplementedException(string='')
-        # Bases: ModbusException
-
-        # Error resulting from not implemented function.
-
-        # exceptionpymodbus.exceptions.ParameterException(string='')
-        # Bases: ModbusException
-
-
-        # Check if the sensor register data is located then process. Else
-        # check the data for erros and return the data as an error.
         if "pymodbus.register_read_message.ReadInputRegistersResponse" in rType:
-
             # If either one of the pumps SAVE the data
             if id == "A" or id == "B":
                 dataHandler.saveData(request.registers, id)
-
-            # # No errors so set flags to False
-            # if id == "A":
-            #     cda.sensor_A_io_error = False
-            #     cda.sensor_A_connect_error = False
-            # elif id == "B":
-            #     cda.sensor_B_io_error = False
-            #     cda.sensor_B_connect_error = False
-            # elif id == "C":
-            #     cda.sensor_C_io_error = False
-            #     cda.sensor_C_connect_error = False
-            # elif id == "D":
-            #     cda.sensor_D_io_error = False
-            #     cda.sensor_D_connect_error = False
 
             rtn = []
             rtn.append(True)
             rtn.append(request.registers)
             client.close()
             return rtn
-
-        # Two specific errors are captured IO Error and Connection Error.  All
-        # other issues are treated as Other Errors
-
-        elif "pymodbus.exceptions.ModbusIOException" in rType:
-            # if id == "A":
-            #     cda.sensor_A_io_error = True
-            # elif id == "B":
-            #     cda.sensor_B_io_error = True
-            # elif id == "C":
-            #     cda.sensor_C_io_error = True
-            # elif id == "D":
-            #     cda.sensor_D_io_error = True
-
-            rtn = []
-            rtn.append(False)
-            rtn.append("IOException")
-            client.close()
-            return rtn
-
-        elif "pymodbus.exceptions.ConnectionException" in rType:
-            # if id == "A":
-            #     cda.sensor_A_connect_error = True
-            # elif id == "B":
-            #     cda.sensor_B_connect_error = True
-            # elif id == "C":
-            #     cda.sensor_C_connect_error = True
-            # elif id == "D":
-            #     cda.sensor_D_connect_error = True
-
-            rtn = []
-            rtn.append(False)
-            rtn.append("ConnectionError")
-            client.close()
-            return rtn
-
         else:
             rtn = []
             rtn.append(False)
-            rtn.append(f"Other error")
+            rtn.append("no register data")
             client.close()
             return rtn
 
-    # except ModbusException as me:
-    #     print("----- ModbusException -----")
-    #     dump(me)
-    #     print("----- ModbusException end -----")
-
-
     except Exception as e:
-        # print("----- error start -----")
-        # dump(e)
-        # print("----- error end -----")
-
-        # errorLine = f"Exception: {e}"
-        # if config.get("Pzem", "ioException") in errorLine:
-        #     if id == "A":
-        #         cda.sensor_A_io_error = True
-        #     elif id == "B":
-        #         cda.sensor_B_io_error = True
-        #     elif id == "C":
-        #         cda.sensor_C_io_error = True
-        #     elif id == "D":
-        #         cda.sensor_D_io_error = True
-
-        # if config.get("Pzem", "connectionError") in errorLine:
-        #     if id == "A":
-        #         cda.sensor_A_connect_error = True
-        #     elif id == "B":
-        #         cda.sensor_B_connect_error = True
-        #     elif id == "C":
-        #         cda.sensor_C_connect_error = True
-        #     elif id == "D":
-        #         cda.sensor_D_connect_error = True
-
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
