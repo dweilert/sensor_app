@@ -33,7 +33,6 @@ LICENSE:
 import os
 import time
 import sys
-import sys
 from datetime import datetime
 from gpiozero import CPUTemperature
 import requests
@@ -335,7 +334,6 @@ if __name__ == "__main__":
 
         cda.current_date = now.strftime("%Y_%m_%d")
 
-        time.sleep(5)
         # Read config.ini file for parameters
         config_status = config.readConfig()
         if config_status == False:
