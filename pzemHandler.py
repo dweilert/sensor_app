@@ -164,9 +164,9 @@ def readSensor(usbPort, id):
         # and convert to a string
         request = client.read_input_registers(0, 10, 1)
 
-        print("---- request start ----")
-        dump(client)
-        print("---- request end ----")
+        # print("---- request start ----")
+        # dump(client)
+        # print("---- request end ----")
 
         rType = type(request)
         rType = str(rType)
