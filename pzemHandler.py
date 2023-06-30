@@ -146,10 +146,10 @@ def readSensor(usbPort, id):
             dump(regs)
 
             print("REGS.STRING: " + regs.string)
-            print("REGS.isERROR: " + regs.isError)
+            # print("REGS.isERROR: " + regs.isError)
 
             rType = type(regs)
-            print(f"type: {rType}")
+            print(f"REGISTER TYPE: {rType}")
             rType = str(rType)
             print(f"str : {rType}")
 
