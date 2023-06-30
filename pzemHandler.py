@@ -123,10 +123,12 @@ def resetEnergy(usbPort):
 
 
 def dump(obj):
+    print("==================== OBJECT DUMP =====================")
     print(type(obj))
     for attr in dir(obj):
         print("obj.%s = %r" % (attr, getattr(obj, attr)))
-    pprint(vars(obj))
+    # pprint(vars(obj))
+    print("=====================================================")
 
 
 
@@ -134,34 +136,12 @@ def readSensor(usbPort, id):
     # Get register data
     try:
         rtn = []
-        # # Check if sensor was found, if not skip
-        # if cda.usb_port1 == "na":
-        #     rtn = []
-        #     rtn.append(False)
-        #     rtn.append("na")
-        #     return rtn
-        # if cda.usb_port2 == "na":
-        #     rtn = []
-        #     rtn.append(False)
-        #     rtn.append("na")
-        #     return rtn
-        # if cda.usb_port3 == "na":
-        #     rtn = []
-        #     rtn.append(False)
-        #     rtn.append("na")
-        #     return rtn
-        # if cda.usb_port4 == "na":
-        #     rtn = []
-        #     rtn.append(False)
-        #     rtn.append("na")
-        #     return rtn
-
         client = ModbusSerialClient(port=usbPort, timeout=int(config.get(
             "Pzem", "timeout")), baudrate=9600, bytesize=8, parity="N", stopbits=1)
 
-        print("---- client start ----")
-        dump(client)
-        print("---- client end ----")
+        # print("---- client start ----")
+        # dump(client)
+        # print("---- client end ----")
 
         status = client.connect()
 
