@@ -139,41 +139,44 @@ def readSensor(usbPort, id):
         client = ModbusSerialClient(port=usbPort, timeout=int(config.get(
             "Pzem", "timeout")), baudrate=9600, bytesize=8, parity="N", stopbits=1)
 
-        status = client.connect()
+        if client.connect():
 
-        # If the connection to the sensor fails flag it as a connection error
-        # and return and build Failed return data array
-        if status != True:
-            print("status not equal True")
+            regs = client.read_input_registers(0, 10, 1)
+
+            dump(regs)
+            
+            rType = type(regs)
+            print(f"type: {rType}")
+            rType = str(rType)
+            print(f"str : {rType}")
+
+            
+            if "pymodbus.register_read_message.ReadInputRegistersResponse" in rType:
+                # If either one of the pumps SAVE the data
+                if id == "A" or id == "B":
+                    dataHandler.saveData(regs.registers, id)
+                rtn = []
+                rtn.append(True)
+                rtn.append(regs.registers)
+                client.close()
+                return rtn
+            else:
+                rtn = []
+                rtn.append(False)
+                rtn.append("no register data")
+                client.close()
+                return rtn
+        
+        else:
+            # If the connection to the sensor fails flag it as a connection error
+            # and return and build Failed return data array
+            print("client did not connect")
             client = None
             rtn = []
             rtn.append(False)
             rtn.append("connection failed")
             return rtn
 
-        # No connection error so continue and get the sensor register data
-        # and convert to a string
-        request = client.read_input_registers(0, 10, 1)
-        rType = type(request)
-        rType = str(rType)
-        print(rType)
-
-        if "pymodbus.register_read_message.ReadInputRegistersResponse" in rType:
-            # If either one of the pumps SAVE the data
-            if id == "A" or id == "B":
-                dataHandler.saveData(request.registers, id)
-
-            rtn = []
-            rtn.append(True)
-            rtn.append(request.registers)
-            client.close()
-            return rtn
-        else:
-            rtn = []
-            rtn.append(False)
-            rtn.append("no register data")
-            client.close()
-            return rtn
 
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
