@@ -139,15 +139,7 @@ def readSensor(usbPort, id):
         client = ModbusSerialClient(port=usbPort, timeout=int(config.get(
             "Pzem", "timeout")), baudrate=9600, bytesize=8, parity="N", stopbits=1)
 
-        # print("---- client start ----")
-        # dump(client)
-        # print("---- client end ----")
-
         status = client.connect()
-
-        print("---- status start ----")
-        dump(status)
-        print("---- status end ----")
 
         # If the connection to the sensor fails flag it as a connection error
         # and return and build Failed return data array
@@ -180,52 +172,44 @@ def readSensor(usbPort, id):
         rType = str(rType)
 
 
-# Pymodbus Exceptions.
+        # Pymodbus Exceptions.
+        # Custom exceptions to be used in the Modbus code.
 
-# Custom exceptions to be used in the Modbus code.
+        # exceptionpymodbus.exceptions.ConnectionException(string='')
+        #     Bases: ModbusException
+        #     Error resulting from a bad connection.
 
-# exceptionpymodbus.exceptions.ConnectionException(string='')
-# Bases: ModbusException
+        # exceptionpymodbus.exceptions.InvalidMessageReceivedException(string='')
+        #     Bases: ModbusException
+        #     Error resulting from invalid response received or decoded.
 
-# Error resulting from a bad connection.
+        # exceptionpymodbus.exceptions.MessageRegisterException(string='')
+        #     Bases: ModbusException
+        #     Error resulting from failing to register a custom message request/response.
 
-# exceptionpymodbus.exceptions.InvalidMessageReceivedException(string='')
-# Bases: ModbusException
+        # exceptionpymodbus.exceptions.ModbusException(string)
+        #     Bases: Exception
+        #     Base modbus exception.
 
-# Error resulting from invalid response received or decoded.
+        # isError()
+        # Error
 
-# exceptionpymodbus.exceptions.MessageRegisterException(string='')
-# Bases: ModbusException
+        # exceptionpymodbus.exceptions.ModbusIOException(string='', function_code=None)
+        #     Bases: ModbusException
+        #     Error resulting from data i/o.
 
-# Error resulting from failing to register a custom message request/response.
+        # exceptionpymodbus.exceptions.NoSuchSlaveException(string='')
+        # Bases: ModbusException
 
-# exceptionpymodbus.exceptions.ModbusException(string)
-# Bases: Exception
+        # Error resulting from making a request to a slave that does not exist.
 
-# Base modbus exception.
+        # exceptionpymodbus.exceptions.NotImplementedException(string='')
+        # Bases: ModbusException
 
-# isError()
-# Error
+        # Error resulting from not implemented function.
 
-# exceptionpymodbus.exceptions.ModbusIOException(string='', function_code=None)
-# Bases: ModbusException
-
-# Error resulting from data i/o.
-
-# exceptionpymodbus.exceptions.NoSuchSlaveException(string='')
-# Bases: ModbusException
-
-# Error resulting from making a request to a slave that does not exist.
-
-# exceptionpymodbus.exceptions.NotImplementedException(string='')
-# Bases: ModbusException
-
-# Error resulting from not implemented function.
-
-# exceptionpymodbus.exceptions.ParameterException(string='')
-# Bases: ModbusException
-
-
+        # exceptionpymodbus.exceptions.ParameterException(string='')
+        # Bases: ModbusException
 
 
         # Check if the sensor register data is located then process. Else
@@ -298,6 +282,12 @@ def readSensor(usbPort, id):
             client.close()
             return rtn
 
+    except ModbusException as me:
+        print("----- ModbusException -----")
+        dump(me)
+        print("----- ModbusException end -----")
+
+
     except Exception as e:
         print("----- error start -----")
         dump(e)
@@ -334,8 +324,7 @@ def readSensor(usbPort, id):
             eStr = None
             cda.Errno71_cnt = cda.errno71_cnt + 1
 
-        logger.msg(
-            "E", f"readSensor() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        logger.msg("E", f"readSensor() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
         logger.msg("E", f"readSensor() PzemHandler.monitor() error type: {e}")
         logger.msg("E", f"readSensor() usbPort: {usbPort} mapped to id: {id}")
 
