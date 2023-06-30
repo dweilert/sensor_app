@@ -330,7 +330,7 @@ if __name__ == "__main__":
         # get current date
         now = datetime.now()
         print("------------")
-        print("Monitor started at: " + now)
+        print("Monitor started at: " + now.strftime("%Y/%m/%d, %H:%M:%S"))
 
         cda.current_date = now.strftime("%Y_%m_%d")
 

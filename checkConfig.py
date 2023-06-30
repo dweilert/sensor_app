@@ -47,7 +47,8 @@ if __name__ == "__main__":
         # get current date
         now = datetime.now()
         print("------------")
-        print("Checking Monitor config.ini a at: " + now)
+        print("Checking Monitor config.ini a at: " +
+              now.strftime("%m/%d/%Y, %H:%M:%S"))
 
         cda.current_date = now.strftime("%Y_%m_%d")
 
