@@ -37,16 +37,17 @@ import os
 
 configI = configparser.ConfigParser()
 
+
 def readConfig():
     try:
-        #dir_path = os.path.dirname(os.path.realpath(__file__))
-        #cwd_path = os.getcwd()
-        #logger.msg("I", "os.path  : " + dir_path)
-        #logger.msg("I", "os.getcwd: " + cwd_path) 
+        # dir_path = os.path.dirname(os.path.realpath(__file__))
+        # cwd_path = os.getcwd()
+        # logger.msg("I", "os.path  : " + dir_path)
+        # logger.msg("I", "os.getcwd: " + cwd_path)
         # configI.read(cwd_path + "/config.ini")
         configI.read("/home/bob/sensor_app/config.ini")
         # Set debug flag from config.ini file
-        if configI.get("Debug","status") == "true":
+        if configI.get("Debug", "status") == "true":
             cda.debug = True
         else:
             cda.debug = False
@@ -57,12 +58,14 @@ def readConfig():
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg("E",f"readConfig() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
-        logger.msg("E",f"readConfig() {e}")
+        logger.msg(
+            "E", f"readConfig() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        logger.msg("E", f"readConfig() {e}")
         return False
 
+
 def get(k1, k2):
-    #print(f"Type: {k1}  Value: {k2}")
+    print(f"Config get() with Type: {k1}  Value: {k2}")
     try:
         data = configI[k1][k2]
         return data
@@ -70,15 +73,17 @@ def get(k1, k2):
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg("E",f"get() Exception type: {exception_type} File name: {filename} Line number: {line_number}")        
-        logger.msg("E",f"get() Type : {k1}")
-        logger.msg("E",f"get() Value: {k2}")
-        return  "err"
+        logger.msg(
+            "E", f"get() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        logger.msg("E", f"get() Type : {k1}")
+        logger.msg("E", f"get() Value: {k2}")
+        return "err"
+
 
 def setValues():
     try:
-        wait_secs = int(get("Interval","wait_to_check_sensors_seconds"))
-        resend_delay = int(get("Interval","wait_to_resend_sms_hours"))
+        wait_secs = int(get("Interval", "wait_to_check_sensors_seconds"))
+        resend_delay = int(get("Interval", "wait_to_resend_sms_hours"))
         resend_delay = resend_delay * 3600   # multiple hours times seconds in hours
         cda.resend_wait = round(resend_delay / wait_secs)
         # logger.msg("I",f"Resend hours: {resend_delay} Resend seconds: {cda.resend_wait}")
@@ -86,5 +91,6 @@ def setValues():
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg("E",f"setValues() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
-        logger.msg("E",f"setValues() {e}") 
+        logger.msg(
+            "E", f"setValues() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        logger.msg("E", f"setValues() {e}")

@@ -37,6 +37,7 @@ logData = []
 
 
 def msg(lvl, msg):
+    print(msg)
     try:
         now = datetime.now()
         ts = now.strftime("%Y-%m-%d %H:%M:%S.%f")
@@ -49,21 +50,24 @@ def msg(lvl, msg):
             lvl = "(D) : "
 
         cda.log_messages.append(ts + " " + lvl + msg)
-        if config.get("Log","log_console") == "true":
+        if config.get("Log", "log_console") == "true":
             print(ts + " " + lvl + msg)
 
         # Determine if maximum log entries are in array and remove some
         # if reached
-        if len(cda.log_messages) > int(config.get("Log","max_records")):
-             wrapLogs()
+        if len(cda.log_messages) > int(config.get("Log", "max_records")):
+            wrapLogs()
 
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        print(f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")
-        cda.log_messages.append(f"Logger - Exception type: {exception_type} File name: {filename} Line number: {line_number}")            
+        print(
+            f"Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        cda.log_messages.append(
+            f"Logger - Exception type: {exception_type} File name: {filename} Line number: {line_number}")
         cda.log_messages.append(f"Dropped msg: {msg}")
+
 
 def wrapLogs():
     try:
@@ -77,7 +81,7 @@ def wrapLogs():
                 ptr = ptr + 1
 
             cda.log_messages = newLog
-            newLog =  None    
+            newLog = None
             return True
         else:
             return True
@@ -86,7 +90,8 @@ def wrapLogs():
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        print(f"wrapLogs() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        print(
+            f"wrapLogs() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
         print(f"wrapLogs() {e}")
         cda.log_messages = []
         return False

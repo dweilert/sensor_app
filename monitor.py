@@ -334,14 +334,14 @@ if __name__ == "__main__":
 
         cda.current_date = now.strftime("%Y_%m_%d")
 
-        time.sleep(5000)
+        time.sleep(5)
         # Read config.ini file for parameters
         config.readConfig()
 
         # initialize values
-        cda.cmdI = ""
-        cda.iCnt = 0
-        cda.error_cnt = 0
+        # cda.cmdI = ""
+        # cda.iCnt = 0
+        # cda.error_cnt = 0
 
         # Check if old CLI command.txt file exists and delete if found
         if os.path.exists(config.get("CommandInterface", "cmd_file")):
