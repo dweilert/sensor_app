@@ -144,6 +144,9 @@ def readSensor(usbPort, id):
 
             print("===============" + str(type(regs)))
 
+            dump(regs)
+
+            
             if regs.string:
                 print("Found regs.string")
 
