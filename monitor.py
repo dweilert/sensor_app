@@ -256,7 +256,7 @@ def mainLine():
 
             # get Raspberry Pi UPS info
             upsI = upsHandler.getUPSInfo(False)
-            checkThresholds.checkUPSCharge(upsI[0])
+            # checkThresholds.checkUPSCharge(upsI[0])
             checkThresholds.checkUPSPercent(upsI[1])
 
             # get Raspberry Pi memory usage data
