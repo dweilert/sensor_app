@@ -67,12 +67,18 @@ def checkAmps(i):
             high = cda.pumpB_amp_high
             low = cda.pumpB_amp_low
 
+        if high > 100:
+            high = high / 1000
+
         if high > int(config.get("Limits", "amps_high")):
             sms = []
             sms.append(config.get("Messages", "amps_high_msg"))
             sms.append(config.get("Messages", "amps_high_who"))
             cda.smsMsg.append(sms)
             smsHandler.checkSMS("amps")
+
+        if low > 100:
+            low = low / 1000
 
         if low < int(config.get("Limits", "amps_low")):
             sms = []

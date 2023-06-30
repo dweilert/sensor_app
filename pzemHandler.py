@@ -172,9 +172,6 @@ def readSensor(usbPort, id):
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg("E", f"readSensor() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
-        logger.msg("E", f"readSensor() PzemHandler.monitor() error type: {e}")
-        logger.msg("E", f"readSensor() usbPort: {usbPort} mapped to id: {id}")
 
         rtn = []
         rtn.append(False)
@@ -197,7 +194,14 @@ def readSensor(usbPort, id):
             elif id == "D":
                 cda.critical_error_D = cda.critical_error_D + 1
 
+        logger.msg("E", f"readSensor() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        logger.msg("E", f"readSensor() PzemHandler.monitor() error type: {e}")
+        logger.msg("E", f"readSensor() usbPort: {usbPort} mapped to id: {id}")
+
         return rtn
+    
+
+
 
 
 def find_usb_ports():
