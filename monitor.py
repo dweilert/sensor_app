@@ -125,6 +125,7 @@ def mainLine():
     find_cnt = 0
     rtn = ""
     critical_count = int(config.get("Limits","critical_error_skip_count"))
+    portsFound = 0
 
     try:
         portsFound = 0
@@ -180,12 +181,21 @@ def mainLine():
         logger.msg("I","  (C) - high-level alarm")
         logger.msg("I","  (D) - overall power")
 
+        # Check for if any ports were found is so break out of while
+        if (cda.usb_port1 != "na"):
+            portsfound = portsfound + 1
+        if (cda.usb_port2 != "na"):
+            portsfound = portsfound + 1
+        if (cda.usb_port3 != "na"):
+            portsfound = portsfound + 1
+        if (cda.usb_port4 != "na"):
+            portsfound = portsfound + 1
+
         # SMS related message, who
         foundMsg = ""
         who = ""
         if portsFound > 0:
-            foundMsg = config.get("Messages", "sensors_at_startup_msg"
-                                  + " " + str(portsfound))
+            foundMsg = config.get("Messages", "sensors_at_startup_msg") +  " " + str(portsfound)
             who = config.get("Messages", "sensors_at_startup_who")
         else:
             foundMsg = config.get("Messages", "sensors_default_msg")
