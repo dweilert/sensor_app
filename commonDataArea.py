@@ -88,7 +88,6 @@ current_date = ""
 iCnt = 0
 error_cnt = 0
 
-errno71_cnt = 0
 
 cpu_temps = []
 cpu_temp_hour = 99
@@ -136,3 +135,10 @@ daily_pump_A_amp_low = 9999
 daily_pump_B_cnt = 0
 daily_pump_B_amp_high = 0
 daily_pump_B_amp_low = 9999
+
+timeout_error = 0
+critical_error = 0
+critical_error_A = 0
+critical_error_B = 0
+critical_error_C = 0
+critical_error_D = 0

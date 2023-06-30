@@ -172,13 +172,6 @@ def readSensor(usbPort, id):
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-
-        # # If "Errno 71" is located increase the counter
-        # eStr = f"type: {e}"
-        # if "Errno 71" in eStr:
-        #     eStr = None
-        #     cda.Errno71_cnt = cda.errno71_cnt + 1
-
         logger.msg("E", f"readSensor() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
         logger.msg("E", f"readSensor() PzemHandler.monitor() error type: {e}")
         logger.msg("E", f"readSensor() usbPort: {usbPort} mapped to id: {id}")
@@ -187,6 +180,20 @@ def readSensor(usbPort, id):
         rtn.append(False)
         rtn.append(exception_type)
         client = None
+
+        if str(type(exception_type)) == "TimeoutError":
+            cda.timeout_error = cda.timeout_error + 1
+
+        if str(type(exception_type)) == "AttributeError":
+            if id == "A":
+                cda.critical_error_A = cda.critical_error_A + 1
+            elif id == "B":
+                cda.critical_error_B = cda.critical_error_B + 1
+            elif id == "C":
+                cda.critical_error_C = cda.critical_error_C + 1
+            elif id == "D":
+                cda.critical_error_D = cda.critical_error_D + 1
+
         return rtn
 
 

@@ -83,7 +83,13 @@ def resetCheck(nowDay, nowHour):
             cda.high_temp_cnt = 0
             cda.ups_charge_cnt = 0
             cda.ups_percent_cnt = 0
-            cda.errno71_cnt = 0
+            
+            cda.critical_error = 0
+            cda.critical_error_A = 0
+            cda.critical_error_B = 0
+            cda.critical_error_C = 0
+            cda.critical_error_D = 0
+            cda.timeout_error = 0
 
             # End of day message and stats
             endOfDay.sendDailyInfo()
