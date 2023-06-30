@@ -27,7 +27,11 @@ LICENSE:
 """
 # all log messages
 log_messages = []
-log_console = True
+write_msg_to_console = True
+write_msg_to_file = True
+
+# debug settings
+debug = False
 
 # monitor
 getPortsCnt = 0

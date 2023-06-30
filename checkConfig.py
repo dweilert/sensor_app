@@ -60,7 +60,8 @@ if __name__ == "__main__":
             sys.exit()
         else:
             print("Read config file OK")
-            print(f"log_console: {config.get('Log', 'log_console')}")
+            print(
+                f"write_msg_to_console: {config.get('Log', 'write_msg_to_console')}")
             print(f"max-records: {config.get('Log', 'max_records')}")
             sys.exit()
 

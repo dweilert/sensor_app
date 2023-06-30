@@ -50,7 +50,7 @@ def msg(lvl, msg):
             lvl = "(D) : "
 
         cda.log_messages.append(ts + " " + lvl + msg)
-        if cda.log_messages == True:
+        if cda.write_msg_to_console == True:
             print(ts + " " + lvl + msg)
 
         # Determine if maximum log entries are in array and remove some
