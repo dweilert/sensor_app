@@ -79,17 +79,17 @@ def checkAmps(i):
             cda.smsMsg.append(sms)
             smsHandler.checkSMS("amps")
 
-        if low > 100:
-            low = low / 1000
+        # if low > 100:
+        #     low = low / 1000
 
-        if low < int(config.get("Limits", "amps_low")):
-            sms = []
-            msg = config.get("Messages", "amps_low_msg")
-            msg = msg + " " + i
-            sms.append(msg)
-            sms.append(config.get("Messages", "amps_low_who"))
-            cda.smsMsg.append(sms)
-            smsHandler.checkSMS("amps")
+        # if low < int(config.get("Limits", "amps_low")):
+        #     sms = []
+        #     msg = config.get("Messages", "amps_low_msg")
+        #     msg = msg + " " + i
+        #     sms.append(msg)
+        #     sms.append(config.get("Messages", "amps_low_who"))
+        #     cda.smsMsg.append(sms)
+        #     smsHandler.checkSMS("amps")
 
     except Exception as e:
         exception_type, exception_object, exception_traceback = sys.exc_info()
