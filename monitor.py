@@ -333,6 +333,7 @@ if __name__ == "__main__":
         logger.msg("I", f"Monitor started at: {now}")
         cda.current_date = now.strftime("%Y_%m_%d")
 
+        time.sleep(5)
         # Read config.ini file for parameters
         config.readConfig()
 
