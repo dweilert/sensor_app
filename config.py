@@ -66,7 +66,6 @@ def readConfig():
 
 
 def get(k1, k2):
-    print(f"Config get() with Type: {k1}  Value: {k2}")
     try:
         data = configI[k1][k2]
         return data
