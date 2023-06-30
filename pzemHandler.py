@@ -136,6 +136,7 @@ def readSensor(usbPort, id):
     # Get register data
     try:
         rtn = []
+        client = None
         client = ModbusSerialClient(port=usbPort, timeout=int(config.get(
             "Pzem", "timeout")), baudrate=9600, bytesize=8, parity="N", stopbits=1)
 
@@ -185,6 +186,7 @@ def readSensor(usbPort, id):
         rtn = []
         rtn.append(False)
         rtn.append(exception_type)
+        client = None
         return rtn
 
 
