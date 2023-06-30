@@ -121,27 +121,31 @@ def resetEnergy(usbPort):
         logger.msg("E", f"resetEnergy() {e}")
 
 
+def dump(obj):
+  for attr in dir(obj):
+    print("obj.%s = %r" % (attr, getattr(obj, attr)))
+
 def readSensor(usbPort, id):
     # Get register data
     try:
         rtn = []
         # Check if sensor was found, if not skip
-        if cda.usb_port1 == "na" and id == "A":
+        if cda.usb_port1 == "na":
             rtn = []
             rtn.append(False)
             rtn.append("na")
             return rtn
-        if cda.usb_port2 == "na" and id == "B":
+        if cda.usb_port2 == "na":
             rtn = []
             rtn.append(False)
             rtn.append("na")
             return rtn
-        if cda.usb_port3 == "na" and id == "C":
+        if cda.usb_port3 == "na":
             rtn = []
             rtn.append(False)
             rtn.append("na")
             return rtn
-        if cda.usb_port4 == "na" and id == "D":
+        if cda.usb_port4 == "na":
             rtn = []
             rtn.append(False)
             rtn.append("na")
@@ -150,6 +154,10 @@ def readSensor(usbPort, id):
         client = ModbusSerialClient(port=usbPort, timeout=int(config.get(
             "Pzem", "timeout")), baudrate=9600, bytesize=8, parity="N", stopbits=1)
         status = client.connect()
+
+        print("---- client start ----")
+        dump(client)
+        print("---- client end ----")
 
         # If the connection to the sensor fails flag it as a connection error
         # and return and build Failed return data array
@@ -172,8 +180,62 @@ def readSensor(usbPort, id):
         # No connection error so continue and get the sensor register data
         # and convert to a string
         request = client.read_input_registers(0, 10, 1)
+
+        print("---- request start ----")
+        dump(client)
+        print("---- request end ----")
+
         rType = type(request)
         rType = str(rType)
+
+
+# Pymodbus Exceptions.
+
+# Custom exceptions to be used in the Modbus code.
+
+# exceptionpymodbus.exceptions.ConnectionException(string='')
+# Bases: ModbusException
+
+# Error resulting from a bad connection.
+
+# exceptionpymodbus.exceptions.InvalidMessageReceivedException(string='')
+# Bases: ModbusException
+
+# Error resulting from invalid response received or decoded.
+
+# exceptionpymodbus.exceptions.MessageRegisterException(string='')
+# Bases: ModbusException
+
+# Error resulting from failing to register a custom message request/response.
+
+# exceptionpymodbus.exceptions.ModbusException(string)
+# Bases: Exception
+
+# Base modbus exception.
+
+# isError()
+# Error
+
+# exceptionpymodbus.exceptions.ModbusIOException(string='', function_code=None)
+# Bases: ModbusException
+
+# Error resulting from data i/o.
+
+# exceptionpymodbus.exceptions.NoSuchSlaveException(string='')
+# Bases: ModbusException
+
+# Error resulting from making a request to a slave that does not exist.
+
+# exceptionpymodbus.exceptions.NotImplementedException(string='')
+# Bases: ModbusException
+
+# Error resulting from not implemented function.
+
+# exceptionpymodbus.exceptions.ParameterException(string='')
+# Bases: ModbusException
+
+
+
 
         # Check if the sensor register data is located then process. Else
         # check the data for erros and return the data as an error.
@@ -246,6 +308,10 @@ def readSensor(usbPort, id):
             return rtn
 
     except Exception as e:
+        print("----- error start -----")
+        dump(e)
+        print("----- error end -----")
+
         errorLine = f"Exception: {e}"
         if config.get("Pzem", "ioException") in errorLine:
             if id == "A":
@@ -399,12 +465,6 @@ def find_usb_ports():
 
             # No more lines to process
             if ln >= hl:
-                # logger.msg("I", "------------")
-                # logger.msg("I", f"Sensor 1 usb port: {cda.usb_port1}")
-                # logger.msg("I", f"Sensor 2 usb port: {cda.usb_port2}")
-                # logger.msg("I", f"Sensor 3 usb port: {cda.usb_port3}")
-                # logger.msg("I", f"Sensor 4 usb port: {cda.usb_port4}")
-                # logger.msg("I", "------------")
                 break
 
         return

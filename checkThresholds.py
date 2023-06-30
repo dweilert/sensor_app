@@ -142,8 +142,7 @@ def checkData(pzem_data, id):
                 cda.aNoD = cda.aNoD + 1
                 if cda.aNoD > int(config.get("Limits", "no_data")):
                     sms = []
-                    sms.append(
-                        "Pump A " + config.get("Messages", "no_data_msg"))
+                    sms.append("Pump A check " + config.get("Messages", "no_data_msg"))
                     sms.append(config.get("Messages", "no_data_who"))
                     cda.smsMsg.append(sms)
                     cda.aNoD = 0
@@ -154,8 +153,7 @@ def checkData(pzem_data, id):
                     cda.aNoP = cda.aNoP + 1
                     if cda.aNoP > int(config.get("Limits", "no_power")):
                         sms = []
-                        sms.append(
-                            "Pump A " + config.get("Messages", "no_power_msg"))
+                        sms.append("Pump A check " + config.get("Messages", "no_power_msg"))
                         sms.append(config.get("Messages", "no_power_who"))
                         cda.smsMsg.append(sms)
                         cda.aNoP = 0
@@ -168,8 +166,7 @@ def checkData(pzem_data, id):
                 cda.bNoD = cda.bNoD + 1
                 if cda.bNoD > int(config.get("Limits", "no_data")):
                     sms = []
-                    sms.append(
-                        "Pump B " + config.get("Messages", "no_data_msg"))
+                    sms.append("Pump B check " + config.get("Messages", "no_data_msg"))
                     sms.append(config.get("Messages", "no_data_who"))
                     cda.smsMsg.append(sms)
                     cda.bNoD = 0
@@ -180,8 +177,7 @@ def checkData(pzem_data, id):
                     cda.bNoP = cda.bNoP + 1
                     if cda.bNoP > int(config.get("Limits", "no_power")):
                         sms = []
-                        sms.append(
-                            "Pump B " + config.get("Messages", "no_power_msg"))
+                        sms.append("Pump B check " + config.get("Messages", "no_power_msg"))
                         sms.append(config.get("Messages", "no_power_who"))
                         cda.smsMsg.append(sms)
                         cda.bNoP = 0
@@ -194,8 +190,7 @@ def checkData(pzem_data, id):
                 cda.cNoD = cda.cNoD + 1
                 if cda.cNoD > int(config.get("Limits", "no_data")):
                     sms = []
-                    sms.append("High-level (3/C) " +
-                               config.get("Messages", "no_data_msg"))
+                    sms.append("High-level alarm check " + config.get("Messages", "no_data_msg"))
                     sms.append(config.get("Messages", "no_data_who"))
                     cda.smsMsg.append(sms)
                     cda.cNoD = 0
@@ -206,10 +201,8 @@ def checkData(pzem_data, id):
                     cda.cNoP = cda.cNoP + 1
                     if cda.cNoP > int(config.get("Limits", "high_level_alarm")):
                         sms = []
-                        sms.append(config.get(
-                            "Messages", "high_level_alarm_msg"))
-                        sms.append(config.get(
-                            "Messages", "high_level_alarm_who"))
+                        sms.append(config.get("Messages", "high_level_alarm_msg"))
+                        sms.append(config.get("Messages", "high_level_alarm_who"))
                         cda.smsMsg.append(sms)
                         cda.cNoP = 0
                         smsHandler.checkSMS("high_level_alarm")
@@ -221,8 +214,7 @@ def checkData(pzem_data, id):
                 cda.dNoD = cda.dNoD + 1
                 if cda.dNoD > int(config.get("Limits", "no_data")):
                     sms = []
-                    sms.append("Sensor D: " +
-                               config.get("Messages", "no_data_msg"))
+                    sms.append("Overall power check " + config.get("Messages", "no_data_msg"))
                     sms.append(config.get("Messages", "no_data_who"))
                     cda.smsMsg.append(sms)
                     cda.dNoD = 0
@@ -233,10 +225,8 @@ def checkData(pzem_data, id):
                     cda.dNoP = cda.dNoP + 1
                     if cda.dNoP > int(config.get("Limits", "no_overall_power")):
                         sms = []
-                        sms.append(config.get(
-                            "Messages", "no_overall_power_msg"))
-                        sms.append(config.get(
-                            "Messages", "no_overall_power_who"))
+                        sms.append(config.get("Messages", "no_overall_power_msg"))
+                        sms.append(config.get("Messages", "no_overall_power_who"))
                         cda.smsMsg.append(sms)
                         cda.dNoP = 0
                         smsHandler.checkSMS("no_overall_power")

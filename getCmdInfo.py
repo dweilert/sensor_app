@@ -207,7 +207,7 @@ def getAllData():
         results = results + "\n"
         results = results + getDaily()
         results = results + "\n"        
-        results = results + intervalCounts()
+        results = results + getIntervalCounts()
         results = results + "\n"
         results = results + color.GREEN + "Register Information" + color.END + "\n"        
         results = results + getRegisters("A")    
@@ -240,7 +240,7 @@ def getAllData():
         return "Error getting all diag information\n"
 
 
-def intervalCounts():
+def getIntervalCounts():
     results = ""
     try:
         results = color.GREEN + "Interval Information" + color.END + "\n"

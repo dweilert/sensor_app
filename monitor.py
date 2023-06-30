@@ -214,7 +214,6 @@ def mainLine():
             if cda.usb_port2 != "na":
                 rtn = []
                 rtn = pzemHandler.readSensor(cda.usb_port2, config.get("USBPortSignatures", "map_usb_port2_to_sensor"))
-                # print(f"B rtn {rtn}")
                 if rtn[0] == False:
                     rtn[1] = []
                 checkThresholds.checkData(rtn[1], config.get("USBPortSignatures", "map_usb_port2_to_sensor"))
@@ -223,7 +222,7 @@ def mainLine():
             if cda.usb_port3 != "na":
                 rtn = []
                 rtn = pzemHandler.readSensor(cda.usb_port3, config.get("USBPortSignatures", "map_usb_port3_to_sensor"))
-                # print(f"C rtn {rtn}")
+                # print(f"C registers: {rtn}")
                 if rtn[0] == False:
                     rtn[1] = []
                 checkThresholds.checkData(rtn[1], config.get("USBPortSignatures", "map_usb_port3_to_sensor"))
@@ -232,7 +231,7 @@ def mainLine():
             if cda.usb_port4 != "na":
                 rtn = []
                 rtn = pzemHandler.readSensor(cda.usb_port4, config.get("USBPortSignatures", "map_usb_port4_to_sensor"))
-                # print(f"D rtn {rtn}")
+                print(f"usb_port4 regisiters: {rtn}")
                 if rtn[0] == False:
                     rtn[1] = []
                 checkThresholds.checkData(rtn[1], config.get("USBPortSignatures", "map_usb_port4_to_sensor"))
