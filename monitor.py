@@ -329,11 +329,12 @@ if __name__ == "__main__":
     try:
         # get current date
         now = datetime.now()
-        logger.msg("I", "------------")
-        logger.msg("I", f"Monitor started at: {now}")
+        print("------------")
+        print("Monitor started at: " + now)
+
         cda.current_date = now.strftime("%Y_%m_%d")
 
-        time.sleep(5)
+        time.sleep(5000)
         # Read config.ini file for parameters
         config.readConfig()
 
