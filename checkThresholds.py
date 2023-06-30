@@ -241,73 +241,73 @@ def checkData(pzem_data, id):
         logger.msg("E", f"checkPump() {e}")
 
 
-def checkSensors():
-    try:
-        cda.smsMsg = []
-        # Check if sensors are not connected
-        connErr = ""
-        if cda.sensor_A_connect_error == True:
-            connErr = connErr + " A "
-        if cda.sensor_B_connect_error == True:
-            connErr = connErr + " B "
-        if cda.sensor_C_connect_error == True:
-            connErr = connErr + " C "
-        if cda.sensor_D_connect_error == True:
-            connErr = connErr + " D "
-        if connErr != "":
-            cda.sensor_connect_error_cnt = cda.sensor_connect_error_cnt + 1
-            if cda.sensor_connect_error_cnt > int(config.get("Limits", "sensor_connect_error")):
-                sms = []
-                sms.append(config.get("Messages", "sensor_connect_error_msg") + connErr)
-                sms.append(config.get("Messages", "sensor_connect_error_who"))
-                cda.smsMsg.append(sms)
-                cda.sensor_connect_error_cnt = 0
-                smsHandler.checkSMS("connect_error")
+# def checkSensors():
+#     try:
+#         cda.smsMsg = []
+#         # Check if sensors are not connected
+#         connErr = ""
+#         if cda.sensor_A_connect_error == True:
+#             connErr = connErr + " A "
+#         if cda.sensor_B_connect_error == True:
+#             connErr = connErr + " B "
+#         if cda.sensor_C_connect_error == True:
+#             connErr = connErr + " C "
+#         if cda.sensor_D_connect_error == True:
+#             connErr = connErr + " D "
+#         if connErr != "":
+#             cda.sensor_connect_error_cnt = cda.sensor_connect_error_cnt + 1
+#             if cda.sensor_connect_error_cnt > int(config.get("Limits", "sensor_connect_error")):
+#                 sms = []
+#                 sms.append(config.get("Messages", "sensor_connect_error_msg") + connErr)
+#                 sms.append(config.get("Messages", "sensor_connect_error_who"))
+#                 cda.smsMsg.append(sms)
+#                 cda.sensor_connect_error_cnt = 0
+#                 smsHandler.checkSMS("connect_error")
 
-        cda.smsMsg = []
-        # Check if sensors have read error
-        ioCnt = 0
-        ioErr = ""
-        if cda.sensor_A_io_error == True:
-            ioErr = ioErr + " A "
-            ioCnt = ioCnt + 1
-        if cda.sensor_B_io_error == True:
-            ioErr = ioErr + " B "
-            ioCnt = ioCnt + 1
-        if cda.sensor_C_io_error == True:
-            ioErr = ioErr + " C "
-            ioCnt = ioCnt + 1
-        if cda.sensor_D_io_error == True:
-            ioErr = ioErr + " D "
-            ioCnt = ioCnt + 1
+#         cda.smsMsg = []
+#         # Check if sensors have read error
+#         ioCnt = 0
+#         ioErr = ""
+#         if cda.sensor_A_io_error == True:
+#             ioErr = ioErr + " A "
+#             ioCnt = ioCnt + 1
+#         if cda.sensor_B_io_error == True:
+#             ioErr = ioErr + " B "
+#             ioCnt = ioCnt + 1
+#         if cda.sensor_C_io_error == True:
+#             ioErr = ioErr + " C "
+#             ioCnt = ioCnt + 1
+#         if cda.sensor_D_io_error == True:
+#             ioErr = ioErr + " D "
+#             ioCnt = ioCnt + 1
 
-        if ioCnt > 0:
-            if ioCnt == int(config.get("Pzem", "total_sensors")):
-                # If all sensors have I/O error it means power was lost
-                cda.all_sensors_io_error_cnt = cda.all_sensors_io_error_cnt + 1
-                if cda.all_sensors_io_error_cnt > int(config.get("Limits", "all_sensors_io_error")):
-                    sms = []
-                    sms.append(config.get(
-                        "Messages", "all_sensors_io_error_msg") + connErr)
-                    sms.append(config.get(
-                        "Messages", "all_sensors_io_error_who"))
-                    cda.smsMsg.append(sms)
-                    cda.all_sensors_io_error_cnt = 0
-                    smsHandler.checkSMS("all_sensors_io_error")
-            else:
-                cda.sensor_io_error_cnt = cda.sensor_io_error_cnt + 1
-                if cda.sensor_io_error_cnt > int(config.get("Limits", "sensor_io_error")):
-                    sms = []
-                    sms.append(config.get(
-                        "Messages", "sensor_io_error_msg") + connErr)
-                    sms.append(config.get("Messages", "sensor_io_error_who"))
-                    cda.smsMsg.append(sms)
-                    cda.sensor_io_error_cnt = 0
-                    smsHandler.checkSMS("io_error")
+#         if ioCnt > 0:
+#             if ioCnt == int(config.get("Pzem", "total_sensors")):
+#                 # If all sensors have I/O error it means power was lost
+#                 cda.all_sensors_io_error_cnt = cda.all_sensors_io_error_cnt + 1
+#                 if cda.all_sensors_io_error_cnt > int(config.get("Limits", "all_sensors_io_error")):
+#                     sms = []
+#                     sms.append(config.get(
+#                         "Messages", "all_sensors_io_error_msg") + connErr)
+#                     sms.append(config.get(
+#                         "Messages", "all_sensors_io_error_who"))
+#                     cda.smsMsg.append(sms)
+#                     cda.all_sensors_io_error_cnt = 0
+#                     smsHandler.checkSMS("all_sensors_io_error")
+#             else:
+#                 cda.sensor_io_error_cnt = cda.sensor_io_error_cnt + 1
+#                 if cda.sensor_io_error_cnt > int(config.get("Limits", "sensor_io_error")):
+#                     sms = []
+#                     sms.append(config.get(
+#                         "Messages", "sensor_io_error_msg") + connErr)
+#                     sms.append(config.get("Messages", "sensor_io_error_who"))
+#                     cda.smsMsg.append(sms)
+#                     cda.sensor_io_error_cnt = 0
+#                     smsHandler.checkSMS("io_error")
 
-    except Exception as e:
-        exception_type, exception_object, exception_traceback = sys.exc_info()
-        filename = exception_traceback.tb_frame.f_code.co_filename
-        line_number = exception_traceback.tb_lineno
-        logger.msg("E", f"checkSensors() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
-        logger.msg("E", f"checkSensors() {e}")
+#     except Exception as e:
+#         exception_type, exception_object, exception_traceback = sys.exc_info()
+#         filename = exception_traceback.tb_frame.f_code.co_filename
+#         line_number = exception_traceback.tb_lineno
+#         logger.msg("E", f"checkSensors() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+#         logger.msg("E", f"checkSensors() {e}")

@@ -238,7 +238,7 @@ def mainLine():
                 cda.sensor_D_registers.append(rtn[1])
 
             # Check thresholds for any issues
-            checkThresholds.checkSensors()
+            # checkThresholds.checkSensors()
 
             # get Raspberry Pi temp and save if it is a new hour
             cpu = CPUTemperature()

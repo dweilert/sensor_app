@@ -146,14 +146,14 @@ def readSensor(usbPort, id):
         if status != True:
             print("status not equal True")
             client = None
-            if id == "A":
-                cda.sensor_A_connect_error = True
-            elif id == "B":
-                cda.sensor_B_connect_error = True
-            elif id == "C":
-                cda.sensor_C_connect_error = True
-            elif id == "D":
-                cda.sensor_D_connect_error = True
+            # if id == "A":
+            #     cda.sensor_A_connect_error = True
+            # elif id == "B":
+            #     cda.sensor_B_connect_error = True
+            # elif id == "C":
+            #     cda.sensor_C_connect_error = True
+            # elif id == "D":
+            #     cda.sensor_D_connect_error = True
 
             rtn = []
             rtn.append(False)
@@ -220,19 +220,19 @@ def readSensor(usbPort, id):
             if id == "A" or id == "B":
                 dataHandler.saveData(request.registers, id)
 
-            # No errors so set flags to False
-            if id == "A":
-                cda.sensor_A_io_error = False
-                cda.sensor_A_connect_error = False
-            elif id == "B":
-                cda.sensor_B_io_error = False
-                cda.sensor_B_connect_error = False
-            elif id == "C":
-                cda.sensor_C_io_error = False
-                cda.sensor_C_connect_error = False
-            elif id == "D":
-                cda.sensor_D_io_error = False
-                cda.sensor_D_connect_error = False
+            # # No errors so set flags to False
+            # if id == "A":
+            #     cda.sensor_A_io_error = False
+            #     cda.sensor_A_connect_error = False
+            # elif id == "B":
+            #     cda.sensor_B_io_error = False
+            #     cda.sensor_B_connect_error = False
+            # elif id == "C":
+            #     cda.sensor_C_io_error = False
+            #     cda.sensor_C_connect_error = False
+            # elif id == "D":
+            #     cda.sensor_D_io_error = False
+            #     cda.sensor_D_connect_error = False
 
             rtn = []
             rtn.append(True)
@@ -244,14 +244,14 @@ def readSensor(usbPort, id):
         # other issues are treated as Other Errors
 
         elif "pymodbus.exceptions.ModbusIOException" in rType:
-            if id == "A":
-                cda.sensor_A_io_error = True
-            elif id == "B":
-                cda.sensor_B_io_error = True
-            elif id == "C":
-                cda.sensor_C_io_error = True
-            elif id == "D":
-                cda.sensor_D_io_error = True
+            # if id == "A":
+            #     cda.sensor_A_io_error = True
+            # elif id == "B":
+            #     cda.sensor_B_io_error = True
+            # elif id == "C":
+            #     cda.sensor_C_io_error = True
+            # elif id == "D":
+            #     cda.sensor_D_io_error = True
 
             rtn = []
             rtn.append(False)
@@ -260,14 +260,14 @@ def readSensor(usbPort, id):
             return rtn
 
         elif "pymodbus.exceptions.ConnectionException" in rType:
-            if id == "A":
-                cda.sensor_A_connect_error = True
-            elif id == "B":
-                cda.sensor_B_connect_error = True
-            elif id == "C":
-                cda.sensor_C_connect_error = True
-            elif id == "D":
-                cda.sensor_D_connect_error = True
+            # if id == "A":
+            #     cda.sensor_A_connect_error = True
+            # elif id == "B":
+            #     cda.sensor_B_connect_error = True
+            # elif id == "C":
+            #     cda.sensor_C_connect_error = True
+            # elif id == "D":
+            #     cda.sensor_D_connect_error = True
 
             rtn = []
             rtn.append(False)
@@ -278,51 +278,51 @@ def readSensor(usbPort, id):
         else:
             rtn = []
             rtn.append(False)
-            rtn.append(f"Other {rType}")
+            rtn.append(f"Other error")
             client.close()
             return rtn
 
-    except ModbusException as me:
-        print("----- ModbusException -----")
-        dump(me)
-        print("----- ModbusException end -----")
+    # except ModbusException as me:
+    #     print("----- ModbusException -----")
+    #     dump(me)
+    #     print("----- ModbusException end -----")
 
 
     except Exception as e:
-        print("----- error start -----")
-        dump(e)
-        print("----- error end -----")
+        # print("----- error start -----")
+        # dump(e)
+        # print("----- error end -----")
 
-        errorLine = f"Exception: {e}"
-        if config.get("Pzem", "ioException") in errorLine:
-            if id == "A":
-                cda.sensor_A_io_error = True
-            elif id == "B":
-                cda.sensor_B_io_error = True
-            elif id == "C":
-                cda.sensor_C_io_error = True
-            elif id == "D":
-                cda.sensor_D_io_error = True
+        # errorLine = f"Exception: {e}"
+        # if config.get("Pzem", "ioException") in errorLine:
+        #     if id == "A":
+        #         cda.sensor_A_io_error = True
+        #     elif id == "B":
+        #         cda.sensor_B_io_error = True
+        #     elif id == "C":
+        #         cda.sensor_C_io_error = True
+        #     elif id == "D":
+        #         cda.sensor_D_io_error = True
 
-        if config.get("Pzem", "connectionError") in errorLine:
-            if id == "A":
-                cda.sensor_A_connect_error = True
-            elif id == "B":
-                cda.sensor_B_connect_error = True
-            elif id == "C":
-                cda.sensor_C_connect_error = True
-            elif id == "D":
-                cda.sensor_D_connect_error = True
+        # if config.get("Pzem", "connectionError") in errorLine:
+        #     if id == "A":
+        #         cda.sensor_A_connect_error = True
+        #     elif id == "B":
+        #         cda.sensor_B_connect_error = True
+        #     elif id == "C":
+        #         cda.sensor_C_connect_error = True
+        #     elif id == "D":
+        #         cda.sensor_D_connect_error = True
 
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
 
-        # If "Errno 71" is located increase the counter
-        eStr = f"type: {e}"
-        if "Errno 71" in eStr:
-            eStr = None
-            cda.Errno71_cnt = cda.errno71_cnt + 1
+        # # If "Errno 71" is located increase the counter
+        # eStr = f"type: {e}"
+        # if "Errno 71" in eStr:
+        #     eStr = None
+        #     cda.Errno71_cnt = cda.errno71_cnt + 1
 
         logger.msg("E", f"readSensor() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
         logger.msg("E", f"readSensor() PzemHandler.monitor() error type: {e}")
@@ -334,25 +334,23 @@ def readSensor(usbPort, id):
         return rtn
 
 
-"""
-Determine which ttyUSB* ports are supporting the connected PZEM modules.
-This accomplished by parsing the results of issuing a 'dmesg' command.
-From the last line of the command output begin searching for which 
-USB port signature is mapped to what ttyUSB.  
-
-The USB port signature is hardcoded and represents the utilized USB hub
-and the connected PZEM modules.
-
-Signatures:
-   PZEM A  - usb 1-1.2.1: ch341-uart converter now attached to
-   PZEM B  - usb 1-1.2.2: ch341-uart converter now attached to
-   PZEM C  - usb 1-1.2.3: ch341-uart converter now attached to
-   PZEM D  - usb 1-1.2.4: ch341-uart converter now attached to
-   
-"""
-
-
 def find_usb_ports():
+    """
+    Determine which ttyUSB* ports are supporting the connected PZEM modules.
+    This accomplished by parsing the results of issuing a 'dmesg' command.
+    From the last line of the command output begin searching for which 
+    USB port signature is mapped to what ttyUSB.  
+
+    The USB port signature is hardcoded and represents the utilized USB hub
+    and the connected PZEM modules.
+
+    Signatures:
+    PZEM A  - usb 1-1.2.1: ch341-uart converter now attached to
+    PZEM B  - usb 1-1.2.2: ch341-uart converter now attached to
+    PZEM C  - usb 1-1.2.3: ch341-uart converter now attached to
+    PZEM D  - usb 1-1.2.4: ch341-uart converter now attached to
+    
+    """
     try:
         # run command on OS to get info for devices
         usblist = subprocess.run(["dmesg"], capture_output=True, text=True)
