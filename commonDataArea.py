@@ -97,7 +97,7 @@ cpu_ram = []
 upsData = []
 
 high_temp_cnt = 0
-ups_charge_cnt = 0
+#ups_charge_cnt = 0
 ups_percent_cnt = 0
 
 sensor_io_error_cnt = 0

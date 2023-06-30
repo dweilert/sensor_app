@@ -254,9 +254,8 @@ def mainLine():
             # check temperature for out of threshoold ranges
             checkThresholds.checkTemperature(cpu.temperature)
 
-            # get Raspberry Pi UPS info
+            # get Raspberry Pi UPS info and check the charge level
             upsI = upsHandler.getUPSInfo(False)
-            # checkThresholds.checkUPSCharge(upsI[0])
             checkThresholds.checkUPSPercent(upsI[1])
 
             # get Raspberry Pi memory usage data
@@ -270,8 +269,7 @@ def mainLine():
             getCmdInfo.checkForCommandFile()
 
             # wait for the defined time and then do it all again
-            time.sleep(
-                int(config.get("Interval", "wait_to_check_sensors_seconds")))
+            time.sleep(int(config.get("Interval", "wait_to_check_sensors_seconds")))
 
             # if diagCnt == 5:
             #     util.checkDiag()

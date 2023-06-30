@@ -46,17 +46,18 @@ import commonDataArea as cda
 # Find your Account SID and Auth Token at twilio.com/console
 # and set the environment variables. See http://twil.io/secure
 
-def checkSMS(what): 
+
+def checkSMS(what):
     try:
-        #print(f"checkSMS parameter: {what} from sensor: {cda.from_sensor}")
+        # print(f"checkSMS parameter: {what} from sensor: {cda.from_sensor}")
         send = True
 
         if what == "all_sensors_io_error":
             if cda.resend_all_sensors_io_error_cnt == 0:
                 send = True
                 cda.resend_all_sensors_io_error_cnt = 1
-            else:             
-                cda.resend_all_sensors_io_error_cnt +=1
+            else:
+                cda.resend_all_sensors_io_error_cnt += 1
                 if cda.resend_all_sensors_io_error_cnt < cda.resend_wait:
                     send = False
                 else:
@@ -69,8 +70,8 @@ def checkSMS(what):
             if cda.resend_sensor_connect_error_cnt == 0:
                 send = True
                 cda.resend_sensor_connect_error_cnt = 1
-            else:             
-                cda.resend_sensor_connect_error_cnt +=1
+            else:
+                cda.resend_sensor_connect_error_cnt += 1
                 if cda.resend_sensor_connect_error_cnt < cda.resend_wait:
                     send = False
                 else:
@@ -80,8 +81,8 @@ def checkSMS(what):
             if cda.resend_high_level_alarm_cnt == 0:
                 send = True
                 cda.resend_high_level_alarm_cnt = 1
-            else:             
-                cda.resend_high_level_alarm_cnt +=1
+            else:
+                cda.resend_high_level_alarm_cnt += 1
                 if cda.resend_high_level_alarm_cnt < cda.resend_wait:
                     send = False
                 else:
@@ -91,19 +92,19 @@ def checkSMS(what):
             if cda.resend_sensor_io_error_cnt == 0:
                 send = True
                 cda.resend_sensor_io_error_cnt = 1
-            else:             
-                cda.resend_sensor_io_error_cnt +=1
+            else:
+                cda.resend_sensor_io_error_cnt += 1
                 if cda.resend_sensor_io_error_cnt < cda.resend_wait:
                     send = False
                 else:
-                    cda.resend_sensor_io_error_cnt = 0                    
+                    cda.resend_sensor_io_error_cnt = 0
 
         elif what == "no_data":
             if cda.resend_sensor_no_data_cnt == 0:
                 send = True
                 cda.resend_sensor_no_data_cnt = 1
-            else:    
-                cda.resend_sensor_no_data_cnt +=1
+            else:
+                cda.resend_sensor_no_data_cnt += 1
                 if cda.resend_sensor_no_data_cnt < cda.resend_wait:
                     send = False
                 else:
@@ -113,8 +114,8 @@ def checkSMS(what):
             if cda.resend_sensor_no_power_a_cnt == 0:
                 send = True
                 cda.resend_sensor_no_power_a_cnt = 1
-            else:             
-                cda.resend_sensor_no_power_a_cnt +=1
+            else:
+                cda.resend_sensor_no_power_a_cnt += 1
                 if cda.resend_sensor_no_power_a_cnt < cda.resend_wait:
                     send = False
                 else:
@@ -124,8 +125,8 @@ def checkSMS(what):
             if cda.resend_sensor_no_power_b_cnt == 0:
                 send = True
                 cda.resend_sensor_no_power_b_cnt = 1
-            else:             
-                cda.resend_sensor_no_power_b_cnt +=1
+            else:
+                cda.resend_sensor_no_power_b_cnt += 1
                 if cda.resend_sensor_no_power_b_cnt < cda.resend_wait:
                     send = False
                 else:
@@ -135,8 +136,8 @@ def checkSMS(what):
             if cda.resend_no_overall_power_cnt == 0:
                 send = True
                 cda.resend_no_overall_power_cnt = 1
-            else:             
-                cda.resend_no_overall_power_cnt +=1
+            else:
+                cda.resend_no_overall_power_cnt += 1
                 if cda.resend_no_overall_power_cnt < cda.resend_wait:
                     send = False
                 else:
@@ -146,30 +147,19 @@ def checkSMS(what):
             if cda.resend_rasp_temp_cnt == 0:
                 send = True
                 cda.resend_rasp_temp_cnt = 1
-            else:             
-                cda.resend_rasp_temp_cnt +=1
+            else:
+                cda.resend_rasp_temp_cnt += 1
                 if cda.resend_rasp_temp_cnt < cda.resend_wait:
                     send = False
                 else:
                     cda.resend_rasp_temp_cnt = 0
 
-        elif what == "ups_charge":
-            if cda.resend_rasp_ups_charge_cnt == 0:
-                send = True
-                cda.resend_rasp_ups_charge_cnt = 1
-            else:            
-                cda.resend_rasp_ups_charge_cnt +=1
-                if cda.resend_rasp_ups_charge_cnt < cda.resend_wait:
-                    send = False
-                else:
-                    cda.resend_rasp_ups_charge_cnt = 0
-
         elif what == "ups_percent":
             if cda.resend_rasp_ups_percent_cnt == 0:
                 send = True
                 cda.resend_rasp_ups_percent_cnt = 1
-            else:            
-                cda.resend_rasp_ups_percent_cnt +=1
+            else:
+                cda.resend_rasp_ups_percent_cnt += 1
                 if cda.resend_rasp_ups_percent_cnt < cda.resend_wait:
                     send = False
                 else:
@@ -178,7 +168,8 @@ def checkSMS(what):
         else:
             if what != "other":
                 send = False
-                logger.msg("W",f"smsHandler.checkSMS did not receive valid type, RECEIVED: {what}")
+                logger.msg(
+                    "W", f"smsHandler.checkSMS did not receive valid type, RECEIVED: {what}")
 
         if send == True:
             sendSMS()
@@ -187,8 +178,9 @@ def checkSMS(what):
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg("E",f"checkSMS() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
-        logger.msg("E",f"checkSMS() {e}")
+        logger.msg(
+            "E", f"checkSMS() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        logger.msg("E", f"checkSMS() {e}")
 
 
 def sendSMS():
@@ -206,23 +198,24 @@ def sendSMS():
 
         now = datetime.now()
         fmtDate = now.strftime("%m/%d/%Y at %H:%M:%S")
-        msg = config.get("Twilio","msg_header") + " " + fmtDate + " - "
+        msg = config.get("Twilio", "msg_header") + " " + fmtDate + " - "
         msg = msg + " " + cda.smsMsg[0][0]
-	
-        client = Client(config.get("Twilio","accountSID"), config.get("Twilio","authToken"))    
+
+        client = Client(config.get("Twilio", "accountSID"),
+                        config.get("Twilio", "authToken"))
         first_msg = True
         for number in toNumbers:
-            #print("Send message to: ", number)
-            if config.get("Twilio","skip_sending") == "true":
-                logger.msg("I","Skipped sending SMS: " + msg )
+            # print("Send message to: ", number)
+            if config.get("Twilio", "skip_sending") == "true":
+                logger.msg("I", "Skipped sending SMS: " + msg)
             else:
                 client.messages.create(
-                    to=number, 
-                    from_=config.get("Twilio","from_number"), 
+                    to=number,
+                    from_=config.get("Twilio", "from_number"),
                     body=msg)
                 if first_msg == True:
-                    first_msg = False				    	    
-                    logger.msg("I","Sent SMS: " + msg + " to " + who )		
+                    first_msg = False
+                    logger.msg("I", "Sent SMS: " + msg + " to " + who)
                     j_data = {}
                     j_data["d"] = fmtDate
                     j_data["m"] = msg
@@ -234,5 +227,6 @@ def sendSMS():
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg("E",f"sendSMS() Exception type: {exception_type} File name: {filename} Line number: {line_number}")               
-        logger.msg("E",f"sendSMS() {e}")
+        logger.msg(
+            "E", f"sendSMS() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        logger.msg("E", f"sendSMS() {e}")

@@ -85,8 +85,7 @@ def checkAmps(i):
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg(
-            "E", f"checkAmps() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        logger.msg("E", f"checkAmps() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
         logger.msg("E", f"checkAmps() {e}")
 
 
@@ -107,44 +106,21 @@ def checkTemperature(temp):
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg(
-            "E", f"checkTemperature() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        logger.msg("E", f"checkTemperature() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
         logger.msg("E", f"checkTemperature() {e}")
-
-
-# def checkUPSCharge(charge):
-#     # Check if Raspberry Pi UPS has been charging for a long time
-#     try:
-#         cda.smsMsg = []
-#         if charge < 0:
-#             cda.ups_charge_cnt = cda.ups_charge_cnt + 1
-#             if cda.ups_charge_cnt > int(config.get("Limits","ups_charge_cnt")):
-#                 sms = []
-#                 sms.append(config.get("Messages","ups_charge_msg"))
-#                 sms.append(config.get("Messages","ups_charge_who"))
-#                 cda.smsMsg.append(sms)
-#                 cda.ups_charge_cnt = 0
-#                 smsHandler.checkSMS("ups_charge")
-#         else:
-#             cda.ups_charge_cnt = 0
-#     except Exception as e:
-#         exception_type, exception_object, exception_traceback = sys.exc_info()
-#         filename = exception_traceback.tb_frame.f_code.co_filename
-#         line_number = exception_traceback.tb_lineno
-#         logger.msg("E",f"checkUPSCharge() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
-#         logger.msg("E",f"checkUPSCharge() {e}")
 
 
 def checkUPSPercent(pct):
     # Check if Raspberry Pi UPS percent is below level
     try:
+        print("UPS % " + str(pct))
+
         cda.smsMsg = []
         if pct < int(config.get("Limits", "ups_percent")):
             cda.ups_percent_cnt = cda.ups_percent_cnt + 1
             if cda.ups_percent_cnt > int(config.get("Limits", "ups_percent_cnt")):
                 sms = []
-                msg = config.get("Messages", "ups_percent_msg") + " " + \
-                    config.get("Limits", "ups_percent") + " percent"
+                msg = config.get("Messages", "ups_percent_msg") + " " + config.get("Limits", "ups_percent") + " percent"
                 sms.append(msg)
                 sms.append(config.get("Messages", "ups_percent_who"))
                 cda.smsMsg.append(sms)
@@ -156,8 +132,7 @@ def checkUPSPercent(pct):
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg(
-            "E", f"checkUPSPercent() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        logger.msg("E", f"checkUPSPercent() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
         logger.msg("E", f"checkUPSPercent() {e}")
 
 
@@ -278,8 +253,7 @@ def checkData(pzem_data, id):
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg(
-            "E", f"checkPump() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        logger.msg("E", f"checkPump() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
         logger.msg("E", f"checkPump() {e}")
 
 
@@ -300,8 +274,7 @@ def checkSensors():
             cda.sensor_connect_error_cnt = cda.sensor_connect_error_cnt + 1
             if cda.sensor_connect_error_cnt > int(config.get("Limits", "sensor_connect_error")):
                 sms = []
-                sms.append(config.get(
-                    "Messages", "sensor_connect_error_msg") + connErr)
+                sms.append(config.get("Messages", "sensor_connect_error_msg") + connErr)
                 sms.append(config.get("Messages", "sensor_connect_error_who"))
                 cda.smsMsg.append(sms)
                 cda.sensor_connect_error_cnt = 0
@@ -352,6 +325,5 @@ def checkSensors():
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg(
-            "E", f"checkSensors() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        logger.msg("E", f"checkSensors() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
         logger.msg("E", f"checkSensors() {e}")
