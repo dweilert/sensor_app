@@ -120,8 +120,6 @@ def mainLine():
     rtn = ""
 
     try:
-        current_hour = 99
-        usingDefault = False
         portsFound = 0
         waitSeconds = config.get("Interval", "wait_to_check_for_ports_seconds")
         while True:
@@ -130,7 +128,6 @@ def mainLine():
 
            # Circut breaker to stop looking for USB definitions
             if find_cnt > 5:
-                usingDefault = True
                 cda.portA = "/dev/ttyUSB0"
                 cda.portB = "/dev/ttyUSB1"
                 cda.portC = "/dev/ttyUSB2"
@@ -330,11 +327,15 @@ Restart service : systemctl restart monitor
 if __name__ == "__main__":
     # reset_usb()
     try:
-        # Read config.ini file for parameters
-        config.readConfig()
         # get current date
         now = datetime.now()
+        logger.msg("I", "------------")
+        logger.msg("I", f"Monitor started at: {now}")
         cda.current_date = now.strftime("%Y_%m_%d")
+
+        # Read config.ini file for parameters
+        config.readConfig()
+
         # initialize values
         cda.cmdI = ""
         cda.iCnt = 0
@@ -344,6 +345,7 @@ if __name__ == "__main__":
         if os.path.exists(config.get("CommandInterface", "cmd_file")):
             os.remove(config.get("CommandInterface", "cmd_file"))
 
+        # Start
         mainLine()
 
     except Exception as e:

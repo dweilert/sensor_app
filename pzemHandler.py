@@ -280,7 +280,7 @@ def readSensor(usbPort, id):
         logger.msg(
             "E", f"readSensor() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
         logger.msg("E", f"readSensor() PzemHandler.monitor() error type: {e}")
-        logger.msg("E", f"readSensor() usbPort: {usbPort} id: {id}")
+        logger.msg("E", f"readSensor() usbPort: {usbPort} mapped to id: {id}")
 
         rtn = []
         rtn.append(False)
