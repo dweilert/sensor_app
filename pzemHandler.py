@@ -143,10 +143,17 @@ def readSensor(usbPort, id):
 
             regs = client.read_input_registers(0, 10, 1)
 
+            if "Error" in regs.string:
+                rtn = []
+                rtn.append(False)
+                rtn.append("no register data")
+                client.close()
+                client = None
+                return rtn
+            
             dump(regs)
 
             print("REGS.STRING: " + regs.string)
-            # print("REGS.isERROR: " + regs.isError)
 
             rType = type(regs)
             print(f"REGISTER TYPE: {rType}")
