@@ -70,6 +70,8 @@ def get(k1, k2):
         data = configI[k1][k2]
         return data
     except Exception as e:
+        if k2 == "log_console":
+            return True
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
