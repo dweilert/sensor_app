@@ -72,7 +72,9 @@ def checkAmps(i):
 
         if high > int(config.get("Limits", "amps_high")):
             sms = []
-            sms.append(config.get("Messages", "amps_high_msg" + " " + i))
+            msg = config.get("Messages", "amps_high_msg")
+            msg = msg + " " + i
+            sms.append(msg)
             sms.append(config.get("Messages", "amps_high_who"))
             cda.smsMsg.append(sms)
             smsHandler.checkSMS("amps")
@@ -82,7 +84,9 @@ def checkAmps(i):
 
         if low < int(config.get("Limits", "amps_low")):
             sms = []
-            sms.append(config.get("Messages", "amps_low_msg" + " " + i))
+            msg = config.get("Messages", "amps_low_msg")
+            msg = msg + " " + i
+            sms.append(msg)
             sms.append(config.get("Messages", "amps_low_who"))
             cda.smsMsg.append(sms)
             smsHandler.checkSMS("amps")
