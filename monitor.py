@@ -153,6 +153,8 @@ def mainLine():
             if portsfound > 0:
                 break
 
+            logger.msg(
+                "I", f"Get sensor attempt {find_cnt} of 5 completed, next attempt in {waitSeconds} seconds")
             time.sleep(int(waitSeconds))
         # ----------------------------------------------------------------------
 
@@ -177,8 +179,8 @@ def mainLine():
 
         # Send SMS
         sms = []
-        sms.append()
-        sms.append(foundMsg, who)
+        sms.append(foundMsg)
+        sms.append(who)
         cda.smsMsg.append(sms)
         smsHandler.sendSMS()
 
