@@ -268,10 +268,22 @@ def mainLine():
 
             # get Raspberry Pi temp and save if it is a new hour
             cpu = CPUTemperature()
+
             if nowHour != cda.cpu_temp_hour:
                 cda.cpu_temps.append(nowHour + ":" + str(cpu.temperature))
                 cda.cpu_temp_hour = nowHour
                 cda.cpu_temp_high = cpu.temperature
+
+                # Also check when the last pump ran
+                cda.pump_last_run = cda.pump_last_run + 1
+                if cda.pump_last_run > config.get("Limits", "no_pumps_run"):
+                    # Send SMS warnng message
+                    sms = []
+                    msg = config.get("Messages", "no_pumps_run_msg") + " " + cda.pump_last_run + " hours"
+                    sms.append(msg)
+                    sms.append(config.get("Messages", "no_pumps_run_who"))
+                    cda.smsMsg.append(sms)
+                    smsHandler.sendSMS()
 
             # check temperature for out of threshoold ranges
             checkThresholds.checkTemperature(cpu.temperature)

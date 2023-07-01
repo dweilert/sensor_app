@@ -90,8 +90,7 @@ def wrapLogs():
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        print(
-            f"wrapLogs() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        print(f"wrapLogs() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
         print(f"wrapLogs() {e}")
         cda.log_messages = []
         return False

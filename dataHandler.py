@@ -56,6 +56,7 @@ def saveData(row, pump):
             # Check if Current in row[1] is seen 	
             if int(row[1]) > 0:
                 if cda.pumpA_status == "OFF":
+                    cda.pump_last_run = 0
                     cda.pumpA_status = "ON"		
                     cda.pumpA_start = ts
                     cda.pumpA_stop = ""
@@ -112,6 +113,7 @@ def saveData(row, pump):
             # Check if Current is seen 	
             if int(row[1]) > 0:
                 if cda.pumpB_status == "OFF":
+                    cda.pump_last_run = 0
                     cda.pumpB_status = "ON"		
                     cda.pumpB_start = ts
                     cda.pumpB_stop = ""
@@ -127,6 +129,7 @@ def saveData(row, pump):
                     cda.pumpB_cycles.append(row)		    		    				    
             else:		
                 if cda.pumpB_status == "ON":
+
                     row.append(ts)
                     cda.pumpB_cycles.append(row)
                     cda.pumpB_stop = ts

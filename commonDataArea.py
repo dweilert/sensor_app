@@ -26,6 +26,7 @@ LICENSE:
 
 """
 # all log messages
+log_file_name = "default.log"
 log_messages = []
 write_msg_to_console = True
 write_msg_to_file = True
@@ -83,6 +84,7 @@ pumpB_amp_high = 0
 pumpB_amp_low = 9999
 pumpB_amp_avg = 0
 
+pump_last_run = 0
 
 current_date = ""
 iCnt = 0

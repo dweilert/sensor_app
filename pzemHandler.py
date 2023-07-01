@@ -201,9 +201,6 @@ def readSensor(usbPort, id):
         return rtn
     
 
-
-
-
 def find_usb_ports():
     """
     Determine which ttyUSB* ports are supporting the connected PZEM modules.
