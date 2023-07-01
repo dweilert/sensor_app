@@ -77,11 +77,11 @@
                         </div>
                     </div>
                     <div class="modal-footer" style="font-size: 80%; background-color: #99f;">
-                        &nbsp;
-                        <!-- <button onclick="closeLoadingModal()" type="button" class="btn btn-sm btn-secondary"
+
+                        <button onclick="closeLoadingModal()" type="button" class="btn btn-sm btn-secondary"
                             data-dismiss="modal">
                             Close
-                        </button> -->
+                        </button>
                     </div>
                 </div>
             </div>
@@ -241,7 +241,7 @@
 
                     } else if (kind === 'm') {
                         formatSMS(this.responseText)
-                        closeLoadingModal();
+
                         dx = document.getElementById("gauges_div");
                         dx.style.display = "none";
                         dx = document.getElementById("run_div");
@@ -563,6 +563,7 @@
 
             h = null;
             sData = []
+            // setTimeout(closeLoadingModal(), 500);
             closeLoadingModal();
         }
 
