@@ -175,7 +175,6 @@
 
         const sensor_url = 'https://isf1iqwwv2.execute-api.us-east-2.amazonaws.com/data';
         const sms_url = 'https://isf1iqwwv2.execute-api.us-east-2.amazonaws.com/sms';
-        const amps_url = 'https://isf1iqwwv2.execute-api.us-east-2.amazonaws.com/amps';
 
         // Returns a Bootstrap modal instance
         let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('messageModal'))
@@ -240,7 +239,6 @@
                         document.getElementById("outputTable").innerHTML = "";
                         closeLoadingModal();
 
-
                     } else if (kind === 'm') {
                         formatSMS(this.responseText)
                         dx = document.getElementById("gauges_div");
@@ -256,8 +254,6 @@
                         dx.style.display === "block";
                         closeLoadingModal();
 
-                    } else if (kind === 'a') {
-                        formatAmps(this.responseText)
                     }
                 }
             }
@@ -374,8 +370,8 @@
                 g_eDate = dt[0];
 
                 if (g_sDate !== g_eDate) {
-                    console.log("================ Clipped data ================")
-                    console.log(JSON.stringify(pumpData[tkeys[i]], null, 2))
+                    // console.log("================ Clipped data ================")
+                    // console.log(JSON.stringify(pumpData[tkeys[i]], null, 2))
                     g_eHr = "23";
                     g_eMin = "59";
                     g_eSec = "59";
@@ -394,7 +390,7 @@
                 timelineData.push(g_line)
             }
 
-            console.log(JSON.stringify(statsTable, null, 4))
+            // console.log(JSON.stringify(statsTable, null, 4))
 
             document.getElementById("entryA").innerHTML = "High amps at: " + pumpA_amps_entry;
             document.getElementById("entryB").innerHTML = "High amps at: " + pumpB_amps_entry;
