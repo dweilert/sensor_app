@@ -184,13 +184,21 @@ def mainLine():
         # Check for if any ports were found is so break out of while
         if cda.usb_port1 != "na":
             portsfound = portsfound + 1
+        else:
+            print(cda.usb_port1)
         if cda.usb_port2 != "na":
             portsfound = portsfound + 1
+        else:
+            print(cda.usb_port2)
         if cda.usb_port3 != "na":
             portsfound = portsfound + 1
+        else:
+            print(cda.usb_port3)
         if cda.usb_port4 != "na":
             portsfound = portsfound + 1
-
+        else:
+            print(cda.usb_port4)
+            
         print(portsFound)
 
         # SMS related message, who
