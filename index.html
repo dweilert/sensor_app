@@ -241,6 +241,7 @@
 
                     } else if (kind === 'm') {
                         formatSMS(this.responseText)
+                        closeLoadingModal();
                         dx = document.getElementById("gauges_div");
                         dx.style.display = "none";
                         dx = document.getElementById("run_div");
@@ -252,8 +253,6 @@
 
                         dx = document.getElementById("outputTable");
                         dx.style.display === "block";
-                        closeLoadingModal();
-
                     }
                 }
             }
@@ -445,21 +444,6 @@
                         data[i].duration = calcInformation(data[i]);
                     }
 
-
-
-                    // // Save the pump data for showing detail in UI
-                    // period = 1
-                    // if (min > 15 && min < 31) {
-                    //     period = 2
-                    // } else if (min > 30 && min < 46) {
-                    //     period = 3
-                    // } else if (min > 45 && min < 60) {
-                    //     period = 4
-                    // }
-                    // key = dt[0] + "." + hr + "." + period
-                    // //items[dt[0]][key] = data[i].pump
-                    // // key = dt[0] + "." + key
-
                     key = data[i].start_date
                     pumpData[key] = data[i]
 
@@ -479,7 +463,6 @@
             console.log("Dropped because of negative value: " + dropNegCnt)
             console.log("Dropped because of initial value : " + dropInitialCnt)
             console.log(JSON.stringify(deleteArray, null, 2))
-
         }
 
 
