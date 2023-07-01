@@ -182,17 +182,17 @@ def mainLine():
         logger.msg("I","  (D) - overall power")
 
         # Check for if any ports were found is so break out of while
-        if (cda.usb_port1 != "na"):
+        if cda.usb_port1 != "na":
             portsfound = portsfound + 1
-        if (cda.usb_port2 != "na"):
+        if cda.usb_port2 != "na":
             portsfound = portsfound + 1
-        if (cda.usb_port3 != "na"):
+        if cda.usb_port3 != "na":
             portsfound = portsfound + 1
-        if (cda.usb_port4 != "na"):
+        if cda.usb_port4 != "na":
             portsfound = portsfound + 1
 
         print(portsFound)
-        
+
         # SMS related message, who
         foundMsg = ""
         who = ""

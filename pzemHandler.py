@@ -253,23 +253,19 @@ def find_usb_ports():
 
                 if cda.usb_port1 == chkUSB:
                     if config.get("Debug", "show_dmesg") == "true":
-                        logger.msg(
-                            "I", f"Sensor 1 disconned from USB port: {chkUSB}")
+                        logger.msg("I", f"Sensor 1 disconned from USB port: {chkUSB}")
                     cda.usb_port1 = "na"
                 elif cda.usb_port2 == chkUSB:
                     if config.get("Debug", "show_dmesg") == "true":
-                        logger.msg(
-                            "I", f"Sensor 2 disconned from USB port: {chkUSB}")
+                        logger.msg("I", f"Sensor 2 disconned from USB port: {chkUSB}")
                     cda.usb_port2 = "na"
                 elif cda.usb_port3 == chkUSB:
                     if config.get("Debug", "show_dmesg") == "true":
-                        logger.msg(
-                            "I", f"Sensor 3 disconned from USB port: {chkUSB}")
+                        logger.msg("I", f"Sensor 3 disconned from USB port: {chkUSB}")
                     cda.usb_port3 = "na"
                 elif cda.usb_port4 == chkUSB:
                     if config.get("Debug", "show_dmesg") == "true":
-                        logger.msg(
-                            "I", f"Sensor 4 disconned from USB port: {chkUSB}")
+                        logger.msg("I", f"Sensor 4 disconned from USB port: {chkUSB}")
                     cda.usb_port4 = "na"
 
             if usb_port1_sig in line:
@@ -278,8 +274,7 @@ def find_usb_ports():
                         pid = line[65:72]
                         cda.usb_port1 = "/dev/" + pid
                         if config.get("Debug", "show_dmesg") == "true":
-                            logger.msg(
-                                "I", f"Sensor 1 set to USB port: {cda.usb_port1}")
+                            logger.msg("I", f"Sensor 1 set to USB port: {cda.usb_port1}")
 
             if usb_port2_sig in line:
                 if cda.usb_port2 == "na":
@@ -287,8 +282,7 @@ def find_usb_ports():
                         pid = line[65:72]
                         cda.usb_port2 = "/dev/" + pid
                         if config.get("Debug", "show_dmesg") == "true":
-                            logger.msg(
-                                "I", f"Sensor 2 set to USB port: {cda.usb_port2}")
+                            logger.msg("I", f"Sensor 2 set to USB port: {cda.usb_port2}")
 
             if usb_port3_sig in line:
                 if cda.usb_port3 == "na":
@@ -296,8 +290,7 @@ def find_usb_ports():
                         pid = line[65:72]
                         cda.usb_port3 = "/dev/" + pid
                         if config.get("Debug", "show_dmesg") == "true":
-                            logger.msg(
-                                "I", f"Sensor 3 set to USB port: {cda.usb_port3}")
+                            logger.msg("I", f"Sensor 3 set to USB port: {cda.usb_port3}")
 
             if usb_port4_sig in line:
                 if cda.usb_port4 == "na":
@@ -305,8 +298,7 @@ def find_usb_ports():
                         pid = line[65:72]
                         cda.usb_port4 = "/dev/" + pid
                         if config.get("Debug", "show_dmesg") == "true":
-                            logger.msg(
-                                "I", f"Sensor 4 set to USB port: {cda.usb_port4}")
+                            logger.msg("I", f"Sensor 4 set to USB port: {cda.usb_port4}")
 
             # Increase line in the dmesg data to get
             ln = ln + 1
@@ -320,6 +312,5 @@ def find_usb_ports():
         exception_type, exception_object, exception_traceback = sys.exc_info()
         filename = exception_traceback.tb_frame.f_code.co_filename
         line_number = exception_traceback.tb_lineno
-        logger.msg(
-            "E", f"find_usb_ports() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
+        logger.msg("E", f"find_usb_ports() Exception type: {exception_type} File name: {filename} Line number: {line_number}")
         logger.msg("E", f"find_usb_ports() {e}")
