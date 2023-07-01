@@ -279,7 +279,8 @@ def mainLine():
                 if cda.pump_last_run > int(config.get("Limits", "no_pumps_run")):
                     # Send SMS warnng message
                     sms = []
-                    msg = config.get("Messages", "no_pumps_run_msg") + " " + cda.pump_last_run + " hours"
+                    msg = config.get("Messages", "no_pumps_run_msg") 
+                    msg = msg + " " + str(cda.pump_last_run) + " hours"
                     sms.append(msg)
                     sms.append(config.get("Messages", "no_pumps_run_who"))
                     cda.smsMsg.append(sms)
