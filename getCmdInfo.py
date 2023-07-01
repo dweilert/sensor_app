@@ -117,7 +117,6 @@ def checkForCommandFile():
                     sms = []
                     tMsg = config.get("Messages","end_of_day_msg")
                     tMsg = tMsg + endOfDay.getDailyData()
-                    print(tMsg)
                     sms.append(tMsg)
                     sms.append(config.get("Messages","end_of_day_who"))
                     cda.smsMsg.append(sms)
