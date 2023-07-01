@@ -181,30 +181,31 @@ def mainLine():
         logger.msg("I","  (C) - high-level alarm")
         logger.msg("I","  (D) - overall power")
 
+        pCnt = 0
         # Check for if any ports were found is so break out of while
         if cda.usb_port1 != "na":
-            portsfound = portsfound + 1
+            pCnt = pCnt + 1
         else:
             print(cda.usb_port1)
         if cda.usb_port2 != "na":
-            portsfound = portsfound + 1
+            pCnt = pCnt + 1
         else:
             print(cda.usb_port2)
         if cda.usb_port3 != "na":
-            portsfound = portsfound + 1
+            pCnt = pCnt + 1
         else:
             print(cda.usb_port3)
         if cda.usb_port4 != "na":
-            portsfound = portsfound + 1
+            pCnt = pCnt + 1
         else:
             print(cda.usb_port4)
-            
-        print(portsFound)
+
+        print(pCnt)
 
         # SMS related message, who
         foundMsg = ""
         who = ""
-        if portsFound > 0:
+        if pCnt > 0:
             foundMsg = config.get("Messages", "sensors_at_startup_msg") +  " " + str(portsfound)
             who = config.get("Messages", "sensors_at_startup_who")
         else:
