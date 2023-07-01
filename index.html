@@ -77,10 +77,11 @@
                         </div>
                     </div>
                     <div class="modal-footer" style="font-size: 80%; background-color: #99f;">
-                        <button onclick="closeLoadingModal()" type="button" class="btn btn-sm btn-secondary"
+                        &nbsp;
+                        <!-- <button onclick="closeLoadingModal()" type="button" class="btn btn-sm btn-secondary"
                             data-dismiss="modal">
                             Close
-                        </button>
+                        </button> -->
                     </div>
                 </div>
             </div>
@@ -237,6 +238,7 @@
                         dx = document.getElementById("outputTable");
                         dx.style.display === "none"
                         document.getElementById("outputTable").innerHTML = "";
+                        closeLoadingModal();
 
 
                     } else if (kind === 'm') {
@@ -252,7 +254,7 @@
 
                         dx = document.getElementById("outputTable");
                         dx.style.display === "block";
-
+                        closeLoadingModal();
 
                     } else if (kind === 'a') {
                         formatAmps(this.responseText)
