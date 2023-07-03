@@ -255,7 +255,7 @@ def mainLine():
                 if cda.critical_error_B < critical_count:
                     if map1 != "skip":
                         rtn = []
-                        rtn = pzemHandler.readSensor(cda.usb_port2, map2))
+                        rtn = pzemHandler.readSensor(cda.usb_port2, map2)
                         #print(f"usb_port2 regisiters: {rtn}")
                         if rtn[0] == False:
                             rtn[1] = []
