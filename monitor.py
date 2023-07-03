@@ -127,6 +127,11 @@ def mainLine():
     critical_count = int(config.get("Limits","critical_error_skip_count"))
     portsFound = 0
 
+    mapA = ""
+    mapB = ""
+    mapC = ""
+    mapD = ""
+
     try:
         portsFound = 0
         waitSeconds = config.get("Interval", "wait_to_check_for_ports_seconds")
@@ -168,12 +173,18 @@ def mainLine():
 
         # ----------------------------------------------------------------------
 
+        map1 = config.get("USBPortSignatures", "map_usb_port1_to_sensor")
+        map2 = config.get("USBPortSignatures", "map_usb_port2_to_sensor")
+        map3 = config.get("USBPortSignatures", "map_usb_port3_to_sensor")
+        map4 = config.get("USBPortSignatures", "map_usb_port4_to_sensor")
+
+
         # Log the sensors located and send SMS about what is found
         logger.msg("I", "------------")
-        logger.msg("I", f"USB port 1: {cda.usb_port1} mapped to Sensor: {config.get('USBPortSignatures', 'map_usb_port1_to_sensor')}")
-        logger.msg("I", f"USB port 2: {cda.usb_port2} mapped to Sensor: {config.get('USBPortSignatures', 'map_usb_port2_to_sensor')}")
-        logger.msg("I", f"USB port 3: {cda.usb_port3} mapped to Sensor: {config.get('USBPortSignatures', 'map_usb_port3_to_sensor')}")
-        logger.msg("I", f"USB port 4: {cda.usb_port4} mapped to Sensor: {config.get('USBPortSignatures', 'map_usb_port4_to_sensor')}")
+        logger.msg("I", f"USB port 1: {cda.usb_port1} mapped to Sensor: {map1}")
+        logger.msg("I", f"USB port 2: {cda.usb_port2} mapped to Sensor: {map2}")
+        logger.msg("I", f"USB port 3: {cda.usb_port3} mapped to Sensor: {map3}")
+        logger.msg("I", f"USB port 4: {cda.usb_port4} mapped to Sensor: {map4}")
         logger.msg("I", "------------")
         logger.msg("I","Logic checking is:")
         logger.msg("I","  (A) - pump 1")
@@ -209,6 +220,7 @@ def mainLine():
         cda.smsMsg.append(sms)
         smsHandler.sendSMS()
 
+
         # Now loop forever
         while True:
             now = datetime.now()
@@ -229,48 +241,48 @@ def mainLine():
             """
             if cda.usb_port1 != "na":
                 if cda.critical_error_A < critical_count: 
-                    if cda.usb_port1 != "skip":
+                    if map1 != "skip":
                         rtn = []
-                        rtn = pzemHandler.readSensor(cda.usb_port1, config.get("USBPortSignatures", "map_usb_port1_to_sensor"))
+                        rtn = pzemHandler.readSensor(cda.usb_port1, map1)
                         # print(f"A rtn {rtn}")
                         #print(f"usb_port1 regisiters: {rtn}")
                         if rtn[0] == False:
                             rtn[1] = []
-                        checkThresholds.checkData(rtn[1], config.get("USBPortSignatures", "map_usb_port1_to_sensor"))
+                        checkThresholds.checkData(rtn[1], map1)
                         cda.sensor_A_registers.append(rtn[1])
 
             if cda.usb_port2 != "na":
                 if cda.critical_error_B < critical_count:
-                    if cda.usb_port2 != "skip":
+                    if map1 != "skip":
                         rtn = []
-                        rtn = pzemHandler.readSensor(cda.usb_port2, config.get("USBPortSignatures", "map_usb_port2_to_sensor"))
+                        rtn = pzemHandler.readSensor(cda.usb_port2, map2))
                         #print(f"usb_port2 regisiters: {rtn}")
                         if rtn[0] == False:
                             rtn[1] = []
-                        checkThresholds.checkData(rtn[1], config.get("USBPortSignatures", "map_usb_port2_to_sensor"))
+                        checkThresholds.checkData(rtn[1], map2)
                         cda.sensor_B_registers.append(rtn[1])
 
             if cda.usb_port3 != "na":
                 if cda.critical_error_C < critical_count:
-                    if cda.usb_port3 != "skip":
+                    if map3 != "skip":
                         rtn = []
-                        rtn = pzemHandler.readSensor(cda.usb_port3, config.get("USBPortSignatures", "map_usb_port3_to_sensor"))
+                        rtn = pzemHandler.readSensor(cda.usb_port3, map3)
                         # print(f"C registers: {rtn}")
                         #print(f"usb_port3 regisiters: {rtn}")
                         if rtn[0] == False:
                             rtn[1] = []
-                        checkThresholds.checkData(rtn[1], config.get("USBPortSignatures", "map_usb_port3_to_sensor"))
+                        checkThresholds.checkData(rtn[1], map3)
                         cda.sensor_C_registers.append(rtn[1])
 
             if cda.usb_port4 != "na":
                 if cda.critical_error_D < critical_count:
-                    if cda.usb_port4 != "skip":
+                    if map4 != "skip":
                         rtn = []
-                        rtn = pzemHandler.readSensor(cda.usb_port4, config.get("USBPortSignatures", "map_usb_port4_to_sensor"))
+                        rtn = pzemHandler.readSensor(cda.usb_port4, map4)
                         #print(f"usb_port4 regisiters: {rtn}")
                         if rtn[0] == False:
                             rtn[1] = []
-                        checkThresholds.checkData(rtn[1], config.get("USBPortSignatures", "map_usb_port4_to_sensor"))
+                        checkThresholds.checkData(rtn[1], map4)
                         cda.sensor_D_registers.append(rtn[1])
 
             # get Raspberry Pi temp and save if it is a new hour
