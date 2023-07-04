@@ -91,6 +91,9 @@ def resetCheck(nowDay, nowHour):
             cda.critical_error_D = 0
             cda.timeout_error = 0
 
+            cda.oserr_A = 0
+            cda.oserr_B = 0
+
             # End of day message and stats
             endOfDay.sendDailyInfo()
             cda.daily_pump_A_cnt = 0

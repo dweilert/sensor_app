@@ -198,7 +198,8 @@ def sendSMS():
 
         now = datetime.now()
         fmtDate = now.strftime("%m/%d/%Y at %H:%M:%S")
-        msg = config.get("Twilio", "msg_header") + " " + fmtDate + " - "
+        # msg = config.get("Twilio", "msg_header") + " " + fmtDate + " - "
+        msg = config.get("Twilio", "msg_header") + " - "
         msg = msg + " " + cda.smsMsg[0][0]
 
         client = Client(config.get("Twilio", "accountSID"),
@@ -218,7 +219,8 @@ def sendSMS():
                     logger.msg("I", "Sent SMS: " + msg + " to " + who)
                     j_data = {}
                     j_data["d"] = fmtDate
-                    j_data["m"] = msg
+                    j_data["m"] = cda.smsMsg[0][0]            
+                    # j_data["m"] = msg
                     j_data["w"] = who
                     awsHandler.putSMSData(j_data)
                 time.sleep(1)

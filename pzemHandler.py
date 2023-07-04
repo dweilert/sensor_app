@@ -180,6 +180,12 @@ def readSensor(usbPort, id):
 
         errStr = str(exception_type)
 
+        if "OSError" in errStr:
+            if id == "A":
+                cda.oserr_A = cda.oserr_A + 1
+            if id == "B":
+                cda.oserr_B = cda.oserr_B + 1
+
         if "TimeoutError" in errStr:
             cda.timeout_error = cda.timeout_error + 1
 

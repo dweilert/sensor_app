@@ -152,7 +152,9 @@ def checkData(pzem_data, id):
                 cda.aNoD = cda.aNoD + 1
                 if cda.aNoD > int(config.get("Limits", "no_data")):
                     sms = []
-                    sms.append("Pump A check " + config.get("Messages", "no_data_msg"))
+                    msg = "Pump A: " + config.get("Messages", "no_data_msg")
+                    msg = msg + " OSError cnt: " + str(cda.oserr_A)
+                    sms.append(msg)
                     sms.append(config.get("Messages", "no_data_who"))
                     cda.smsMsg.append(sms)
                     cda.aNoD = 0
@@ -176,7 +178,9 @@ def checkData(pzem_data, id):
                 cda.bNoD = cda.bNoD + 1
                 if cda.bNoD > int(config.get("Limits", "no_data")):
                     sms = []
-                    sms.append("Pump B check " + config.get("Messages", "no_data_msg"))
+                    msg = "Pump B: " + config.get("Messages", "no_data_msg")
+                    msg = msg + " OSError cnt: " + str(cda.oserr_A)
+                    sms.append(msg)
                     sms.append(config.get("Messages", "no_data_who"))
                     cda.smsMsg.append(sms)
                     cda.bNoD = 0

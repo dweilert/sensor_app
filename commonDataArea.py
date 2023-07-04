@@ -144,3 +144,6 @@ critical_error_A = 0
 critical_error_B = 0
 critical_error_C = 0
 critical_error_D = 0
+
+oserr_A = 0
+oserr_B = 0
